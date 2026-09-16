@@ -1,0 +1,1255 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>龟缸架 · 参数设计器</title>
+<style>
+:root{--ink:#183e3b;--muted:#617773;--green:#26796a;--line:#dce5e0;--paper:#f4f7f4;--gold:#ae7831;--red:#ac453a;--shadow:0 7px 28px #234a3d08}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Segoe UI","Microsoft YaHei",sans-serif;font-size:14px;line-height:1.6}button,input,select{font:inherit}button,a,input,select{outline-offset:3px}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.4}button:focus-visible,a:focus-visible{outline:2px solid var(--green)}a{color:var(--green);text-underline-offset:3px}button{border:1px solid var(--line);border-radius:8px;padding:8px 13px;background:#fff;color:var(--ink);transition:background .15s}button:hover:not(:disabled){background:#edf4ef}.primary{background:var(--green);border-color:var(--green);color:#fff}.primary:hover:not(:disabled){background:#1a6659}.quiet{background:transparent}.small{font-size:12px;padding:5px 9px}
+.app-header{background:#193f3a;color:#f1f7ee;padding:25px max(24px,calc((100vw - 1680px)/2));display:flex;align-items:center;justify-content:space-between;gap:22px}.eyebrow{font-size:10px;letter-spacing:2.6px;opacity:.65;font-weight:650}h1{font-size:25px;line-height:1.3;margin:4px 0 7px;letter-spacing:1px}.app-header p{margin:0;color:#bdcec6;font-size:12px}.header-side{display:flex;flex-direction:column;align-items:flex-end;gap:7px}.header-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.header-actions button{border-color:#66877b;color:#eaf1e5;background:transparent;font-size:11px;padding:5px 9px}.header-actions .primary{background:#d5e7cb;color:#1b4138;border-color:#d5e7cb}.local-badge{font-size:11px;color:#bad4c5;display:flex;gap:6px;align-items:center}.local-badge:before{content:"";width:6px;height:6px;border-radius:50%;background:#9bd4b7}
+.layout{max-width:1728px;margin:auto;padding:24px;display:grid;grid-template-columns:330px minmax(0,1fr);gap:24px;align-items:start}.parameters{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto;scrollbar-width:thin;padding-right:3px}.parameter-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.parameter-top h2{font-size:16px;margin:0}.units{font-size:11px;color:var(--muted);padding:3px 7px;background:#e7eee8;border-radius:5px}.form-section{background:#fff;border:1px solid var(--line);border-radius:11px;margin-bottom:11px;overflow:hidden;box-shadow:var(--shadow)}summary{padding:13px 15px;font-weight:650;cursor:pointer;user-select:none}summary::marker{color:#8ba999}.form-body{padding:0 15px 15px}.section-hint,.help{font-size:11px;color:var(--muted);margin:0 0 11px;line-height:1.7}.help{margin:5px 0 0}.fields{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field{min-width:0}.field label,.field-label{font-size:12px;display:block;margin-bottom:5px;color:#48675e}.field input,.field select{width:100%;min-width:0;border:1px solid #d6e0d8;border-radius:6px;padding:7px 9px;background:#fcfdfa;color:var(--ink);height:37px;font-variant-numeric:tabular-nums}.field input:focus,.field select:focus{border-color:var(--green);outline:2px solid #d9ece2}.field input[aria-invalid=true],.field select[aria-invalid=true]{border-color:var(--red);background:#fff5f2}.span2{grid-column:1/-1}.wide-input{font-weight:600}.tier-editor{display:grid;grid-template-columns:44px 1fr 1fr;gap:8px;align-items:center;margin-top:8px}.tier-editor .tier-tag{font-size:12px;color:var(--green);font-weight:650}.tier-editor input{width:100%;min-width:0;border:1px solid #d6e0d8;border-radius:6px;padding:7px 8px;height:36px;background:#fcfdfa;color:var(--ink)}.tier-editor input[aria-invalid=true]{border-color:var(--red)}.tier-head{font-size:11px;color:var(--muted);margin-top:13px}.tier-editor input:focus{outline:2px solid #d9ece2;border-color:var(--green)}.profile-row{padding:11px 0;border-bottom:1px solid #e9eee8}.profile-row:last-child{border:0;padding-bottom:0}.profile-row:first-child{padding-top:0}.profile-note{display:flex;justify-content:space-between;gap:6px;align-items:baseline;margin-bottom:5px}.profile-note label{font-size:12px}.profile-note span{font-size:10px;color:var(--muted)}.profile-main{display:grid;grid-template-columns:minmax(0,1fr) 82px;gap:6px;align-items:end}.profile-row select{width:100%;border:1px solid #d6e0d8;border-radius:6px;padding:7px 8px;background:#fcfdfa;color:var(--ink)}.profile-wall label{font-size:10px;margin-bottom:2px;white-space:nowrap}.profile-wall input{height:34px!important;padding:5px 6px!important}.custom-fields{margin-top:8px}.preset-row{display:flex;gap:6px;margin:11px 0;flex-wrap:wrap}.parameter-footer{padding:8px 3px 16px;color:var(--muted);font-size:11px}.jump-link{display:none}
+.workspace{min-width:0}.status-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:15px;min-height:22px}.status-bar strong{font-size:14px;font-weight:600;overflow-wrap:anywhere}.save-state{font-size:11px;color:var(--muted);white-space:nowrap}.metrics{display:grid;grid-template-columns:1.35fr repeat(4,1fr);gap:12px;margin-bottom:16px}.metric{background:#e7eee4;border:1px solid #dce6d6;border-top:2px solid #80a48c;border-radius:8px;padding:12px 15px}.metric small{display:block;color:#667d6b;font-size:11px}.metric strong{font-size:24px;display:block;font-weight:650;line-height:1.5;white-space:nowrap;font-variant-numeric:tabular-nums}.metric .metric-caption{font-size:10px;color:#768b7c}.validation{border-radius:9px;padding:12px 15px;margin-bottom:16px;border:1px solid #e7d9b5;background:#fff8e9;font-size:12px}.validation.error{border-color:#e5b4a8;background:#fff0eb;color:#963e32}.validation p{margin:3px 0}.validation[hidden]{display:none}.card{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);margin-bottom:18px;overflow:hidden}.card-head{padding:15px 18px;border-bottom:1px solid #e6ece5;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.card-head h2{font-size:16px;margin:0;display:flex;align-items:center;gap:9px}.card-head h2 .index{font-size:10px;color:#8fa79a;letter-spacing:1px}.card-head .hint{font-size:11px;color:var(--muted)}.card-actions{display:flex;gap:7px;flex-wrap:wrap}.tabs{display:flex;gap:5px;flex-wrap:wrap;padding:12px 18px 0}.tab{border-color:transparent;background:transparent;padding:7px 11px;color:#6d8378;font-size:12px}.tab[aria-selected=true]{background:#e4f0e8;color:#235d4e;border-color:#cfe2d6;font-weight:650}.view-options{padding:10px 20px 0;display:flex;align-items:center;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:11px}.view-options label{display:flex;align-items:center;gap:5px}.view-options input[type=checkbox]{accent-color:var(--green);width:14px;height:14px}.view-options select{border:1px solid var(--line);border-radius:5px;background:#fff;color:var(--ink);padding:3px 5px;font-size:11px}.drawing{padding:0 10px;min-height:300px;position:relative;background:linear-gradient(135deg,#fff,#fbfdf9)}.drawing svg{width:100%;height:auto;display:block;max-height:730px}.drawing:fullscreen{background:#fff;display:flex;align-items:center;justify-content:center;padding:12px}.drawing:fullscreen svg{height:100%;width:100%;max-height:none}.drawing-placeholder{min-height:420px;display:grid;place-items:center;text-align:center;color:#a06c56;font-size:14px;padding:30px}.drawing-caption{padding:12px 20px;background:#f6f9f3;border-top:1px solid #e8eee3;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;font-size:11px;color:#6b8174}.legend{display:flex;gap:12px;flex-wrap:wrap}.legend span{display:flex;align-items:center;gap:5px}.dot{display:inline-block;width:9px;height:9px;border-radius:2px}.dot.frame{background:#a7bdc5}.dot.middle{background:#c5ac79}.dot.tank{background:#98cbbd}.dot.space{background:#f0dfaf}.table-scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:12px;line-height:1.55}th{background:#f2f6f0;color:#5a7467;white-space:nowrap;font-weight:600}th,td{text-align:left;padding:10px 15px;border-bottom:1px solid #e9eee7}td{font-variant-numeric:tabular-nums}td.number,th.number{text-align:right;white-space:nowrap}td .sub{display:block;font-size:10px;color:#7c9084;margin-top:2px}tbody tr:hover{background:#fafcf8}.chip{display:inline-block;background:#e8f0e7;color:#456751;font-size:10px;border-radius:4px;padding:2px 6px;white-space:nowrap}.material-totals{padding:13px 18px;display:flex;flex-wrap:wrap;gap:10px;background:#fbfcf8}.material-total{border:1px solid #e0e8dc;border-radius:6px;padding:7px 11px;font-size:12px}.material-total b{margin-left:8px}.footnote{padding:11px 18px;color:#7a8d7f;font-size:11px;border-top:1px solid #e9eee5}.footnote p{margin:3px 0}.two-cards{display:grid;grid-template-columns:1fr 1fr;gap:18px}.two-cards .card{margin:0}.formula-list{padding:5px 18px 15px}.formula-row{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px solid #eef1e9;font-size:12px}.formula-row:last-child{border:0}.formula-row .label{color:var(--muted)}.formula-row .value{text-align:right;font-variant-numeric:tabular-nums}.app-footer{margin:23px 4px 30px;font-size:11px;color:#7c8d7d;line-height:1.8}.app-footer p{margin:5px 0}.app-footer details{margin-top:10px}.app-footer summary{padding:0;font-size:11px;font-weight:400}.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(15px);opacity:0;pointer-events:none;background:#204c3e;color:#f0f5e9;padding:10px 20px;border-radius:8px;box-shadow:0 5px 25px #15362630;font-size:13px;transition:.2s;z-index:10;max-width:90vw}.toast.show{opacity:1;transform:translateX(-50%)}[hidden]{display:none!important}.print-summary{display:none}
+@media(min-width:1650px){.layout{grid-template-columns:360px minmax(0,1fr)}}
+@media(max-width:1180px){.layout{grid-template-columns:290px minmax(0,1fr);gap:16px;padding:18px}.metrics{grid-template-columns:1fr 1fr}.metric strong{font-size:23px}.two-cards{grid-template-columns:1fr}.card-head{padding:13px 15px}.app-header{padding:20px 22px}}
+@media(max-width:850px){.app-header{align-items:flex-start;flex-direction:column;gap:15px}.layout{display:block;padding:14px}.parameters{position:static;max-height:none;overflow:visible;padding:0}.form-section{margin-bottom:10px}.jump-link{display:inline-block;font-size:12px}.workspace{margin-top:22px;scroll-margin-top:12px}.parameter-footer{padding-bottom:2px}.card-head{gap:9px}.view-options{gap:10px}.tabs{padding-left:10px;padding-right:10px}.tab{padding:6px 8px}.metric strong{font-size:22px}.metrics .metric:first-child,.metrics .metric:last-child{grid-column:1/-1}.drawing{min-height:240px;padding:0}.status-bar{align-items:flex-start}.metric{padding:10px 12px}.header-actions{gap:6px}}
+.locator-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 18px 0;padding:10px 12px;border:1px solid #e3e9df;border-radius:8px;background:#f7f9f4;font-size:12px}.locator-bar strong{display:block;font-weight:650}.locator-bar span{display:block;color:var(--muted);font-size:11px;margin-top:2px}.locator-bar button{flex-shrink:0}.locator-bar.active{background:#fff5e8;border-color:#e8be83}.locator-bar.active strong{color:#a45417}.dot.focus{background:#e2812b}.is-located{outline:2px solid #df913e!important;outline-offset:2px;background:#fff9ee!important}.profile-row.is-located{padding-left:6px;padding-right:6px;border-radius:5px}.cost-summary{display:grid;grid-template-columns:1fr 1fr 1fr 1.4fr;gap:14px;padding:18px;background:#f6f9f2}.cost-summary small{display:block;font-size:11px;color:var(--muted)}.cost-summary strong{display:block;font-size:22px;font-variant-numeric:tabular-nums;line-height:1.6}.cost-summary span{display:block;font-size:11px;color:#8c6832}.cost-grand{border-left:1px solid #d9e3d4;padding-left:18px}.cost-grand strong{color:#216b57}.cost-heading{font-size:13px;margin:0;padding:15px 18px 10px}.cost-heading span{font-size:11px;font-weight:400;color:var(--muted);margin-left:10px}.cost-table{min-width:760px}.cost-table input{width:98px;max-width:100%;padding:6px 7px;border:1px solid #d7e1d7;border-radius:5px;background:#fcfdf9;color:var(--ink);font:inherit;text-align:right}.cost-table input::placeholder{color:#97a699}.cost-table input:focus{outline:2px solid #e8be83;border-color:#bf853e}.cost-table input[aria-invalid=true]{border-color:var(--red);background:#fff0eb}.cost-table .bracket-name{width:166px;text-align:left}.cost-table .per-end{width:62px}.cost-table td{vertical-align:top}.cost-table .sub{max-width:220px}.cost-table .price-error{color:#b04936!important}.cost-table .unpriced{color:#9b825b}.cost-table .priced{color:#285f4a;font-weight:650}.bracket-table{min-width:785px}.extra-table{min-width:860px}.stock-table{min-width:900px}.stock-plan{max-width:520px;white-space:normal;line-height:1.6}.comparison-table{min-width:920px}.comparison-current{background:#f5faf6}.comparison-note{font-size:10px;color:var(--muted)}.parameter-footer p{margin-bottom:4px}
+.vendor-quote{border-top:1px solid #e4ebe3;background:#fbfcf8}.vendor-quote>summary{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 18px;color:#285f50}.vendor-quote>summary span:first-child{font-weight:650}.vendor-quote>summary small{color:var(--muted);font-weight:400;text-align:right}.vendor-body{padding:0 18px 12px}.vendor-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:3px 0 9px}.vendor-actions{display:flex;gap:7px;flex-wrap:wrap}.link-button{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:8px;padding:5px 9px;background:#fff;color:var(--ink);font-size:12px;line-height:1.45;text-decoration:none}.link-button:hover{background:#edf4ef}.link-button.primary{background:var(--green);border-color:var(--green);color:#fff}.vendor-total{font-size:12px;color:#4f6d62}.vendor-total b{font-size:14px;color:#235f50}.jlc-table{min-width:900px}.jlc-table td,.jlc-table th{padding-top:7px;padding-bottom:7px}.combined-code{white-space:nowrap;font-weight:650;color:#315f54}.match-ok{color:#26735f}.match-check{color:#986821}.vendor-note{margin:8px 0 0;font-size:11px;color:var(--muted);line-height:1.6}
+.tier-open{display:grid;place-items:center;height:36px;border:1px dashed #bfd3c7;border-radius:6px;background:#f1f7f2;color:#39705d;font-size:11px}
+@media(max-width:850px){.locator-bar{margin:10px 10px 0;align-items:flex-start}.cost-summary{grid-template-columns:1fr 1fr;gap:10px;padding:14px}.cost-summary strong{font-size:20px}.cost-grand{border-left:0;padding-left:0}.cost-heading span{display:block;margin:3px 0 0}.locator-bar span{line-height:1.5}}
+
+/* Compact workspace: keep the common controls and drawing visible together. */
+.dot.bracket{background:#df7c24;border-radius:50%}.dot.deck{background:#b88a52}.dot.caster{background:#536865;border-radius:50%}
+@media(min-width:851px){
+ body{font-size:13px;line-height:1.45}
+ button{padding:6px 10px}
+ .app-header{padding:13px max(18px,calc((100vw - 1680px)/2))}
+ .app-header h1{font-size:21px;margin:1px 0 3px}.app-header p{font-size:11px}
+ .layout{padding:13px 18px;gap:14px;grid-template-columns:310px minmax(0,1fr)}
+ .parameters{top:10px;max-height:calc(100vh - 20px)}
+ .parameter-top{margin-bottom:7px}.parameter-top h2{font-size:15px}
+ .form-section{margin-bottom:7px;border-radius:8px}summary{padding:9px 12px}
+ .form-body{padding:0 12px 10px}.section-hint{margin-bottom:7px;line-height:1.5}
+ .fields{gap:7px}.field label,.field-label{font-size:11px;margin-bottom:3px}
+ .field input,.field select{height:32px;padding:4px 7px}.tier-editor{margin-top:5px;gap:6px}.tier-editor input{height:31px;padding:4px 7px}
+ .tier-head{margin-top:8px}.profile-row{padding:7px 0}.profile-note{margin-bottom:3px}.profile-row select{padding:5px 7px}.custom-fields{margin-top:5px}
+ .preset-row{margin:7px 0}.parameter-footer{padding:4px 3px 8px}
+ .status-bar{margin-bottom:7px}.metrics{gap:8px;margin-bottom:10px}.metric{padding:8px 11px}.metric strong{font-size:20px;line-height:1.35}
+ .validation{padding:8px 12px;margin-bottom:10px}.card{margin-bottom:11px;border-radius:9px}
+ .card-head{padding:9px 13px}.card-head h2{font-size:15px}.tabs{padding:7px 13px 0}.tab{padding:5px 8px}
+ .view-options{padding:6px 14px 0;gap:11px}.locator-bar{margin:7px 13px 0;padding:7px 9px}
+ .drawing{min-height:220px}.drawing svg{max-height:560px}.drawing-caption{padding:8px 14px}
+ th,td{padding:7px 10px}.material-totals{padding:8px 12px;gap:6px}.material-total{padding:5px 8px}
+ .footnote{padding:8px 12px}.cost-summary{padding:11px 14px;gap:12px}.cost-summary strong{font-size:20px}.cost-heading{padding:10px 13px 7px}
+ .formula-list{padding:3px 13px 10px}.formula-row{padding:6px 0}.app-footer{margin:13px 3px 18px;line-height:1.55}
+}
+@media(min-width:1650px){.layout{grid-template-columns:320px minmax(0,1fr)}}
+@media(min-width:851px) and (max-width:1180px){.layout{grid-template-columns:285px minmax(0,1fr);padding:11px;gap:11px}.drawing svg{max-height:520px}}
+@media(max-width:850px){.app-header{padding:14px 16px;gap:9px}.app-header h1{font-size:21px}.header-side{align-items:flex-start;width:100%}.header-actions{justify-content:flex-start}.layout{padding:9px}.metrics{gap:7px;margin-bottom:10px}.card{margin-bottom:11px}.drawing svg{max-height:560px}}
+@media print{
+ @page{size:A4 landscape;margin:8mm}
+ body{background:#fff;color:#183e3b;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ body>.app-header,body>.layout,body>.toast{display:none!important}
+ .print-summary{display:block!important}
+ .print-page{page-break-after:always;break-after:page;width:100%;min-height:185mm;position:relative}
+ .print-page:last-child{page-break-after:auto;break-after:auto}
+ .print-page svg{display:block;width:100%;height:auto;max-height:181mm;margin:auto}
+ .print-list{font-size:8.5pt;padding:2mm 1mm}.print-list h1{font-size:16pt;margin:0 0 2mm}.print-list h2{font-size:12pt;margin:4mm 0 1.5mm}.print-list p{margin:1mm 0 3mm;color:#536d64}
+ .print-list table{font-size:8pt}.print-list th,.print-list td{padding:1.6mm 2mm}.print-list thead{display:table-header-group}.print-list tr{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<header class="app-header">
+ <div><div class="eyebrow">TURTLE HABITAT / FRAME PLANNER</div><h1>龟缸架 · 参数设计器</h1><p>改尺寸，定位对应部位，自动更新下料长度与材料费用。</p></div>
+ <div class="header-side"><div class="header-actions"><button id="exportSvg" title="将立体、正视、侧视、俯视和承托剖面排入同一个 SVG 总图">导出全视角 SVG</button><button id="exportXlsx" title="导出与详细装配 STEP 配套的 Excel 材料与标准件 BOM">导出配套 BOM XLSX</button><button id="exportStep" class="primary" title="导出型材槽形、独立下料段、角码、转接板和福马轮的详细装配 STEP">导出详细装配 STEP</button><button id="printBtn" title="打印整套图纸，并遵循图纸中的龟缸显示选项">打印整套图纸</button></div><div class="local-badge">单文件 · 无需联网 · 参数与报价自动保存</div></div>
+</header>
+<main class="layout">
+ <aside class="parameters" aria-label="设计参数">
+  <div class="parameter-top"><h2>设计参数</h2><span class="units">统一单位：mm</span><a class="jump-link" href="#workspace">查看图纸 ↓</a></div>
+  <details class="form-section" open><summary>01　缸尺寸与底部高度</summary><div class="form-body">
+   <div class="fields">
+    <div class="field span2"><label for="projectName">方案名称</label><input id="projectName" data-path="name" type="text" class="wide-input"></div>
+    <div class="field"><label for="tankWidth">常规缸外宽 · 左右</label><input id="tankWidth" data-path="tankWidth" type="number" min="0.1" step="0.5"></div>
+    <div class="field"><label for="tankDepth">常规缸外深 · 前后</label><input id="tankDepth" data-path="tankDepth" type="number" min="0.1" step="0.5"></div>
+    <div class="field"><label for="legClear">脚轮顶至底层梁下净高</label><input id="legClear" data-path="legClear" type="number" min="0" step="0.5"></div>
+    <div class="field"><label for="footExposed">福马轮组件安装高度</label><input id="footExposed" data-path="footExposed" type="number" min="0" step="0.5"></div>
+    <div class="field"><label for="tierCount">龟缸层数</label><input id="tierCount" data-path="tierCount" type="number" min="1" step="1"></div>
+    </div><p class="help">底层梁下离地 = 福马轮安装高度 + 脚轮上方净高。默认 120 + 0 = 120 mm；福马轮高度填 0 表示不安装。</p>
+  </div></details>
+  <details class="form-section" open><summary>02　各层缸高与操作净空</summary><div class="form-body"><p class="section-hint">层号从下往上。中间层净空为缸口到上一层承托框最低横梁下沿；最上层可开放，也可保留封框。</p><div class="field span2"><label for="topMode">最上层上方结构</label><select id="topMode" data-path="topMode"><option value="open">顶部开放 · 独立尺寸</option><option value="framed">顶部封框 · 使用常规缸宽深</option></select></div><div id="topTankEditor"><p class="help">顶部开放时，顶层缸独立使用整个框面；默认 680 × 600 mm，四边最小余量各 7.5 mm。若常规层需要更大外廓，多出的空间会居中分配。</p><div class="fields"><div class="field"><label for="topTankWidth">顶部缸外宽 · 左右</label><input id="topTankWidth" data-path="topTank.width" type="number" min="0.1" step="0.5"></div><div class="field"><label for="topTankDepth">顶部缸外深 · 前后</label><input id="topTankDepth" data-path="topTank.depth" type="number" min="0.1" step="0.5"></div><div class="field"><label for="topClearLeft">顶部左最小余量 · 距架外沿</label><input id="topClearLeft" data-path="topTank.clear.left" type="number" min="0" step="0.5"></div><div class="field"><label for="topClearRight">顶部右最小余量 · 距架外沿</label><input id="topClearRight" data-path="topTank.clear.right" type="number" min="0" step="0.5"></div><div class="field"><label for="topClearFront">顶部前最小余量 · 距架外沿</label><input id="topClearFront" data-path="topTank.clear.front" type="number" min="0" step="0.5"></div><div class="field"><label for="topClearBack">顶部后最小余量 · 距架外沿</label><input id="topClearBack" data-path="topTank.clear.back" type="number" min="0" step="0.5"></div></div></div><div class="tier-editor tier-head"><span>层位</span><span>缸外高</span><span>上方操作净空</span></div><div id="tierFields"></div></div></details>
+  <details class="form-section" open><summary>03　四边余量</summary><div class="form-body"><div class="fields">
+    <div class="field"><label for="clearLeft">左余量 · 缸到立柱</label><input id="clearLeft" data-path="clear.left" type="number" min="0" step="0.5"></div>
+    <div class="field"><label for="clearRight">右余量 · 缸到立柱</label><input id="clearRight" data-path="clear.right" type="number" min="0" step="0.5"></div>
+    <div class="field"><label for="clearFront">前余量 · 距架前沿</label><input id="clearFront" data-path="clear.front" type="number" min="0" step="0.5"></div>
+    <div class="field"><label for="clearBack">后余量 · 距架后沿</label><input id="clearBack" data-path="clear.back" type="number" min="0" step="0.5"></div>
+  </div><p class="help">前后梁放在缸底下方；前后余量应小于对应梁的顶部宽度。</p></div></details>
+  <details class="form-section" open><summary>04　型材与层托</summary><div class="form-body"><p class="section-hint">默认全 4040、名义壁厚 2.4 mm，对应嘉立创欧标 40 槽 8 的 TXCL-H6-4040。每层承托梁顶面齐平；选择顶部开放时不采购顶部封框型材。</p><div class="field"><label for="middleCount">每层中间托梁根数</label><input id="middleCount" data-path="middleCount" type="number" min="0" step="1"></div><div class="preset-row"><button id="all4040" class="small primary">全 4040 玻璃缸方案</button><button id="mixedPreset" class="small">4080 加强方案</button></div><div id="profileFields"></div><datalist id="wall-thickness-options"><option value="1.5"><option value="1.8"><option value="2"><option value="2.4"><option value="2.5"><option value="3"></datalist><p class="help">常用名义壁厚可选 1.5 / 1.8 / 2.0 / 2.4 / 2.5 / 3.0 mm；当前嘉立创匹配规格为 2.4 mm。槽型材承载还取决于内部筋位、米重和截面惯性矩。</p></div></details>
+  <details class="form-section" open><summary>05　连接方式与立柱对齐</summary><div class="form-body"><div class="fields">
+   <div class="field span2"><label for="jointLayout">立柱与层框对齐</label><select id="jointLayout" data-path="jointLayout"><option value="continuous">贯通立柱 · 横梁夹在立柱之间</option><option value="stacked">分段立柱 · 立柱压在层框上</option></select></div>
+   <div class="field"><label for="outerConnection">外框与分段立柱节点</label><select id="outerConnection" data-path="connections.outer"><option value="angle">外置角码 · 免打孔</option><option value="endTap">端面攻丝 + 配合通孔</option><option value="throughBolt">贯穿孔 + 螺栓螺母</option><option value="anchor">内置锚式连接件</option></select></div>
+   <div class="field"><label for="middleConnection">中间托梁节点</label><select id="middleConnection" data-path="connections.middle"><option value="angle">外置角码 · 免打孔</option><option value="endTap">端面攻丝 + 配合通孔</option><option value="throughBolt">贯穿孔 + 螺栓螺母</option><option value="anchor">内置锚式连接件</option></select></div>
+  </div><p class="help">“贯通立柱”保留整根立柱，横梁装在立柱之间；“分段立柱”让上层立柱压在下层框架顶面，立柱按层分段。打孔类方式会在图上显示孔位符号，并自动计入对应加工 / 连接组件。</p></div></details>
+  <details class="form-section"><summary>06　玻璃缸承托与福马轮</summary><div class="form-body">
+   <div class="fields">
+    <div class="field"><label for="boardThickness">刚性承托板厚度</label><input id="boardThickness" data-path="boardThickness" type="number" min="0" step="0.5"></div>
+    <div class="field"><label for="matThickness">缓冲垫厚度</label><input id="matThickness" data-path="matThickness" type="number" min="0" step="0.5"></div>
+    <div class="field span2"><label for="casterModel">福马轮型号说明</label><input id="casterModel" data-path="casterModel" type="text"></div>
+    <div class="field span2"><label for="casterCapacity">单只福马轮额定承载 · kg</label><input id="casterCapacity" data-path="casterCapacity" type="number" min="0" step="1"></div>
+    </div><p class="help">承托板和缓冲垫默认都为 0 mm，填 0 表示不放；垫层及玻璃缸底部支撑方式以缸厂家说明为准。福马轮按四角各 1 只绘制。</p>
+  </div></details>
+  <details class="form-section"><summary>07　采购定尺与切割损耗</summary><div class="form-body"><p class="section-hint">排料按同一规格分别计算。每根原料先扣除两端修整量，再按每个下料件计一次锯缝。</p><div class="fields">
+   <div class="field span2"><label for="costBasis">型材预算计价方式</label><select id="costBasis" data-path="procurement.costBasis"><option value="stock">按定尺原料采购长度</option><option value="net">按成品净长度</option></select></div>
+   <div class="field"><label for="stockLength">原料定尺长度</label><input id="stockLength" data-path="procurement.stockLength" type="number" min="0.1" step="1"></div>
+   <div class="field"><label for="sawKerf">单次切割锯缝</label><input id="sawKerf" data-path="procurement.sawKerf" type="number" min="0" step="0.1"></div>
+   <div class="field"><label for="endTrim">每端修整余量</label><input id="endTrim" data-path="procurement.endTrim" type="number" min="0" step="0.5"></div>
+  </div><p class="help">默认 6000 mm 原料、3 mm 锯缝、每端修整 5 mm。嘉立创按单根定制报价时可选择“按成品净长度”。</p></div></details>
+   <div class="parameter-footer"><button class="quiet small" id="resetBtn">恢复初始参数</button><p>选中参数可在图上定位。数值仅保留正数、非负数及装配关系等实际约束，不设任意上限；无效组合会暂停下料及费用计算。</p></div>
+ </aside>
+ <section class="workspace" id="workspace" aria-label="图纸与下料结果">
+  <div class="status-bar"><strong id="schemeTitle"></strong><span class="save-state" id="saveState" role="status"></span></div>
+  <div class="metrics"><div class="metric"><small>整体外尺寸 · 宽 × 深 × 最高处</small><strong id="metricSize">—</strong><span class="metric-caption">mm，开放时含最上层玻璃缸</span></div><div class="metric"><small>不含最上层缸高度</small><strong id="metricWithoutTopTank">—</strong><span class="metric-caption">顶部开放时即顶层缸底离地</span></div><div class="metric"><small id="metricColumnLabel">立柱下料长度</small><strong id="metricColumn">—</strong><span class="metric-caption" id="metricColumnCaption">4 根立柱，随顶部结构联动</span></div><div class="metric"><small>主体型材净长</small><strong id="metricLength">—</strong><span class="metric-caption" id="metricCount">未计锯缝及配件</span></div><div class="metric"><small>最上层玻璃缸口离地</small><strong id="metricRim">—</strong><span class="metric-caption" id="metricWater">名义满水量估算</span></div></div>
+  <div id="validation" class="validation" role="status" hidden></div>
+  <section class="card"><div class="card-head"><h2><span class="index">01</span>结构视图</h2><div class="card-actions"><button id="fullscreenBtn" class="small">放大</button></div></div>
+   <div class="tabs" role="tablist" aria-label="视图选择"><button class="tab" role="tab" id="tab-iso" data-view="iso" aria-controls="drawing" aria-selected="true">立体总览</button><button class="tab" role="tab" id="tab-front" data-view="front" aria-controls="drawing" aria-selected="false" tabindex="-1">正视图</button><button class="tab" role="tab" id="tab-side" data-view="side" aria-controls="drawing" aria-selected="false" tabindex="-1">侧视图</button><button class="tab" role="tab" id="tab-plan" data-view="plan" aria-controls="drawing" aria-selected="false" tabindex="-1">单层俯视</button><button class="tab" role="tab" id="tab-section" data-view="section" aria-controls="drawing" aria-selected="false" tabindex="-1">承托剖面</button></div>
+   <div class="view-options"><label title="同时控制页面视图、SVG 导出和整套打印"><input type="checkbox" id="showTanks" checked>导出 / 打印显示龟缸</label><label><input type="checkbox" id="showBrackets" checked>显示连接件 / 孔位</label><label><input type="checkbox" id="showDims" checked>尺寸标注</label><label>查看层位 <select id="selectedTier" aria-label="俯视和剖面的层位"></select></label><label><input type="checkbox" id="autoLocate" checked>选参数时在立体图标注</label><span id="viewHint"></span></div>
+   <div class="locator-bar" id="locatorBar"><div><strong id="locatorTitle">参数定位</strong><span id="locatorText">选中尺寸或型材参数，图上会用橙色标出对应位置。</span></div><button class="small" id="clearFocus" disabled>取消标注</button></div>
+   <div class="drawing" id="drawing" role="tabpanel" aria-labelledby="tab-iso"></div>
+   <div class="drawing-caption"><div class="legend"><span><i class="dot frame"></i>4040 架体</span><span><i class="dot middle"></i>中间托梁</span><span><i class="dot deck"></i>刚性承托板</span><span><i class="dot tank"></i>玻璃龟缸</span><span><i class="dot caster"></i>福马轮</span><span><i class="dot bracket"></i>连接件 / 孔位</span><span><i class="dot focus"></i>当前参数</span></div><span>尺寸方案；承载与连接方式需按实物复核</span></div>
+  </section>
+  <section class="card" id="costCard"><div class="card-head"><h2><span class="index">02</span>采购、报价与下料</h2><span class="hint">预算单价与采购数量可直接修改</span></div>
+   <div class="cost-summary" aria-live="polite"><div><small>型材小计</small><strong id="profileCost">待报价</strong></div><div><small>角码小计</small><strong id="bracketCost">待报价</strong></div><div><small>辅材小计</small><strong id="extraCost">待报价</strong></div><div class="cost-grand"><small id="grandCostLabel">已报价小计</small><strong id="grandCost">待报价</strong><span id="costStatus"></span></div></div>
+   <h3 class="cost-heading">按型材规格汇总 <span>同一截面转向安装合并计价</span></h3>
+   <div class="table-scroll"><table class="cost-table"><thead><tr><th>型材规格</th><th>使用部位</th><th class="number">成品件数</th><th class="number">净长（m）</th><th class="number">计价长度（m）</th><th class="number">单价（元/m）</th><th class="number">小计（元）</th></tr></thead><tbody id="profileCostRows"></tbody></table></div>
+   <details class="vendor-quote" open><summary><span>定尺原料排料</span><small id="stockSummary">等待尺寸计算</small></summary><div class="vendor-body"><div class="table-scroll"><table class="stock-table"><thead><tr><th>型材规格</th><th class="number">净长</th><th class="number">原料数量</th><th class="number">采购长度</th><th class="number">利用率</th><th>逐根切割方案</th></tr></thead><tbody id="stockRows"></tbody></table></div><p class="vendor-note">这是长度排料，不包含夹持区、孔位避让和厂家最短余料要求；正式下单前请按设备工艺复核。</p></div></details>
+   <h3 class="cost-heading">外置角码 <span>仅统计选择“外置角码”的节点；型号、用量及单价可修改</span></h3>
+   <div class="table-scroll"><table class="cost-table bracket-table"><thead><tr><th>角码型号 / 预算分组</th><th>对应横梁</th><th class="number">每端个数</th><th class="number">采购数量（个）</th><th class="number">单价（元/个）</th><th class="number">小计（元）</th></tr></thead><tbody id="bracketCostRows"></tbody></table></div>
+   <h3 class="cost-heading">福马轮与辅材 <span>留空采购数量时使用自动数量；填 0 可排除</span></h3>
+   <div class="table-scroll"><table class="cost-table extra-table"><thead><tr><th>项目</th><th>自动计算依据</th><th class="number">采购数量</th><th>单位</th><th class="number">单价（元）</th><th class="number">小计（元）</th></tr></thead><tbody id="extraCostRows"></tbody></table></div>
+    <details class="vendor-quote" open><summary><span>型材下料与嘉立创 FA 清单</span><small id="jlcSummary">等待尺寸计算</small></summary><div class="vendor-body"><div class="vendor-toolbar"><div class="vendor-total"><div id="jlcExactTotal"></div><div id="step3dSummary" class="sub"></div></div><div class="vendor-actions"><button class="small" id="jlcPreset">应用嘉立创 4040 规格</button><button class="small" id="copyJlcList">复制型号清单</button><a class="link-button" href="https://www.jlcfa.com/serial/1186401645868.html" target="_blank" rel="noreferrer">打开型材选型</a><a class="link-button primary" href="https://www.jlcfa.com/assembly-quote" target="_blank" rel="noreferrer">打开整机装配报价</a><a class="link-button" href="https://www.jlcfa.com/profile-quote" target="_blank" rel="noreferrer">单根型材报价</a></div></div><div class="table-scroll"><table class="jlc-table"><thead><tr><th>合并编号</th><th>安装位置</th><th>型材 / 嘉立创型号</th><th class="number">下料长度 × 数量</th><th class="number">净长合计</th><th class="number">匹配 / 单根价</th></tr></thead><tbody id="cutRows"></tbody></table></div><p class="vendor-note"><b>提交整机报价时，请同时上传同尺寸编号的“详细装配 STEP”和“配套 BOM XLSX”。</b> STEP 内每段型材均为独立实体，名称包含规格和切割长度，并加入当前启用的角码、福马轮及转接底板；型材槽口为识别用简化外形，中心孔和螺栓孔仍需按最终选型深化。</p></div></details>
+   <details class="vendor-quote"><summary><span>全 4040 / 4080 加强方案对比</span><small id="comparisonSummary">按当前缸尺寸与层数计算</small></summary><div class="vendor-body"><div class="table-scroll"><table class="comparison-table"><thead><tr><th>方案</th><th>主要梁规格</th><th class="number">总高</th><th class="number">型材净长</th><th class="number">定尺原料</th><th class="number">型材</th><th class="number">角码</th><th class="number">辅材</th><th class="number">预算合计</th></tr></thead><tbody id="comparisonRows"></tbody></table></div><p class="vendor-note">对比保持龟缸、净空、承托和采购参数一致。这里只比较几何与预算；承载差异必须结合具体型材的截面惯性矩和连接节点数据。</p></div></details>
+   <div class="footnote"><p>预算单价（2026-09-15）：默认 4040、壁厚 2.4 mm 按嘉立创 TXCL-H6-4040 报价折算为 52.94 元/m；角码候选 TYZB-X6-G408-4040G 按页面起价 4.22 元/个。打孔、贯穿螺栓和内置连接件为可编辑估算价，实际加工价以厂家为准。</p><p>型材计价可选净长或定尺采购长度；定尺排料已计算锯缝和端部修整。完整预算包含当前启用的型材、连接件、福马轮、转接板、紧固件、斜撑、墙面固定件、端盖、承托板及缓冲垫，不含运费。</p></div>
+   </section>
+  <section class="card"><div class="card-head"><h2><span class="index">03</span>各层安装高度</h2><span class="hint">均为距地面高度 · mm</span></div><div class="table-scroll"><table><thead><tr><th>层位</th><th class="number">缸高</th><th class="number">操作净空</th><th class="number">框最低下沿</th><th class="number">中梁下沿</th><th class="number">承托梁顶</th><th class="number">承托板顶</th><th class="number">玻璃缸底</th><th class="number">缸口</th></tr></thead><tbody id="elevationRows"></tbody></table></div><div class="footnote" id="heightSummary"></div></section>
+  <div class="two-cards"><section class="card"><div class="card-head"><h2><span class="index">04</span>承托与装配尺寸</h2></div><div id="panelDetails" class="formula-list"></div></section><section class="card"><div class="card-head"><h2><span class="index">05</span>尺寸怎么算</h2></div><div id="formulaDetails" class="formula-list"></div></section></div>
+  <footer class="app-footer"><p>当前按无框平底玻璃龟缸绘制：承托板和缓冲垫按设置值显示；如设置承托板，板件落在前梁、后梁及中间梁上。顶部结构、立柱对齐和节点方式都可切换；福马轮按四角各一只绘制，转接底板已在详细 STEP 中用简化实体表示。背部 X 斜撑及墙面防倾倒件已列入预算，但尚未在 3D 装配体中建模。</p><p>参数联动只校验几何与采购长度，不是整架承载验算。打孔类节点的孔径、端距、攻丝和扭矩应按型材厂家连接图确认；4040 应选有明确截面参数的标准型或重型，满水状态禁止推动。</p></footer>
+ </section>
+</main>
+<div class="toast" id="toast" role="status"></div>
+<section class="print-summary" id="printSheet" aria-label="待打印的整套图纸"></section>
+<script id="initial-config" type="application/json">{"schema":1,"seed":"confirmed-mixed-v1","name":"四层无框玻璃龟缸架 · 顶部开放","topMode":"open","jointLayout":"continuous","connections":{"outer":"angle","middle":"angle"},"topTank":{"width":680,"depth":600,"height":350,"clear":{"left":7.5,"right":7.5,"front":7.5,"back":7.5}},"tankWidth":600,"tankDepth":600,"legClear":0,"footExposed":120,"boardThickness":0,"matThickness":0,"casterModel":"GD-80 或同级平板福马轮","casterCapacity":550,"tierCount":4,"middleCount":2,"clear":{"left":7.5,"right":7.5,"front":7.5,"back":7.5},"tiers":[{"height":350,"gap":150},{"height":350,"gap":150},{"height":350,"gap":150},{"height":350,"gap":150}],"profiles":{"post":{"choice":"4040","b":40,"h":40,"t":2.4},"fb":{"choice":"4040","b":40,"h":40,"t":2.4},"side":{"choice":"4040","b":40,"h":40,"t":2.4},"middle":{"choice":"4040","b":40,"h":40,"t":2.4},"top":{"choice":"4040","b":40,"h":40,"t":2.4}},"procurement":{"costBasis":"stock","stockLength":6000,"sawKerf":3,"endTrim":5},"revision":13,"cost":{"profiles":{"40x40-t2_4":{"unit":52.94},"40x80-t2_4":{"unit":96}},"brackets":{"40x40":{"name":"TYZB-X6-G408-4040G（候选）","unit":4.22,"perEnd":2,"quantity":null},"40x80":{"name":"40 槽 8 加强角码（待选型）","unit":8,"perEnd":2,"quantity":null}},"extras":{"casters":{"name":"福马轮","unit":65,"quantity":null},"casterPlates":{"name":"福马轮转接底板","unit":15,"quantity":null},"supportBoard":{"name":"防水刚性承托板","unit":120,"quantity":null},"cushionMat":{"name":"缓冲垫","unit":25,"quantity":null},"fasteners":{"name":"角码螺栓与 T 型螺母","unit":0.8,"quantity":null},"endTapConnections":{"name":"端面攻丝 + 配合通孔加工组件","unit":6,"quantity":null},"throughBoltConnections":{"name":"贯穿孔 + 螺栓螺母组件","unit":8,"quantity":null},"anchorConnections":{"name":"内置锚式连接件","unit":12,"quantity":null},"rearBrace":{"name":"背部 X 斜撑组件","unit":35,"quantity":null},"wallAnchor":{"name":"墙面防倾倒固定套件","unit":18,"quantity":null},"endCaps":{"name":"立柱端盖","unit":2.5,"quantity":null}}}}</script>
+<script>
+'use strict';
+// All coordinates and lengths use millimetres. No network or external library is required.
+const $=id=>document.getElementById(id),clone=v=>JSON.parse(JSON.stringify(v));
+const fmt=v=>Number.isFinite(v)?Number(v.toFixed(2)).toLocaleString('zh-CN',{maximumFractionDigits:2,useGrouping:false}):'—';
+const fmtM=v=>Number.isFinite(v)?Number(v.toFixed(5)).toLocaleString('zh-CN',{maximumFractionDigits:5,useGrouping:false}):'—';
+const escapeHtml=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
+const PRESETS={'3030':[30,30],'3060v':[30,60],'3060h':[60,30],'4040':[40,40],'4060v':[40,60],'4080v':[40,80],'4080h':[80,40],'5050':[50,50],'6060':[60,60],'8080':[80,80]};
+const ROLES=[['post','立柱','左右宽 × 前后深'],['fb','前后主梁','前后宽 × 竖向高'],['side','左右连接梁','左右宽 × 竖向高'],['middle','中间托梁','前后宽 × 竖向高'],['top','顶部封框','水平宽 × 竖向高']];
+const VIEWS={iso:'立体总览',front:'正视图',side:'侧视图',plan:'单层俯视图',section:'承托剖面'};
+const INITIAL=JSON.parse($('initial-config').textContent);
+let selectedPath=null;
+let state=clone(INITIAL),model=null,activeView='iso',selectedTier=0,storageAvailable=true,updateTimer=null,toastTimer=null;
+const storageKey='turtle-frame-planner:1:'+INITIAL.seed+':'+location.pathname;
+const keyNumber=v=>String(v).replaceAll('.','_'),sizeKey=p=>[p.b,p.h].sort((a,b)=>a-b).map(keyNumber).join('x');
+const stockKey=p=>sizeKey(p)+(Number.isFinite(p.t)&&p.t!==2?'-t'+keyNumber(p.t):'');
+const ROLE_BY_ID={A:'post',G:'post',H:'post',B:'fb',C:'side',F:'middle',D:'top',E:'top'};
+const CONNECTION_METHODS={angle:{label:'外置角码',short:'角码',extra:null},endTap:{label:'端面攻丝 + 配合通孔',short:'攻丝+通孔',extra:'endTapConnections'},throughBolt:{label:'贯穿孔 + 螺栓螺母',short:'贯穿螺栓',extra:'throughBoltConnections'},anchor:{label:'内置锚式连接件',short:'内置连接',extra:'anchorConnections'}};
+const JOINT_LAYOUTS={continuous:'贯通立柱 · 横梁夹在立柱之间',stacked:'分段立柱 · 立柱压在层框上'};
+const connectionMethodForRole=(cfg,role)=>role==='middle'?cfg.connections.middle:cfg.connections.outer;
+const connectionLabel=method=>CONNECTION_METHODS[method]?.label??method;
+const money=v=>Number.isFinite(v)?v.toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2}):'—';
+const REFERENCE_PROFILE_T2={'30x30':28,'30x60':48,'40x40':44.11,'40x60':60,'40x80':80,'50x50':65,'60x60':95,'80x80':170};
+const REFERENCE_BRACKET={'30x30':4,'30x60':6,'40x40':5,'40x60':7,'40x80':8,'50x50':8,'60x60':12,'80x80':20};
+const JLC={date:'2026-09-15',catalogUrl:'https://www.jlcfa.com/serial/1186401645868.html',quoteUrl:'https://www.jlcfa.com/profile-quote',assemblyUrl:'https://www.jlcfa.com/assembly-quote',profile:{key:'40x40-t2_4',code:'TXCL-H6-4040',wall:2.4,unitWithTax:52.94,pricesWithTax:{'530':28.13,'610':32.34,'1198':63.25,'1660':87.54,'1761':92.85,'2200':115.93}},profile4080:{key:'40x80-t2_4',code:'TXCL-H6-4080',wall:2.4},bracket:{code:'TYZB-X6-G408-4040G',unit:4.22}};
+const roundMoney=v=>Math.round(v*100+1e-8)/100;
+const suggestedProfileUnit=p=>stockKey(p)===JLC.profile.key?JLC.profile.unitWithTax:roundMoney((REFERENCE_PROFILE_T2[sizeKey(p)]??40*((p.b+p.h)/80))*(p.t/2));
+const suggestedBracketUnit=p=>roundMoney(REFERENCE_BRACKET[sizeKey(p)]??5*((p.b+p.h)/80));
+function stockName(p){const [a,b]=[p.b,p.h].sort((x,y)=>x-y);return a<100&&b<100&&Number.isInteger(a)&&Number.isInteger(b)?`${a}${b}`:`${fmt(a)}×${fmt(b)}`;}
+const profileLabel=p=>`${stockName(p)} · t${fmt(p.t)}`;
+function sectionName(p){return `${stockName(p)} · ${fmt(p.b)}×${fmt(p.h)} · 壁厚 ${fmt(p.t)}`;}
+function readPath(obj,path){return path.split('.').reduce((a,k)=>a?.[k],obj);}
+function setPath(obj,path,value){const parts=path.split('.'),last=parts.pop();let target=obj;for(const k of parts)target=target[k];target[last]=value;}
+function normalise(input){
+ if(!input||typeof input!=='object'||input.schema!==1)throw Error('本地参数格式不正确。');
+ const cfg=clone(INITIAL),revision=input.revision??1,scalar=['tankWidth','tankDepth','legClear','footExposed','boardThickness','matThickness','casterCapacity','tierCount','middleCount'];
+ cfg.name=String(input.name??cfg.name);
+ cfg.topMode=input.topMode==='framed'?'framed':'open';
+ cfg.jointLayout=input.jointLayout==='stacked'?'stacked':'continuous';
+ if(input.connections&&typeof input.connections==='object')for(const role of ['outer','middle'])if(Object.prototype.hasOwnProperty.call(CONNECTION_METHODS,input.connections[role]))cfg.connections[role]=input.connections[role];
+ if(input.topTank&&typeof input.topTank==='object'){
+  for(const key of ['width','depth','height'])if(key in input.topTank)cfg.topTank[key]=input.topTank[key];
+  if(input.topTank.clear&&typeof input.topTank.clear==='object')for(const key of ['left','right','front','back'])if(key in input.topTank.clear)cfg.topTank.clear[key]=input.topTank.clear[key];
+ }
+ cfg.casterModel=String(input.casterModel??cfg.casterModel);
+ for(const k of scalar)if(k in input)cfg[k]=input[k];
+ if(input.procurement&&typeof input.procurement==='object'){
+  cfg.procurement.costBasis=input.procurement.costBasis==='net'?'net':'stock';
+  for(const k of ['stockLength','sawKerf','endTrim'])if(k in input.procurement)cfg.procurement[k]=input.procurement[k];
+ }
+ if(revision<4&&input.footExposed===20)cfg.footExposed=118;
+ if(revision<6&&Number.isFinite(input.legClear)&&Number.isFinite(cfg.footExposed))cfg.legClear=Math.max(0,input.legClear-cfg.footExposed);
+ if(!input.clear||!Array.isArray(input.tiers)||!input.profiles)throw Error('本地参数缺少尺寸或型材信息。');
+ const migrateV2=revision<2;
+ for(const k of ['left','right','front','back'])cfg.clear[k]=revision<3&&input.clear[k]===2?5:input.clear[k];
+ cfg.tiers=input.tiers.map(t=>({height:t?.height,gap:migrateV2&&t?.gap===200?150:t?.gap}));
+ for(const [role]of ROLES){const p=input.profiles[role];if(!p||(!PRESETS[p.choice]&&p.choice!=='custom'))throw Error('型材参数格式不正确。');cfg.profiles[role]={choice:p.choice,b:p.b,h:p.h,t:p.t??cfg.profiles[role].t??2};if(PRESETS[p.choice])[cfg.profiles[role].b,cfg.profiles[role].h]=PRESETS[p.choice];if(revision<4&&(role==='fb'||role==='side')&&p.choice==='4080v'&&p.b===40&&p.h===80)cfg.profiles[role]={choice:'4040',b:40,h:40,t:p.t??2};}
+ for(const group of ['profiles','brackets'])for(const [key,value]of Object.entries(input.cost?.[group]??{})){
+  if(!/^\d+(?:_\d+)?x\d+(?:_\d+)?(?:-t\d+(?:_\d+)?)?$/.test(key)||!value||typeof value!=='object')continue;
+  const fields=group==='profiles'?['unit']:['unit','perEnd','quantity','name'],row={};
+  for(const field of fields)if(field in value)row[field]=field==='name'?String(value[field]):value[field];
+  cfg.cost[group][key]=row;
+ }
+ for(const [key,value]of Object.entries(input.cost?.extras??{})){
+  if(!Object.prototype.hasOwnProperty.call(cfg.cost.extras,key)||!value||typeof value!=='object')continue;
+  for(const field of ['unit','quantity','name'])if(field in value)cfg.cost.extras[key][field]=field==='name'?String(value[field]):value[field];
+ }
+ if(revision<4){const b=cfg.cost.brackets['40x40']??(cfg.cost.brackets['40x40']={});if(b.perEnd===undefined||b.perEnd===1)b.perEnd=2;if(!b.name||b.name==='4040 梁用角码')b.name='4040 加强角码';}
+ if(revision<5){
+  const p40=cfg.cost.profiles['40x40']??(cfg.cost.profiles['40x40']={}),p80=cfg.cost.profiles['40x80']??(cfg.cost.profiles['40x80']={});if(p40.unit===undefined||p40.unit===null)p40.unit=40;if(p80.unit===undefined||p80.unit===null)p80.unit=80;
+  const b40=cfg.cost.brackets['40x40']??(cfg.cost.brackets['40x40']={}),b80=cfg.cost.brackets['40x80']??(cfg.cost.brackets['40x80']={});if(b40.unit===undefined||b40.unit===null)b40.unit=5;if(b40.perEnd===undefined)b40.perEnd=2;if(!b40.name)b40.name='4040 加强角码';if(b80.unit===undefined||b80.unit===null)b80.unit=8;if(b80.perEnd===undefined)b80.perEnd=2;if(!b80.name)b80.name='4080 加强角码';
+ }
+ if(revision<7){
+  const wasDefault4040=ROLES.every(([role])=>{const p=input.profiles?.[role];return p?.choice==='4040'&&p.b===40&&p.h===40&&p.t===2;});
+  const wasDefaultPrice=input.cost?.profiles?.['40x40']?.unit===40;
+  if(wasDefault4040&&wasDefaultPrice){
+   for(const [role]of ROLES)cfg.profiles[role]={choice:'4040',b:40,h:40,t:JLC.profile.wall};
+   delete cfg.cost.profiles['40x40'];cfg.cost.profiles[JLC.profile.key]={unit:JLC.profile.unitWithTax};
+   const bracket=cfg.cost.brackets['40x40']??(cfg.cost.brackets['40x40']={});
+   if(bracket.unit===5)bracket.unit=JLC.bracket.unit;
+   if(!bracket.name||bracket.name==='4040 加强角码')bracket.name=JLC.bracket.code+'（候选）';
+  }
+ }
+ if(revision<8&&cfg.cost.profiles[JLC.profile.key]?.unit===52.93)cfg.cost.profiles[JLC.profile.key].unit=JLC.profile.unitWithTax;
+ if(revision<10){
+  if(input.name==='三层无框玻璃龟缸架 · 顶部开放')cfg.name=INITIAL.name;
+  const oldThreeTierDefault=input.tierCount===3&&input.tiers.length===3&&input.tiers.every(t=>t?.height===350&&t?.gap===150);
+  if(oldThreeTierDefault){cfg.tierCount=4;while(cfg.tiers.length<4)cfg.tiers.push(clone(INITIAL.tiers.at(-1)));}
+  if(input.legClear===32)cfg.legClear=0;
+  if(input.footExposed===118)cfg.footExposed=120;
+  if(input.boardThickness===18)cfg.boardThickness=0;
+  if(input.matThickness===5)cfg.matThickness=0;
+  if(cfg.cost.profiles[JLC.profile.key]?.unit===52.96)cfg.cost.profiles[JLC.profile.key].unit=JLC.profile.unitWithTax;
+ }
+ if(revision<11){
+  const oldCommonDefault=['left','right','front','back'].every(k=>input.clear?.[k]===5);
+  const oldTopDefault=['left','right','front','back'].every(k=>input.topTank?.clear?.[k]===5);
+  if(oldCommonDefault)for(const k of ['left','right','front','back'])cfg.clear[k]=7.5;
+  if(oldTopDefault)for(const k of ['left','right','front','back'])cfg.topTank.clear[k]=7.5;
+ }
+ if(Number.isInteger(cfg.tierCount)&&cfg.tierCount>0)while(cfg.tiers.length<cfg.tierCount)cfg.tiers.push(clone(INITIAL.tiers.at(-1)));
+ return cfg;
+}
+
+function buildProfileStructure(m){
+ const members=[],rows=[];
+ const addRow=(id,name,role,profile,length,orientation,specs)=>{
+  if(!specs.length||length<=0)return;
+  const ids=[];
+  specs.forEach((spec,index)=>{const memberId=/^[A-Z]$/.test(id)?`${id}${index+1}`:`${id}-${index+1}`;ids.push(memberId);members.push({id:memberId,rowId:id,role,position:spec.position,profile:{...profile},length,x:spec.x,y:spec.y,z:spec.z,w:spec.w,d:spec.d,h:spec.h,axis:spec.axis??'x',tier:spec.tier??-1,connectAt:spec.connectAt??['start','end']});});
+  rows.push({id,name,role,profile:{...profile},length,qty:specs.length,orientation,ids,connectionEnds:specs.reduce((sum,spec)=>sum+(spec.connectAt??['start','end']).length,0)});
+ };
+ const p=m.p,corners=[[0,0,'左前'],[m.W-p.post.b,0,'右前'],[0,m.D-p.post.h,'左后'],[m.W-p.post.b,m.D-p.post.h,'右后']];
+ if(m.cfg.jointLayout==='continuous'){
+  addRow('A','贯通立柱','post',p.post,m.column,'左右 × 前后',corners.map(([x,y,label])=>({position:`${label}贯通立柱`,x,y,z:m.cfg.footExposed,w:p.post.b,d:p.post.h,h:m.column,axis:'z',connectAt:[]})));
+ }else{
+  if(m.cfg.legClear>0)addRow('G','底部支腿段','post',p.post,m.cfg.legClear,'层框下承压',corners.map(([x,y,label])=>({position:`${label}底部支腿段`,x,y,z:m.cfg.footExposed,w:p.post.b,d:p.post.h,h:m.cfg.legClear,axis:'z',connectAt:['end']})));
+  for(let i=0;i<m.levels.length-1;i++){
+   const z=m.levels[i].frameTop,length=m.levels[i+1].frameBottom-z;
+   addRow(`A${i+1}`,`第 ${i+1} 层至第 ${i+2} 层立柱段`,'post',p.post,length,'立柱压在下层框顶',corners.map(([x,y,label])=>({position:`第 ${i+1}–${i+2} 层 · ${label}立柱段`,x,y,z,w:p.post.b,d:p.post.h,h:length,axis:'z',connectAt:['start','end']})));
+  }
+  if(m.cfg.topMode==='framed'){
+   const z=m.levels.at(-1).frameTop,length=m.topBottom-z;
+   addRow('H','顶层至封框立柱段','post',p.post,length,'顶部封框下承压',corners.map(([x,y,label])=>({position:`顶层至封框 · ${label}立柱段`,x,y,z,w:p.post.b,d:p.post.h,h:length,axis:'z',connectAt:['start','end']})));
+  }
+ }
+ addRow('B','各层前后主梁','fb',p.fb,m.frontLength,'前后宽 × 高',m.levels.flatMap(level=>[
+  {position:`第 ${level.index} 层 · 前梁`,x:m.frontX,y:0,z:level.fbBottom,w:m.frontLength,d:p.fb.b,h:p.fb.h,tier:level.index-1},
+  {position:`第 ${level.index} 层 · 后梁`,x:m.frontX,y:m.D-p.fb.b,z:level.fbBottom,w:m.frontLength,d:p.fb.b,h:p.fb.h,tier:level.index-1}
+ ]));
+ addRow('C','各层左右连接梁','side',p.side,m.sideLength,'左右宽 × 高',m.levels.flatMap(level=>[
+  {position:`第 ${level.index} 层 · 左梁`,x:0,y:m.sideY,z:level.sideBottom,w:p.side.b,d:m.sideLength,h:p.side.h,axis:'y',tier:level.index-1},
+  {position:`第 ${level.index} 层 · 右梁`,x:m.W-p.side.b,y:m.sideY,z:level.sideBottom,w:p.side.b,d:m.sideLength,h:p.side.h,axis:'y',tier:level.index-1}
+ ]));
+ addRow('F','各层中间托梁','middle',p.middle,m.middleLength,'前后宽 × 高',m.levels.flatMap(level=>m.middleYs.map((y,index)=>({position:`第 ${level.index} 层 · 中梁 ${index+1}（从前往后）`,x:m.middleX,y,z:level.middleBottom,w:m.middleLength,d:p.middle.b,h:p.middle.h,tier:level.index-1}))));
+ if(m.cfg.topMode==='framed'){
+  addRow('D','顶部前后封框','top',p.top,m.topFrontLength,'前后宽 × 高',[
+   {position:'顶部前杆',x:m.topFrontX,y:0,z:m.topBottom,w:m.topFrontLength,d:p.top.b,h:p.top.h},
+   {position:'顶部后杆',x:m.topFrontX,y:m.D-p.top.b,z:m.topBottom,w:m.topFrontLength,d:p.top.b,h:p.top.h}
+  ]);
+  addRow('E','顶部左右封框','top',p.top,m.topSideLength,'左右宽 × 高',[
+   {position:'顶部左杆',x:0,y:m.topSideY,z:m.topBottom,w:p.top.b,d:m.topSideLength,h:p.top.h,axis:'y'},
+   {position:'顶部右杆',x:m.W-p.top.b,y:m.topSideY,z:m.topBottom,w:p.top.b,d:m.topSideLength,h:p.top.h,axis:'y'}
+  ]);
+ }
+ return {members,rows,pieces:members.map(part=>({id:part.id,position:part.position,profile:{...part.profile},length:part.length}))};
+}
+function connectionUsage(m){
+ const counts={angle:0,endTap:0,throughBolt:0,anchor:0};
+ for(const member of m.profileMembers){const ends=member.connectAt?.length??0;if(!ends)continue;counts[connectionMethodForRole(m.cfg,member.role)]+=ends;}
+ return counts;
+}
+function connectionGroupUsage(m){
+ const counts={outer:0,middle:0};
+ for(const member of m.profileMembers){const ends=member.connectAt?.length??0;if(!ends)continue;counts[member.role==='middle'?'middle':'outer']+=ends;}
+ return counts;
+}
+const rowCodeLabel=row=>`${row.id} × ${row.qty}`;
+
+function calculate(cfg){
+ const errors=[],warnings=[],badFields=[],open=cfg.topMode==='open';
+ const check=(path,label,{integer=false,positive=false}={})=>{const n=readPath(cfg,path),ok=typeof n==='number'&&Number.isFinite(n)&&(positive?n>0:n>=0)&&(!integer||Number.isInteger(n));if(!ok){errors.push(`${label}应为${integer?'整数':'有效数字'}，并且${positive?'大于 0':'不小于 0'}。`);badFields.push(path);}};
+ check('tierCount','层数',{integer:true,positive:true});check('middleCount','中间托梁根数',{integer:true});check('legClear','脚轮顶至底层梁下净高');check('footExposed','福马轮组件安装高度');check('boardThickness','刚性承托板厚度');check('matThickness','缓冲垫厚度');check('casterCapacity','单只福马轮额定承载');
+ check('procurement.stockLength','原料定尺长度',{positive:true});check('procurement.sawKerf','切割锯缝');check('procurement.endTrim','每端修整余量');
+ if(!['stock','net'].includes(cfg.procurement.costBasis)){errors.push('型材预算计价方式无效。');badFields.push('procurement.costBasis');}
+ if(Number.isFinite(cfg.procurement.stockLength)&&Number.isFinite(cfg.procurement.endTrim)&&cfg.procurement.stockLength<=2*cfg.procurement.endTrim){errors.push('原料定尺长度必须大于两端修整余量之和。');badFields.push('procurement.stockLength','procurement.endTrim');}
+ const tierCountOk=Number.isInteger(cfg.tierCount)&&cfg.tierCount>0,lowerCount=tierCountOk?(open?Math.max(0,cfg.tierCount-1):cfg.tierCount):0,usesCommon=!open||lowerCount>0;
+ if(usesCommon){check('tankWidth','常规缸外宽',{positive:true});check('tankDepth','常规缸外深',{positive:true});for(const [key,label]of [['left','常规缸左余量'],['right','常规缸右余量'],['front','常规缸前余量'],['back','常规缸后余量']])check('clear.'+key,label);}
+ if(open){check('topTank.width','顶部缸外宽',{positive:true});check('topTank.depth','顶部缸外深',{positive:true});check('topTank.height','顶部缸外高',{positive:true});for(const [key,label]of [['left','顶部缸左余量'],['right','顶部缸右余量'],['front','顶部缸前余量'],['back','顶部缸后余量']])check('topTank.clear.'+key,label);}
+ if(cfg.footExposed>0&&!String(cfg.casterModel??'').trim()){errors.push('福马轮安装高度大于 0 时，请填写型号说明。');badFields.push('casterModel');}
+ if(cfg.footExposed>0&&cfg.casterCapacity<=0){errors.push('福马轮安装高度大于 0 时，单只额定承载必须大于 0。');badFields.push('casterCapacity');}
+ const profileRoles=ROLES.filter(([role])=>role!=='top'||!open);
+ for(const [role,label]of profileRoles){check(`profiles.${role}.b`,label+'水平尺寸',{positive:true});check(`profiles.${role}.h`,label+(role==='post'?'前后深度':'高度'),{positive:true});check(`profiles.${role}.t`,label+'名义壁厚',{positive:true});}
+ for(const [role,label]of profileRoles){const p=cfg.profiles[role];if([p.b,p.h,p.t].every(Number.isFinite)&&p.t*2>=Math.min(p.b,p.h)){errors.push(`${label}名义壁厚必须小于截面短边的一半。`);badFields.push(`profiles.${role}.t`);}}
+ if(tierCountOk)for(let i=0;i<cfg.tierCount;i++){const isOpenTop=open&&i===cfg.tierCount-1;if(!isOpenTop)check(`tiers.${i}.height`,`第 ${i+1} 层缸高`,{positive:true});if(!isOpenTop)check(`tiers.${i}.gap`,`第 ${i+1} 层操作净空`);}
+ if(errors.length)return {valid:false,errors,warnings,badFields};
+ const p=cfg.profiles,pc=p.post,fb=p.fb,side=p.side,mid=p.middle,top=p.top,c=cfg.clear,tc=cfg.topTank.clear,stacked=cfg.jointLayout==='stacked';
+ const lowerReqW=usesCommon?cfg.tankWidth+c.left+c.right+2*pc.b:0,lowerReqD=usesCommon?cfg.tankDepth+c.front+c.back:0;
+ const topReqW=open?cfg.topTank.width+tc.left+tc.right:0,topReqD=open?cfg.topTank.depth+tc.front+tc.back:0;
+ const W=open?Math.max(lowerReqW,topReqW):lowerReqW,D=open?Math.max(lowerReqD,topReqD):lowerReqD;
+ const lowerPlacement=usesCommon?{tankX:pc.b+c.left+(W-lowerReqW)/2,tankY:c.front+(D-lowerReqD)/2,tankWidth:cfg.tankWidth,tankDepth:cfg.tankDepth,basis:'立柱内侧'}:null;
+ if(lowerPlacement)lowerPlacement.clear={left:lowerPlacement.tankX-pc.b,right:W-pc.b-lowerPlacement.tankX-lowerPlacement.tankWidth,front:lowerPlacement.tankY,back:D-lowerPlacement.tankY-lowerPlacement.tankDepth};
+ const topPlacement=open?{tankX:tc.left+(W-topReqW)/2,tankY:tc.front+(D-topReqD)/2,tankWidth:cfg.topTank.width,tankDepth:cfg.topTank.depth,basis:'架体外沿'}:null;
+ if(topPlacement)topPlacement.clear={left:topPlacement.tankX,right:W-topPlacement.tankX-topPlacement.tankWidth,front:topPlacement.tankY,back:D-topPlacement.tankY-topPlacement.tankDepth};
+ const frontX=stacked?0:pc.b,sideY=stacked?fb.b:pc.h,middleX=side.b;
+ const frontLength=stacked?W:W-2*pc.b,sideLength=stacked?D-2*fb.b:D-2*pc.h,middleLength=W-2*side.b;
+ const topFrontX=stacked?0:pc.b,topSideY=stacked?top.b:pc.h,topFrontLength=stacked?W:W-2*pc.b,topSideLength=stacked?D-2*top.b:D-2*pc.h;
+ const frameHeight=Math.max(fb.h,side.h,cfg.middleCount?mid.h:0),zoneStart=stacked?fb.b:Math.max(fb.b,pc.h),zoneEnd=D-zoneStart;
+ const middleGap=(zoneEnd-zoneStart-cfg.middleCount*mid.b)/(cfg.middleCount+1);
+ if(![W,D,frontLength,sideLength,middleLength,topFrontLength,topSideLength,frameHeight,zoneStart,zoneEnd,middleGap].every(Number.isFinite)){errors.push('参数组合后的几何尺寸超出浏览器可计算范围。');badFields.push(open?'topTank.width':'tankWidth',open?'topTank.depth':'tankDepth');}
+ if(frontLength<=0){errors.push('架体宽度不足以布置前后梁；请增大缸宽或减小立柱左右尺寸。');badFields.push(open?'topTank.width':'tankWidth','profiles.post.b');}
+ if(sideLength<=0){errors.push(stacked?'架体深度不足以让侧梁装在前后梁之间；请增大缸深或减小前后梁水平宽度。':'架体深度不足以容纳前后立柱；请增大缸深或减小立柱前后尺寸。');badFields.push(open?'topTank.depth':'tankDepth',stacked?'profiles.fb.b':'profiles.post.h');}
+ if(middleLength<=0){errors.push('左右连接梁之间没有中梁安装空间；请增大缸宽或减小侧梁水平宽度。');badFields.push(open?'topTank.width':'tankWidth','profiles.side.b');}
+ if(2*fb.b>=D){errors.push('前后主梁在深度方向相交；请减小主梁宽度或增大缸深。');badFields.push('profiles.fb.b',open?'topTank.depth':'tankDepth');}
+ for(const [placement,label,prefix]of [[lowerPlacement,'常规缸','clear'],[topPlacement,'顶部缸','topTank.clear']])if(placement){if(placement.clear.front>=fb.b){errors.push(`${label}实际前余量 ${fmt(placement.clear.front)} mm 不小于前梁顶部宽 ${fmt(fb.b)} mm，承托面搭不到前梁。`);badFields.push(prefix+'.front');}if(placement.clear.back>=fb.b){errors.push(`${label}实际后余量 ${fmt(placement.clear.back)} mm 不小于后梁顶部宽 ${fmt(fb.b)} mm，承托面搭不到后梁。`);badFields.push(prefix+'.back');}}
+ if(!stacked&&fb.b>pc.h&&side.b>pc.b){errors.push('前后梁和侧梁在角部相交：两者都比立柱对应尺寸更宽。请增大立柱或缩小其中一种横梁截面。');badFields.push('profiles.fb.b','profiles.side.b');}
+ if(!open&&!stacked&&top.b>pc.b&&top.b>pc.h){errors.push('顶部前后杆与侧杆在角部相交；请增大立柱截面或减小顶部型材水平宽度。');badFields.push('profiles.top.b');}
+ if(!open&&(topFrontLength<=0||topSideLength<=0||2*top.b>=W||2*top.b>=D)){errors.push('顶部封框尺寸不足；请减小顶部型材水平宽度或增大架体尺寸。');badFields.push('profiles.top.b');}
+ if(cfg.middleCount&&middleGap<=0){errors.push('中间托梁过多或过宽，深度方向放不下；请减小数量、截面宽度或增大缸深。');badFields.push('middleCount','profiles.middle.b');}
+ if(errors.length)return {valid:false,errors,warnings,badFields};
+ const middleYs=Array.from({length:cfg.middleCount},(_,i)=>zoneStart+middleGap+i*(mid.b+middleGap));
+ const bands=[{y:0,b:fb.b,kind:'fb',label:'前梁'},...middleYs.map((y,i)=>({y,b:mid.b,kind:'middle',label:`中梁 ${i+1}`})),{y:D-fb.b,b:fb.b,kind:'fb',label:'后梁'}];
+ const clearSpans=bands.slice(0,-1).map((a,i)=>({from:a.y+a.b,to:bands[i+1].y,gap:bands[i+1].y-a.y-a.b}));
+ const baseHeight=cfg.footExposed+cfg.legClear,supportHeight=cfg.boardThickness+cfg.matThickness;let frameBottom=baseHeight;
+ const levels=Array.from({length:cfg.tierCount},(_,i)=>{const isTop=i===cfg.tierCount-1,isOpenTop=open&&isTop,tier=cfg.tiers[i]??{},placement=isOpenTop?topPlacement:lowerPlacement,height=isOpenTop?cfg.topTank.height:tier.height,gap=isOpenTop?null:tier.gap,frameTop=frameBottom+frameHeight,boardBottom=frameTop,boardTop=boardBottom+cfg.boardThickness,matTop=boardTop+cfg.matThickness,tankBottom=matTop,tankRim=tankBottom+height;const row={index:i+1,isTop,isOpenTop,height,gap,...placement,frameBottom,frameTop,boardBottom,boardTop,matTop,tankBottom,tankRim,fbBottom:frameTop-fb.h,sideBottom:frameTop-side.h,middleBottom:cfg.middleCount?frameTop-mid.h:null};frameBottom=tankRim+(gap??0);return row;});
+ const highest=levels.at(-1),topBottom=open?null:frameBottom,rackTop=open?highest.frameTop:topBottom+top.h,H=open?Math.max(rackTop,highest.tankRim):rackTop,column=rackTop-cfg.footExposed,withoutTopTankHeight=open?highest.tankBottom:null;
+ if(![rackTop,H,column,...levels.flatMap(l=>[l.frameBottom,l.frameTop,l.tankBottom,l.tankRim])].every(Number.isFinite)){errors.push('参数组合后的总高超出浏览器可计算范围。');badFields.push('tierCount');return {valid:false,errors,warnings,badFields};}
+ const geometry={cfg,p,W,D,H,column,rackTop,withoutTopTankHeight,frameHeight,supportHeight,baseHeight,frontLength,sideLength,middleLength,topFrontLength,topSideLength,frontX,sideY,middleX,topFrontX,topSideY,middleYs,bands,clearSpans,levels,topBottom};
+ const structure=buildProfileStructure(geometry),rows=structure.rows,pieces=structure.pieces,profileMembers=structure.members;
+ const materials={};for(const r of rows){const name=profileLabel(r.profile),key=stockKey(r.profile);if(!materials[key])materials[key]={key,name,profile:{...r.profile},length:0,count:0,roles:[]};if(!materials[key].roles.includes(r.role))materials[key].roles.push(r.role);materials[key].length+=r.length*r.qty;materials[key].count+=r.qty;}
+ const totalLength=rows.reduce((a,r)=>a+r.length*r.qty,0),totalCount=rows.reduce((a,r)=>a+r.qty,0),litres=levels.reduce((a,l)=>a+l.tankWidth*l.tankDepth*l.height,0)/1e6;
+ const designMass=litres+cfg.tierCount*40+70,requiredCasterCapacity=designMass*1.5/3,placements=[lowerPlacement,topPlacement].filter(Boolean);
+ const activeInputClear=[...(usesCommon?Object.values(c):[]),...(open?Object.values(tc):[])];if(activeInputClear.some(v=>v===0))warnings.push('有一侧余量为 0；名义尺寸可闭合，安装前仍需处理缸外形和型材公差。');
+ const minOverlap=Math.min(...placements.flatMap(item=>[fb.b-item.clear.front,fb.b-item.clear.back]));if(minOverlap<10)warnings.push('承托面与前后梁的最小搭接不足 10 mm，需按实际缸底承重点复核。');
+ if(cfg.middleCount===0)warnings.push(`未设置中间托梁，承托板在前后梁之间的净跨度达到 ${fmt(D-2*fb.b)} mm，不适用于当前玻璃缸方案。`);
+ else if(cfg.middleCount<2)warnings.push('玻璃缸整底承托方案建议每层至少设置 2 根中间托梁。');
+ if(cfg.boardThickness===0)warnings.push('当前未设置刚性承托板；玻璃缸能否直接由横梁承托，必须按缸底结构和厂家要求确认。');
+ else if(cfg.boardThickness<18)warnings.push('刚性承托板薄于默认 18 mm，需按板材实际强度和梁间净距复核挠度。');
+ const thinRoles=profileRoles.filter(([role])=>p[role].t<2).map(([,label])=>label);if(thinRoles.length)warnings.push(`${thinRoles.join('、')}名义壁厚低于建议的 2.0 mm；当前满水玻璃缸方案应改用有截面参数的标准型或重型并复核。`);
+ if(cfg.footExposed>0&&cfg.casterCapacity<requiredCasterCapacity)warnings.push(`按约 ${fmt(designMass)} kg 规划满载质量、3 只轮分担和 1.5 倍余量估算，每只福马轮建议不低于 ${Math.ceil(requiredCasterCapacity)} kg。`);
+ if(cfg.middleCount>0&&middleGap<15)warnings.push('中间托梁之间空间较小，请确认角码与紧固件安装位置。');
+ if(levels.some(l=>Number.isFinite(l.gap)&&l.gap<150))warnings.push('有层的操作净空小于 150 mm，请结合维护方式及灯具实际占位确认。');
+ if(H>3000)warnings.push('整架高度超过 3 m，维护方式、侧向稳定和墙体固定需专门设计。');
+ if(!stacked&&(fb.b>pc.h||side.b>pc.b||(!open&&top.b>Math.min(pc.b,pc.h))))warnings.push('部分横杆截面超出立柱端部对应宽度；几何未相交，连接件适配需单独深化。');
+ if(cfg.connections.outer!=='angle'||cfg.connections.middle!=='angle')warnings.push('当前选择了打孔或内置连接方式；孔径、攻丝规格、端距、扭矩和型材中心孔结构须按所购型材及连接件图纸确认。');
+ if(stacked)warnings.push('分段立柱方案按层框承压绘制；每个立柱段端面必须切平，并为侧向定位配置所选连接件。');
+ const postMembers=profileMembers.filter(part=>part.role==='post'),maxPostLength=postMembers.length?Math.max(...postMembers.map(part=>part.length)):0,postTotalLength=postMembers.reduce((sum,part)=>sum+part.length,0);
+ const result={valid:true,errors,warnings,badFields,...geometry,rows,pieces,profileMembers,materials,totalLength,totalCount,litres,designMass,requiredCasterCapacity,lowerCount,lowerReqW,lowerReqD,topReqW,topReqD,lowerPlacement,topPlacement,tankX:levels[0].tankX,tankY:levels[0].tankY,maxPostLength,postTotalLength,postCount:postMembers.length};
+ result.connectionCounts=connectionUsage(result);
+ result.connectionGroupCounts=connectionGroupUsage(result);
+ result.stockPlan=calculateStockPlan(result,cfg);
+ if(result.stockPlan.errors.length){errors.push(...result.stockPlan.errors);badFields.push('procurement.stockLength','procurement.sawKerf','procurement.endTrim');return {valid:false,errors,warnings,badFields};}
+ result.cost=calculateCosts(result,cfg);return result;
+}
+function drawingSvg(type,m,options={},prefix='main'){
+ const vw=1120,vh=760,o={tanks:true,dims:true,tier:0,...options},C={ink:'#254d47',muted:'#749080',line:'#78958a',frame:'#b9cbd1',edge:'#6d8c94',post:'#d3dfe2',mid:'#d1b780',midEdge:'#9b7a45',tank:'#c7e4ed',tankEdge:'#4f8498',deck:'#c59a63',deckEdge:'#8e673e',mat:'#6f8f75',caster:'#526662',gold:'#fbefd3'};
+ const visibleTop=visibleOutputHeight(m,o.tanks);
+ const R=(x,y,w,h,fill,stroke='none',extra='')=>`<rect x="${x}" y="${y}" width="${Math.max(0,w)}" height="${Math.max(0,h)}" fill="${fill}" stroke="${stroke}" ${extra}/>`;
+ const L=(x1,y1,x2,y2,stroke=C.line,width=1,extra='')=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${stroke}" stroke-width="${width}" ${extra}/>`;
+ const T=(x,y,t,size=15,extra='',color=C.ink)=>`<text x="${x}" y="${y}" font-size="${size}" fill="${color}" ${extra}>${escapeHtml(t)}</text>`;
+ const P=(pts,fill,stroke=C.edge,extra='')=>`<polygon points="${pts.map(p=>p.join(',')).join(' ')}" fill="${fill}" stroke="${stroke}" stroke-width="1" stroke-linejoin="round" ${extra}/>`;
+ function dim(a,b,label,offset=0){
+  if(!o.dims)return '';const dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy);if(len<1)return '';
+  const nx=-dy/len,ny=dx/len,aa=[a[0]+nx*offset,a[1]+ny*offset],bb=[b[0]+nx*offset,b[1]+ny*offset];
+  let s='';if(offset)s+=L(...a,aa[0]+nx*6,aa[1]+ny*6,C.line,.8)+L(...b,bb[0]+nx*6,bb[1]+ny*6,C.line,.8);
+  s+=L(...aa,...bb,C.line,1,`marker-start="url(#${prefix}-arrow)" marker-end="url(#${prefix}-arrow)"`);
+  const mx=(aa[0]+bb[0])/2,my=(aa[1]+bb[1])/2;let angle=Math.atan2(dy,dx)*180/Math.PI;if(angle>90)angle-=180;if(angle<-90)angle+=180;
+  const labelWidth=[...String(label)].reduce((sum,ch)=>sum+(/[^\x00-\xff]/.test(ch)?15:8),0)+14;
+  const lift=Math.abs(dy)>Math.abs(dx)?-13:-14;
+  s+=`<g transform="translate(${mx} ${my}) rotate(${angle})">${R(-labelWidth/2,lift-13,labelWidth,20,'#fcfefb')}${T(0,lift+1,label,14,'text-anchor="middle"')}</g>`;
+  return s;
+ }
+ const title=type==='plan'||type==='section'?`${VIEWS[type]} · 第 ${o.tier+1} 层`:VIEWS[type];
+ let s=R(0,0,vw,vh,'#fcfefb')+T(32,35,title,20,'font-weight="700"')+T(32,60,m.cfg.name.length>40?m.cfg.name.slice(0,40)+'…':m.cfg.name,12,'',C.muted)+T(vw-32,35,'单位：mm',12,'text-anchor="end"',C.muted)+T(vw-32,60,`${m.cfg.jointLayout==='continuous'?'贯通立柱':'分段立柱承压'} · ${o.tanks?'玻璃缸整底承托':'架体与承托结构'}`,12,'text-anchor="end"',C.muted);
+ const pc=m.p.post,fb=m.p.fb,side=m.p.side,mid=m.p.middle,top=m.p.top;
+ let projection=null;
+ if(type==='front'||type==='side'){
+  const front=type==='front',width=front?m.W:m.D,col=front?pc.b:pc.h,scale=Math.min((vw-420)/width,(vh-235)/visibleTop),x=vw*.44-width*scale/2,bottom=680,X=v=>x+v*scale,Y=z=>bottom-z*scale;
+  projection=(xx,yy,zz)=>[X(front?xx:yy),Y(zz)];
+  s+=L(X(-30),Y(0),X(width+30),Y(0),'#97aca0',1.4);
+   for(const level of m.levels){
+    const tankStart=front?level.tankX:level.tankY,tankW=front?level.tankWidth:level.tankDepth;
+   if(front){
+    s+=R(X(m.frontX),Y(level.frameTop),m.frontLength*scale,fb.h*scale,C.frame,C.edge,'stroke-width="1.1"');
+    if(fb.h*scale>14)s+=T(X(width/2),Y(level.frameTop-fb.h/2)+4,`B · ${profileLabel(fb)}`,12,'text-anchor="middle"');
+   }else{
+    for(const band of m.bands){const p=band.kind==='middle'?mid:fb;s+=R(X(band.y),Y(level.frameTop),band.b*scale,p.h*scale,band.kind==='middle'?C.mid:C.frame,band.kind==='middle'?C.midEdge:C.edge);}
+    s+=R(X(m.sideY),Y(level.frameTop),m.sideLength*scale,side.h*scale,'#e0e8e3',C.edge,'fill-opacity=".38" stroke-dasharray="4 3"');
+   }
+   if(m.cfg.boardThickness)s+=R(X(tankStart),Y(level.boardTop),tankW*scale,m.cfg.boardThickness*scale,C.deck,C.deckEdge,'data-part="support-board" stroke-width="1.1"');
+   if(m.cfg.matThickness)s+=R(X(tankStart),Y(level.matTop),tankW*scale,m.cfg.matThickness*scale,C.mat,'none','data-part="support-mat" fill-opacity=".75"');
+   if(o.tanks){
+    s+=R(X(tankStart),Y(level.tankRim),tankW*scale,level.height*scale,'#eef8fb',C.tankEdge,'stroke-width="1.3" fill-opacity=".78"');
+    s+=R(X(tankStart+1),Y(level.tankRim-Math.min(15,level.height*.1)),Math.max(0,tankW-2)*scale,(level.height-Math.min(15,level.height*.1)-1)*scale,C.tank,'none','fill-opacity=".48"');
+    if(level.height*scale>32)s+=T(X(tankStart+tankW/2),Y((level.tankBottom+level.tankRim)/2)+5,`第 ${level.index} 层玻璃缸 · 高 ${fmt(level.height)}`,Math.min(15,tankW*scale/13),'text-anchor="middle" font-weight="600"');
+   }
+    if(o.tanks&&o.dims&&Number.isFinite(level.gap)&&level.gap*scale>=18){s+=R(X(col),Y(level.tankRim+level.gap),(width-2*col)*scale,level.gap*scale,C.gold,'none','fill-opacity=".85"');s+=T(X(width/2),Y(level.tankRim+level.gap/2)+4,`操作 ${fmt(level.gap)}`,12,'text-anchor="middle"','#a47a35');}
+    if(o.dims){
+     const marks=o.tanks?[[level.tankRim,`缸口 +${fmt(level.tankRim)}`],...(level.height*scale>=36?[[level.tankBottom,`缸底 +${fmt(level.tankBottom)}`]]:[])]:[[level.frameTop,`第 ${level.index} 层梁顶 +${fmt(level.frameTop)}`]];
+     for(const [z,label]of marks){s+=L(X(width)+7,Y(z),X(width)+42,Y(z),'#94aa9a',1,'stroke-dasharray="3 3"')+T(X(width)+51,Y(z)+4,label,12);}
+   }
+  }
+  const visiblePosts=m.profileMembers.filter(part=>part.role==='post'&&(front?nearly(part.y,0):nearly(part.x,0)));
+  for(const part of visiblePosts){const start=front?part.x:part.y;s+=R(X(start),Y(part.z+part.h),col*scale,part.h*scale,C.post,C.edge,'stroke-width="1.1"')+L(X(start+col/2),Y(part.z+part.h-5),X(start+col/2),Y(part.z),'#f4f8f5',1);}
+  for(const xx of [0,width-col]){
+   const cx=X(xx+col/2),plateY=Y(m.cfg.footExposed),wheelY=Y(Math.max(20,m.cfg.footExposed*.28)),wheelR=Math.max(5,Math.min(8,24*scale)),plateHalf=Math.max(8,col*.7*scale);
+   if(m.cfg.footExposed)s+=`<g data-caster="front-${xx}" aria-label="福马轮">${R(cx-plateHalf,plateY,plateHalf*2,Math.max(3,5*scale),C.caster,'#324743','rx="1.5"')}${L(cx,plateY+3,cx,wheelY-wheelR,C.caster,Math.max(2,4*scale))}<circle cx="${cx}" cy="${wheelY}" r="${wheelR}" fill="#76908b" stroke="#324743" stroke-width="1.4"/>${R(cx-wheelR*.85,Y(0)-3,wheelR*1.7,3,'#415752')}</g>`;
+  }
+   if(m.cfg.topMode==='framed')s+=front?R(X(m.topFrontX),Y(m.H),m.topFrontLength*scale,top.h*scale,C.frame,C.edge):R(X(m.topSideY),Y(m.H),m.topSideLength*scale,top.h*scale,C.frame,C.edge);
+   s+=dim([X(0),Y(m.rackTop)],[X(width),Y(m.rackTop)],`${front?'外宽':'外深'} ${fmt(width)}`,-32);
+    s+=dim([X(0),Y(visibleTop)],[X(0),Y(0)],`${o.tanks?'总高':'架体高'} ${fmt(visibleTop)}`,82);
+    if(o.tanks&&m.cfg.topMode==='open')s+=dim([X(width),Y(m.withoutTopTankHeight)],[X(width),Y(0)],`不含顶缸 ${fmt(m.withoutTopTankHeight)}`,-190);
+   s+=dim([X(0),Y(m.rackTop)],[X(0),Y(m.cfg.footExposed)],`${m.cfg.jointLayout==='continuous'?'立柱':'分段区'} ${fmt(m.column)}`,134);
+  const splitX=X(0)-28,splitDim=(z1,z2,label)=>{const y1=Y(z1),y2=Y(z2);return L(X(0),y1,splitX+4,y1,C.line,.8)+L(X(0),y2,splitX+4,y2,C.line,.8)+L(splitX,y1,splitX,y2,C.line,1.2)+L(splitX-4,y1,splitX+4,y1,C.line,1.2)+L(splitX-4,y2,splitX+4,y2,C.line,1.2)+T(splitX-7,(y1+y2)/2+4,label,11,'text-anchor="end"');};
+  if(m.cfg.footExposed)s+=splitDim(0,m.cfg.footExposed,`轮高 ${fmt(m.cfg.footExposed)}`);
+  if(m.cfg.legClear)s+=splitDim(m.cfg.footExposed,m.baseHeight,`净高 ${fmt(m.cfg.legClear)}`);
+  s+=T(vw/2,734,front?`底脚 ${fmt(m.cfg.footExposed)} + ${fmt(m.cfg.legClear)} = 梁下 ${fmt(m.baseHeight)}；${m.cfg.boardThickness?fmt(m.cfg.boardThickness)+' mm 承托板':'不放承托板'} + ${fmt(m.cfg.matThickness)} mm 垫。`:o.tanks?`${m.cfg.boardThickness?'整面承托板':'玻璃缸底部'}落在前梁、后梁和 ${m.cfg.middleCount} 根中梁上。`:`承托层由前梁、后梁和 ${m.cfg.middleCount} 根中梁共同组成。`,12,'text-anchor="middle"',C.muted);
+ }
+  if(type==='plan'){
+   const level=m.levels[Math.min(o.tier,m.levels.length-1)],scale=Math.min((vw-360)/m.W,(vh-245)/m.D),x=vw*.45-m.W*scale/2,yt=145,X=v=>x+v*scale,Y=v=>yt+(m.D-v)*scale;
+  projection=(xx,yy,zz)=>[X(xx),Y(yy)];
+  const rp=(xx,yy,w,d,fill,edge=C.edge,extra='')=>R(X(xx),Y(yy+d),w*scale,d*scale,fill,edge,extra);
+  for(const xx of [0,m.W-pc.b])for(const yy of [0,m.D-pc.h])s+=rp(xx,yy,pc.b,pc.h,C.post);
+  for(const xx of [0,m.W-side.b])s+=rp(xx,m.sideY,side.b,m.sideLength,C.frame);
+  for(const band of m.bands){const isMid=band.kind==='middle',p=isMid?mid:fb,start=isMid?m.middleX:m.frontX,length=isMid?m.middleLength:m.frontLength;s+=rp(start,band.y,length,band.b,isMid?C.mid:C.frame,isMid?C.midEdge:C.edge);
+   const label=length*scale<180?band.label:band.label+' '+stockName(p)+' × '+fmt(length);s+=T(X(m.W/2),Y(band.y+band.b/2)+4,label,Math.max(9,Math.min(13,band.b*scale*.6)),'text-anchor="middle"');
+  }
+  if(m.sideLength*scale>160)for(const xx of [side.b/2,m.W-side.b/2])s+=T(X(xx),Y(m.D/2)+4,`C · ${stockName(side)} × ${fmt(m.sideLength)}`,12,`text-anchor="middle" transform="rotate(-90 ${X(xx)} ${Y(m.D/2)})"`);
+   if(m.cfg.boardThickness)s+=rp(level.tankX,level.tankY,level.tankWidth,level.tankDepth,C.deck,C.deckEdge,'data-part="support-board" fill-opacity=".26" stroke-width="1.3"');
+   if(m.cfg.matThickness)s+=rp(level.tankX,level.tankY,level.tankWidth,level.tankDepth,C.mat,'none','data-part="support-mat" fill-opacity=".1"');
+   if(o.tanks)s+=rp(level.tankX,level.tankY,level.tankWidth,level.tankDepth,'none',C.tankEdge,'data-part="glass-tank" stroke-width="1.8" stroke-dasharray="6 4"');
+  s+=dim([X(0),Y(m.D)],[X(m.W),Y(m.D)],`外宽 ${fmt(m.W)}`,-32);
+  s+=dim([X(0),Y(m.D)],[X(0),Y(0)],`外深 ${fmt(m.D)}`,60);
+  if(m.cfg.middleCount)s+=dim([X(m.middleX),Y(0)],[X(m.middleX+m.middleLength),Y(0)],`中梁下料 ${fmt(m.middleLength)}`,35);
+  for(const gap of m.clearSpans)if(gap.gap*scale>28)s+=dim([X(m.W),Y(gap.to)],[X(m.W),Y(gap.from)],fmt(gap.gap),-54);
+   s+=T(vw/2,714,o.tanks?`前方 ↓　实际余量：前 ${fmt(level.clear.front)} / 后 ${fmt(level.clear.back)} / 左 ${fmt(level.clear.left)} / 右 ${fmt(level.clear.right)}（${level.basis}）`:'前方 ↓　当前为架体视图，龟缸边界与四边余量已隐藏。',12,'text-anchor="middle"');
+  s+=T(vw/2,738,o.tanks?(m.cfg.boardThickness?`蓝色虚线为玻璃缸边界；棕色为 ${fmt(m.cfg.boardThickness)} mm 整面承托板。`:'蓝色虚线为玻璃缸边界；当前不放刚性承托板。'):(m.cfg.boardThickness?`棕色区域为 ${fmt(m.cfg.boardThickness)} mm 整面承托板。`:'仅显示立柱、主梁、侧梁和中间托梁。'),12,'text-anchor="middle"',C.muted);
+ }
+ if(type==='section'){
+  const level=m.levels[Math.min(o.tier,m.levels.length-1)],sectionHeight=(o.tanks?level.height:0)+m.frameHeight+m.supportHeight,scale=Math.min((vw-340)/m.D,430/Math.max(1,sectionHeight)),x=vw*.44-m.D*scale/2,sectionBase=o.tanks?638:455,Y=z=>sectionBase-m.frameHeight*scale-z*scale,X=v=>x+v*scale;
+  projection=(xx,yy,zz)=>[X(yy),Y(zz-level.frameTop)];
+  for(const band of m.bands){const p=band.kind==='middle'?mid:fb;s+=R(X(band.y),Y(0),band.b*scale,p.h*scale,band.kind==='middle'?C.mid:C.frame,band.kind==='middle'?C.midEdge:C.edge,`data-part="${band.kind}" data-height="${p.h}" data-top="${level.frameTop}" data-bottom="${level.frameTop-p.h}"`);
+   s+=T(X(band.y+band.b/2),Y(-p.h)+19,band.kind==='middle'?'中梁':'主梁',11,'text-anchor="middle"');
+  }
+   if(m.cfg.boardThickness)s+=R(X(level.tankY),Y(m.cfg.boardThickness),level.tankDepth*scale,m.cfg.boardThickness*scale,C.deck,C.deckEdge,'data-part="support-board" stroke-width="1.3"');
+   if(m.cfg.matThickness)s+=R(X(level.tankY),Y(m.supportHeight),level.tankDepth*scale,m.cfg.matThickness*scale,C.mat,'none','data-part="support-mat" fill-opacity=".75"');
+   if(o.tanks){s+=R(X(level.tankY),Y(m.supportHeight+level.height),level.tankDepth*scale,level.height*scale,'#eef8fb',C.tankEdge,'data-part="glass-tank" stroke-width="1.5" fill-opacity=".78"');if(level.height*scale>40){s+=T(X(level.tankY+level.tankDepth/2),Y(m.supportHeight+level.height/2),`第 ${level.index} 层玻璃龟缸 · ${fmt(level.tankWidth)}×${fmt(level.tankDepth)}×${fmt(level.height)}`,18,'text-anchor="middle" font-weight="600"');s+=T(X(level.tankY+level.tankDepth/2),Y(m.supportHeight+level.height/2)+26,'整面刚性承托 · 梁间跨度由板件跨越',13,'text-anchor="middle"',C.muted);}}
+  s+=L(X(0)-15,Y(0),X(m.D)+22,Y(0),'#668e7a',1,'stroke-dasharray="4 3"');
+  s+=T(X(m.D)+29,Y(0)+23,'梁顶齐平',12,'',C.muted);
+   if(m.cfg.boardThickness)s+=L(X(level.tankY+level.tankDepth),Y(m.cfg.boardThickness/2),X(m.D)+24,Y(m.cfg.boardThickness/2),C.deckEdge,1)+T(X(m.D)+29,Y(m.cfg.boardThickness/2)+4,`承托板 ${fmt(m.cfg.boardThickness)}`,11,'',C.deckEdge);
+   if(m.cfg.matThickness)s+=L(X(level.tankY+level.tankDepth),Y(m.cfg.boardThickness+m.cfg.matThickness/2),X(m.D)+24,Y(m.cfg.boardThickness+m.cfg.matThickness/2),C.mat,1)+T(X(m.D)+29,Y(m.cfg.boardThickness+m.cfg.matThickness/2)+4,`垫层 ${fmt(m.cfg.matThickness)}`,11,'',C.mat);
+  const sectionTop=m.supportHeight+(o.tanks?level.height:0);
+  s+=dim([X(0),Y(sectionTop)],[X(m.D),Y(sectionTop)],`外深 ${fmt(m.D)}`,-34);
+   if(o.tanks)s+=dim([X(level.tankY),Y(m.supportHeight+level.height)],[X(level.tankY),Y(m.supportHeight)],`缸高 ${fmt(level.height)}`,54);
+  for(const gap of m.clearSpans)if(gap.gap*scale>30)s+=dim([X(gap.from),Y(-m.frameHeight)],[X(gap.to),Y(-m.frameHeight)],fmt(gap.gap),48);
+  s+=T(vw/2,719,`前后主梁 ${profileLabel(fb)} · 中间托梁 ${profileLabel(mid)} · 两侧连接梁 ${profileLabel(side)}`,12,'text-anchor="middle"');
+  s+=T(vw/2,742,o.tanks?`本层梁顶 +${fmt(level.frameTop)}；承托板顶 +${fmt(level.boardTop)}；玻璃缸底 +${fmt(level.tankBottom)}。`:`本层梁顶 +${fmt(level.frameTop)}；承托板顶 +${fmt(level.boardTop)}；龟缸已隐藏。`,12,'text-anchor="middle"',C.muted);
+ }
+ if(type==='iso'){
+  const a=Math.PI/5.1,co=Math.cos(a),si=Math.sin(a),tilt=.4,raw=(x,y,z)=>[co*x-si*y,-tilt*(si*x+co*y)-z];
+  const corners=[];for(const xx of [0,m.W])for(const yy of [0,m.D])for(const zz of [0,visibleTop])corners.push(raw(xx,yy,zz));
+  const minX=Math.min(...corners.map(p=>p[0])),maxX=Math.max(...corners.map(p=>p[0])),minY=Math.min(...corners.map(p=>p[1])),maxY=Math.max(...corners.map(p=>p[1]));
+   const sc=Math.min((vw-300)/(maxX-minX),(vh-215)/(maxY-minY)),dx=vw/2-(minX+maxX)*sc/2,dy=374-(minY+maxY)*sc/2,project=(x,y,z)=>{const r=raw(x,y,z);return [dx+r[0]*sc,dy+r[1]*sc];};
+  projection=project;
+  const faces=[];
+  function box(x,y,z,w,d,h,kind){
+   if(h<=0||w<=0||d<=0)return;const shade=kind==='tank'?['#b7d9e4','#9fcbd9','#e6f4f7']:kind==='deck'?['#a87843','#c09561','#ddbd8d']:kind==='mat'?['#5e7d67','#76937d','#9ab09d']:kind==='middle'?['#b79c69','#d1b983','#e7d6b0']:['#acc1c8','#c3d3d7','#e0e9e8'];
+   const arr=[[[x,y,z],[x,y+d,z],[x,y+d,z+h],[x,y,z+h]],[[x,y,z],[x+w,y,z],[x+w,y,z+h],[x,y,z+h]],[[x,y,z+h],[x+w,y,z+h],[x+w,y+d,z+h],[x,y+d,z+h]]];
+   arr.forEach((pts,i)=>{const center=pts.reduce((a,p)=>a.map((v,k)=>v+p[k]/4),[0,0,0]);faces.push({pts:pts.map(p=>project(...p)),fill:shade[i],kind,depth:-si*center[0]-co*center[1]+tilt*center[2]});});
+  }
+  for(const member of m.profileMembers)box(member.x,member.y,member.z,member.w,member.d,member.h,member.role==='middle'?'middle':'frame');
+  for(const level of m.levels){
+    box(level.tankX,level.tankY,level.boardBottom,level.tankWidth,level.tankDepth,m.cfg.boardThickness,'deck');
+    if(m.cfg.matThickness)box(level.tankX,level.tankY,level.boardTop,level.tankWidth,level.tankDepth,m.cfg.matThickness,'mat');
+    if(o.tanks)box(level.tankX,level.tankY,level.tankBottom,level.tankWidth,level.tankDepth,level.height,'tank');
+  }
+  s+=P([[0,0,0],[m.W,0,0],[m.W,m.D,0],[0,m.D,0]].map(p=>project(...p)),'#e7eee4','#d5e1d4');
+  const casterMark=(xx,yy,rear=false)=>{
+   const topPoint=project(xx,yy,m.cfg.footExposed),wheelPoint=project(xx,yy,Math.max(20,m.cfg.footExposed*.28)),groundPoint=project(xx,yy,0),wheelR=Math.max(5,Math.min(9,27*sc));
+   return `<g data-caster="${xx}-${yy}" aria-label="${escapeHtml(m.cfg.casterModel)}"${rear?' opacity=".5"':''}><line x1="${topPoint[0]}" y1="${topPoint[1]}" x2="${wheelPoint[0]}" y2="${wheelPoint[1]-wheelR}" stroke="${C.caster}" stroke-width="${Math.max(2,4*sc)}"/><line x1="${topPoint[0]-8}" y1="${topPoint[1]}" x2="${topPoint[0]+8}" y2="${topPoint[1]}" stroke="#324743" stroke-width="4" stroke-linecap="round"/><circle cx="${wheelPoint[0]}" cy="${wheelPoint[1]}" r="${wheelR}" fill="#78918c" stroke="#324743" stroke-width="1.5"/><line x1="${groundPoint[0]-7}" y1="${groundPoint[1]}" x2="${groundPoint[0]+7}" y2="${groundPoint[1]}" stroke="#324743" stroke-width="3" stroke-linecap="round"/></g>`;
+  };
+  if(m.cfg.footExposed)for(const xx of [pc.b/2,m.W-pc.b/2])s+=casterMark(xx,m.D-pc.h/2,true);
+  faces.sort((a,b)=>a.depth-b.depth).forEach(f=>{const stroke=f.kind==='tank'?C.tankEdge:f.kind==='deck'?C.deckEdge:f.kind==='mat'?C.mat:f.kind==='middle'?C.midEdge:C.edge,opacity=f.kind==='tank'?'fill-opacity=".66" stroke-opacity=".8"':f.kind==='mat'?'fill-opacity=".78"':'';s+=P(f.pts,f.fill,stroke,`data-part="${f.kind}" ${opacity}`);});
+  if(m.cfg.footExposed)for(const xx of [pc.b/2,m.W-pc.b/2])s+=casterMark(xx,pc.h/2);
+  if(o.brackets){
+   const bracketRows=new Map(m.cost.brackets.map(r=>[r.key,r]));
+   const members=m.profileMembers.filter(member=>(member.connectAt?.length??0)>0);
+   const connectionMark=(point,method,key,count)=>{
+    const [px,py]=project(...point);let marks='';
+    if(method==='angle'){
+     const copies=Math.min(4,Math.max(1,count));for(let i=0;i<copies;i++){const shift=(i-(copies-1)/2)*4;marks+=`<path d="M ${px-5+shift} ${py+5} V ${py-5} H ${px+5+shift}" fill="none" stroke="#df7c24" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${px-5+shift}" cy="${py-5}" r="1.7" fill="#fff8e9" stroke="#b95e18" stroke-width="1"/>`;}
+     if(count>4)marks+=T(px+8,py-7,'×'+count,8,'font-weight="700"','#b95e18');
+    }else if(method==='endTap')marks=`<circle cx="${px}" cy="${py}" r="5.2" fill="#fff8e9" stroke="#df7c24" stroke-width="2"/><path d="M ${px-3.2} ${py} H ${px+3.2} M ${px} ${py-3.2} V ${py+3.2}" stroke="#b95e18" stroke-width="1.5"/>`;
+    else if(method==='throughBolt')marks=`<circle cx="${px}" cy="${py}" r="6.2" fill="#fff8e9" stroke="#df7c24" stroke-width="2"/><circle cx="${px}" cy="${py}" r="2.2" fill="#b95e18"/><path d="M ${px-8} ${py} H ${px+8}" stroke="#b95e18" stroke-width="1.4"/>`;
+    else marks=`<path d="M ${px} ${py-6} L ${px+6} ${py} L ${px} ${py+6} L ${px-6} ${py} Z" fill="#fff0d5" stroke="#df7c24" stroke-width="2"/><circle cx="${px}" cy="${py}" r="1.8" fill="#b95e18"/>`;
+    return `<g data-connection-method="${method}" data-profile-key="${key}" aria-label="${escapeHtml(connectionLabel(method))}">${marks}</g>`;
+   };
+   for(const member of members){
+    const method=connectionMethodForRole(m.cfg,member.role),key=sizeKey(member.profile),row=bracketRows.get(key),count=method==='angle'&&Number.isInteger(row?.perEnd)&&row.perEnd>0?row.perEnd:1,z=member.z+Math.min(14,member.h*.28);
+    const points=member.axis==='z'?{start:[member.x+member.w/2,member.y+member.d/2,member.z],end:[member.x+member.w/2,member.y+member.d/2,member.z+member.h]}:member.axis==='y'?{start:[member.x+member.w/2,member.y,z],end:[member.x+member.w/2,member.y+member.d,z]}:{start:[member.x,member.y+member.d/2,z],end:[member.x+member.w,member.y+member.d/2,z]};
+    for(const endpoint of member.connectAt)s+=connectionMark(points[endpoint],method,key,count);
+   }
+  }
+   s+=dim(project(0,m.D,visibleTop),project(0,m.D,0),`${o.tanks?'高':'架体高'} ${fmt(visibleTop)}`,51);
+   if(o.tanks&&m.cfg.topMode==='open')s+=dim(project(m.W,0,m.withoutTopTankHeight),project(m.W,0,0),`不含顶缸 ${fmt(m.withoutTopTankHeight)}`,-180);
+   s+=dim(project(0,0,0),project(m.W,0,0),`宽 ${fmt(m.W)}`,26);
+   s+=dim(project(0,0,0),project(0,m.D,0),`深 ${fmt(m.D)}`,-27);
+  if(o.dims)for(const level of m.levels){const z=o.tanks?level.tankRim:level.frameTop,point=project(m.W,0,z),label=o.tanks?`第 ${level.index} 层缸口 +${fmt(z)}`:`第 ${level.index} 层梁顶 +${fmt(z)}`;s+=L(point[0]+6,point[1],point[0]+47,point[1],C.line,1,'stroke-dasharray="3 3"')+T(point[0]+56,point[1]+4,label,12);}
+   s+=R(18,692,vw-36,67,'#fcfefb')+L(32,694,vw-32,694,'#dfe8e1',1);
+   s+=T(vw/2,714,`${o.tanks?'玻璃缸底部':'承托配置'}：${m.cfg.boardThickness?fmt(m.cfg.boardThickness)+' mm 防水板':'无刚性承托板'} + ${fmt(m.cfg.matThickness)} mm 缓冲垫；顶部：${m.cfg.topMode==='open'?'开放':'封框'}；${m.cfg.footExposed?'福马轮 × 4':'不装福马轮'}`,12,'text-anchor="middle"',C.muted);
+   s+=T(vw/2,735,`${m.cfg.jointLayout==='continuous'?'贯通立柱，横梁夹装':'分段立柱压在层框上'}　/　外框 ${connectionLabel(m.cfg.connections.outer)}　/　中梁 ${connectionLabel(m.cfg.connections.middle)}`,12,'text-anchor="middle"');
+   const connectionSummary=Object.entries(m.connectionCounts).filter(([,count])=>count>0).map(([method,count])=>`${CONNECTION_METHODS[method].short} ${count} 处`).join('　/　');
+   s+=T(vw/2,755,o.brackets?`连接节点示意：${connectionSummary}；孔位仅作识别标记。`:'连接件与孔位示意已隐藏。',12,'text-anchor="middle"',C.muted);
+ }
+ if(o.focus&&projection)s+=focusOverlay(m,o.focus,projection,type,o.tier,prefix,!!o.suppressMoney);
+ return `<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="760" viewBox="0 0 1120 760" role="img" aria-label="${escapeHtml(title)}"><defs><marker id="${prefix}-arrow" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto-start-reverse"><path d="M7,3.5 L0,0 L0,7 Z" fill="#78958a"/></marker></defs><g font-family="Microsoft YaHei,Segoe UI,Arial,sans-serif">${s}</g></svg>`;
+}
+function profileEditors(){
+ $('profileFields').innerHTML=ROLES.map(([role,label,note])=>{const p=state.profiles[role],options=Object.entries(PRESETS).map(([key,[b,h]])=>`<option value="${key}"${key===p.choice?' selected':''}>${stockName({b,h})} · ${b} × ${h}${role==='post'?'（左右 × 前后）':'（水平 × 高）'}</option>`).join('');
+  return `<div class="profile-row"${role==='top'&&state.topMode==='open'?' hidden':''}><div class="profile-note"><label for="profile-${role}">${label}</label><span>${note}</span></div><div class="profile-main"><select id="profile-${role}" data-path="profiles.${role}.choice">${options}<option value="custom"${p.choice==='custom'?' selected':''}>自定义截面</option></select><div class="field profile-wall"><label for="profile-${role}-t">壁厚 mm</label><input id="profile-${role}-t" data-path="profiles.${role}.t" type="number" min="0.1" step="0.1" list="wall-thickness-options" value="${escapeHtml(p.t??'')}"></div></div><div class="fields custom-fields"${p.choice==='custom'?'':' hidden'}><div class="field"><label for="profile-${role}-b">${role==='post'?'左右宽度':'水平宽度'}</label><input id="profile-${role}-b" data-path="profiles.${role}.b" type="number" min="0.1" step="0.1" value="${escapeHtml(p.b??'')}"></div><div class="field"><label for="profile-${role}-h">${role==='post'?'前后深度':'竖向高度'}</label><input id="profile-${role}-h" data-path="profiles.${role}.h" type="number" min="0.1" step="0.1" value="${escapeHtml(p.h??'')}"></div></div></div>`;
+ }).join('');
+}
+function tierEditors(){
+ const n=Number.isInteger(state.tierCount)&&state.tierCount>=1?state.tierCount:state.tiers.length;
+ while(state.tiers.length<n)state.tiers.push(clone(INITIAL.tiers.at(-1)));
+ $('tierFields').innerHTML=state.tiers.slice(0,n).map((tier,i)=>{const isOpenTop=state.topMode==='open'&&i===n-1,heightPath=isOpenTop?'topTank.height':`tiers.${i}.height`,height=isOpenTop?state.topTank.height:tier.height;return `<div class="tier-editor"><span class="tier-tag">第 ${i+1} 层${isOpenTop?' · 顶部':''}</span><input id="tier-${i}-height" data-path="${heightPath}" type="number" min="0.1" step="0.5" value="${escapeHtml(height??'')}" aria-label="第 ${i+1} 层缸高，毫米">${isOpenTop?'<output class="tier-open" aria-label="最上层顶部开放">顶部开放</output>':`<input id="tier-${i}-gap" data-path="tiers.${i}.gap" type="number" min="0" step="0.5" value="${escapeHtml(tier.gap??'')}" aria-label="第 ${i+1} 层操作净空，毫米">`}</div>`;}).join('');
+ selectedTier=Math.min(selectedTier,Math.max(0,n-1));$('selectedTier').innerHTML=Array.from({length:n},(_,i)=>`<option value="${i}">第 ${i+1} 层${state.topMode==='open'&&i===n-1?' · 顶部缸':i===0?' · 底层':''}</option>`).join('');$('selectedTier').value=selectedTier;
+}
+function syncControls(){$('topTankEditor').hidden=state.topMode!=='open';profileEditors();tierEditors();document.querySelectorAll('[data-path]').forEach(e=>{const value=readPath(state,e.dataset.path);e.value=value??'';});}
+function showToast(message){clearTimeout(toastTimer);$('toast').textContent=message;$('toast').classList.add('show');toastTimer=setTimeout(()=>$('toast').classList.remove('show'),3500);}
+function persistNow(){
+ clearTimeout(updateTimer);
+ try{localStorage.setItem(storageKey,JSON.stringify(state));storageAvailable=true;$('saveState').textContent='已自动保存到当前浏览器';}
+ catch{storageAvailable=false;$('saveState').textContent='浏览器存储不可用，关闭页面后修改不会保留';}
+}
+function queuePersist(){$('saveState').textContent=storageAvailable?'参数已更新，正在保存…':'浏览器存储不可用，修改仅保留在本次打开期间';clearTimeout(updateTimer);updateTimer=setTimeout(persistNow,240);}
+function displayValidation(m){
+ document.querySelectorAll('[data-path]').forEach(e=>e.removeAttribute('aria-invalid'));
+ for(const path of m.badFields){const element=[...document.querySelectorAll('[data-path]')].find(e=>e.dataset.path===path);if(element)element.setAttribute('aria-invalid','true');const match=path.match(/^profiles\.([^.]+)\./);if(match)$('profile-'+match[1])?.setAttribute('aria-invalid','true');}
+ const messages=m.valid?m.warnings:m.errors,box=$('validation');box.hidden=!messages.length;box.classList.toggle('error',!m.valid);
+ box.innerHTML=messages.length?`<strong>${m.valid?'装配提示':'请调整以下参数；图纸及下料输出已暂停'}</strong>${messages.map(t=>`<p>${escapeHtml(t)}</p>`).join('')}`:'';
+}
+function setView(type){activeView=type;document.querySelectorAll('[data-view]').forEach(b=>{const selected=b.dataset.view===type;b.setAttribute('aria-selected',String(selected));b.tabIndex=selected?0:-1;});$('drawing').setAttribute('aria-labelledby','tab-'+type);renderView();}
+function viewOptions(){return {tanks:$('showTanks').checked,brackets:$('showBrackets').checked,dims:$('showDims').checked&&!selectedPath,tier:selectedTier,focus:selectedPath};}
+function outputViewOptions(){return {tanks:$('showTanks').checked,brackets:$('showBrackets').checked,dims:$('showDims').checked,tier:selectedTier,focus:null,suppressMoney:true};}
+function renderView(){
+ updateLocator();
+ const tanks=$('showTanks').checked,tankLegend=document.querySelector('.legend .dot.tank')?.closest('span');if(tankLegend)tankLegend.hidden=!tanks;
+ $('viewHint').textContent=activeView==='iso'?`橙色符号为连接件 / 孔位；外框 ${CONNECTION_METHODS[state.connections.outer].short}，中梁 ${CONNECTION_METHODS[state.connections.middle].short}`:activeView==='plan'?(tanks?'虚线为龟缸边界':'龟缸边界与余量已隐藏'):activeView==='section'?'前后方向剖切，显示各梁高度':activeView==='side'?'侧梁半透明，显示中梁安装高度':'';
+ $('selectedTier').disabled=activeView!=='plan'&&activeView!=='section';
+ if(!model?.valid){$('drawing').innerHTML='<div class="drawing-placeholder">调整左侧标出的参数后，<br>这里会重新生成尺寸图。</div>';return;}
+ $('drawing').innerHTML=drawingSvg(activeView,model,viewOptions());
+}
+const formulaRow=(label,value)=>`<div class="formula-row"><span class="label">${escapeHtml(label)}</span><span class="value">${escapeHtml(value)}</span></div>`;
+function refresh(){
+ model=calculate(state);window.rackDimensions=model.valid?{width:model.W,depth:model.D,height:model.H,heightWithoutTopTank:model.withoutTopTankHeight,column:model.column,levels:clone(model.levels)}:null;
+ $('schemeTitle').textContent=state.name||'未命名方案';displayValidation(model);
+ $('fullscreenBtn').disabled=!model.valid;
+ for(const id of ['exportSvg','exportXlsx','exportStep','printBtn'])$(id).disabled=!model.valid;
+ if(!model.valid){for(const id of ['metricSize','metricWithoutTopTank','metricColumn','metricLength','metricRim'])$(id).textContent='—';$('metricCount').textContent='等待有效参数';$('metricWater').textContent='等待有效参数';for(const id of ['cutRows','elevationRows','heightSummary','panelDetails','formulaDetails','profileCostRows','bracketCostRows','extraCostRows','stockRows','comparisonRows'])$(id).innerHTML='';resetCostDisplay();renderStockPlan();renderComparison();renderJlc();renderView();return;}
+ const m=model,p=m.p,c=state.clear;
+ $('metricSize').textContent=`${fmt(m.W)} × ${fmt(m.D)} × ${fmt(m.H)}`;$('metricWithoutTopTank').textContent=state.topMode==='open'?`${fmt(m.withoutTopTankHeight)} mm`:'不适用';$('metricColumnLabel').textContent=state.jointLayout==='continuous'?'立柱下料长度':'最长立柱段';$('metricColumn').textContent=`${fmt(state.jointLayout==='continuous'?m.column:m.maxPostLength)} mm`;$('metricColumnCaption').textContent=state.jointLayout==='continuous'?'4 根贯通立柱，随顶部结构联动':`${m.postCount} 段立柱，共 ${fmtM(m.postTotalLength/1000)} m`;$('metricLength').textContent=`${fmtM(m.totalLength/1000)} m`;$('metricCount').textContent=`${m.totalCount} 件成品；定尺原料 ${m.stockPlan.totalBars} 根 / ${fmtM(m.stockPlan.purchaseLength/1000)} m`;$('metricRim').textContent=`${fmt(m.levels.at(-1).tankRim)} mm`;$('metricWater').textContent=`水约 ${fmt(m.litres)} L；规划满载约 ${fmt(m.designMass)} kg`;
+ $('elevationRows').innerHTML=m.levels.map(l=>`<tr><td>第 ${l.index} 层</td><td class="number">${fmt(l.height)}</td><td class="number">${l.gap===null?'顶部开放':fmt(l.gap)}</td>${[l.frameBottom,l.middleBottom,l.frameTop,l.boardTop,l.tankBottom,l.tankRim].map(v=>`<td class="number">${v===null?'—':fmt(v)}</td>`).join('')}</tr>`).join('');
+ const sumHeights=m.levels.reduce((v,l)=>v+l.height,0),sumGaps=m.levels.reduce((v,l)=>v+(l.gap??0),0);
+ const columnSummary=state.jointLayout==='continuous'?`贯通立柱长度 = ${fmt(m.rackTop)} − 福马轮 ${fmt(state.footExposed)} = <b>${fmt(m.column)} mm</b>，共 4 根。`:`立柱按层分为 <b>${m.postCount} 段</b>，最长 <b>${fmt(m.maxPostLength)} mm</b>，总净长 ${fmtM(m.postTotalLength/1000)} m；每段压在下层框架上。`;
+ $('heightSummary').innerHTML=state.topMode==='open'?`<p>底层梁下离地 = 福马轮 ${fmt(state.footExposed)} + 上方净高 ${fmt(state.legClear)} = <b>${fmt(m.baseHeight)} mm</b>。最高承托梁顶 <b>${fmt(m.rackTop)} mm</b>，最上层缸口为整体最高处 <b>${fmt(m.H)} mm</b>；${columnSummary}</p><p>不含最上层缸高度 = 总高 ${fmt(m.H)} − 顶部缸高 ${fmt(m.levels.at(-1).height)} = <b>${fmt(m.withoutTopTankHeight)} mm</b>（即顶部缸底离地）。整体最高处 = 轮高 ${fmt(state.footExposed)} + 脚轮上方净高 ${fmt(state.legClear)} + ${state.tierCount} ×（框高 ${fmt(m.frameHeight)} + 承托层 ${fmt(m.supportHeight)}）+ 缸高合计 ${fmt(sumHeights)} + 中间层净空合计 ${fmt(sumGaps)} = ${fmt(m.H)} mm。</p>`:`<p>底层梁下离地 = 福马轮 ${fmt(state.footExposed)} + 上方净高 ${fmt(state.legClear)} = <b>${fmt(m.baseHeight)} mm</b>。顶部封框下沿 <b>${fmt(m.topBottom)} mm</b>，顶面 <b>${fmt(m.H)} mm</b>；${columnSummary}</p><p>整体最高处 = 轮高 ${fmt(state.footExposed)} + 脚轮上方净高 ${fmt(state.legClear)} + ${state.tierCount} ×（框高 ${fmt(m.frameHeight)} + 承托层 ${fmt(m.supportHeight)}）+ 缸高合计 ${fmt(sumHeights)} + 净空合计 ${fmt(sumGaps)} + 顶框高 ${fmt(p.top.h)} = ${fmt(m.H)} mm。</p>`;
+ const commonLevels=m.levels.filter(l=>!l.isOpenTop),topLevel=state.topMode==='open'?m.levels.at(-1):null;
+ const layerParts=(thickness)=>{if(!thickness)return '不放（厚度 0 mm）';const parts=[];if(commonLevels.length)parts.push(`常规层 ${fmt(state.tankWidth)} × ${fmt(state.tankDepth)} × ${fmt(thickness)} mm，共 ${commonLevels.length} 张`);if(topLevel)parts.push(`顶层 ${fmt(topLevel.tankWidth)} × ${fmt(topLevel.tankDepth)} × ${fmt(thickness)} mm，共 1 张`);return parts.join('；');};
+ const marginText=l=>`左 ${fmt(l.clear.left)} / 右 ${fmt(l.clear.right)} / 前 ${fmt(l.clear.front)} / 后 ${fmt(l.clear.back)} mm（距${l.basis}）`;
+ const overlapText=l=>`${fmt(p.fb.b-l.clear.front)} / ${fmt(p.fb.b-l.clear.back)} mm`;
+ const panelRows=[['立柱与层框对齐',JOINT_LAYOUTS[state.jointLayout]],['外框 / 分段立柱节点',`${connectionLabel(state.connections.outer)}，${m.connectionGroupCounts.outer} 个连接端`],['中间托梁节点',`${connectionLabel(state.connections.middle)}，${m.connectionGroupCounts.middle} 个连接端`],['最上层结构',topLevel?`顶部开放；独立玻璃缸 ${fmt(topLevel.tankWidth)} × ${fmt(topLevel.tankDepth)} × ${fmt(topLevel.height)} mm；立柱止于最高承托梁顶 ${fmt(m.rackTop)} mm`:`顶部封框；封框顶 ${fmt(m.H)} mm`],['刚性承托板',layerParts(state.boardThickness)],['缓冲垫',layerParts(state.matThickness)]];
+ if(commonLevels.length)panelRows.push(['常规层四边实际余量',marginText(commonLevels[0])],['常规层前 / 后搭接',overlapText(commonLevels[0])]);
+ if(topLevel)panelRows.push(['顶部缸四边实际余量',marginText(topLevel)],['顶部缸前 / 后搭接',overlapText(topLevel)]);
+ panelRows.push(['梁间净距（前→后）',m.clearSpans.map(g=>fmt(g.gap)).join(' / ')+' mm'],['中梁靠前边线距架前沿',m.middleYs.length?m.middleYs.map(fmt).join(' / ')+' mm':'无中间托梁'],['福马轮',state.footExposed?`${state.casterModel}，4 只，安装高度 ${fmt(state.footExposed)} mm，${fmt(state.casterCapacity)} kg / 只`:'不安装（高度 0 mm）'],['脚轮承载校核提示',state.footExposed?`规划满载约 ${fmt(m.designMass)} kg；估算每只 ≥ ${Math.ceil(m.requiredCasterCapacity)} kg`:'未安装脚轮，不做脚轮承载比较']);
+ $('panelDetails').innerHTML=panelRows.map(r=>formulaRow(...r)).join('');
+ const commonW=`${fmt(state.tankWidth)} + ${fmt(c.left)} + ${fmt(c.right)} + 2×${fmt(p.post.b)} = ${fmt(m.lowerReqW)}`,commonD=`${fmt(state.tankDepth)} + ${fmt(c.front)} + ${fmt(c.back)} = ${fmt(m.lowerReqD)}`,topW=topLevel?`${fmt(state.topTank.width)} + ${fmt(state.topTank.clear.left)} + ${fmt(state.topTank.clear.right)} = ${fmt(m.topReqW)}`:'',topD=topLevel?`${fmt(state.topTank.depth)} + ${fmt(state.topTank.clear.front)} + ${fmt(state.topTank.clear.back)} = ${fmt(m.topReqD)}`:'';
+ const widthFormula=topLevel?(commonLevels.length?`max（常规层 ${commonW}；顶部 ${topW}）= ${fmt(m.W)}`:`顶部 ${topW}`):commonW,depthFormula=topLevel?(commonLevels.length?`max（常规层 ${commonD}；顶部 ${topD}）= ${fmt(m.D)}`:`顶部 ${topD}`):commonD;
+ const frontFormula=state.jointLayout==='continuous'?`${fmt(m.W)} − 2×立柱宽 ${fmt(p.post.b)} = ${fmt(m.frontLength)}`:`与架体同宽 = ${fmt(m.frontLength)}`;
+ const sideFormula=state.jointLayout==='continuous'?`${fmt(m.D)} − 2×立柱深 ${fmt(p.post.h)} = ${fmt(m.sideLength)}`:`${fmt(m.D)} − 2×前后梁宽 ${fmt(p.fb.b)} = ${fmt(m.sideLength)}`;
+ const postFormula=state.jointLayout==='continuous'?`${fmt(m.rackTop)} − 福马轮组件 ${fmt(state.footExposed)} = ${fmt(m.column)}，共 4 根`:`按相邻层框顶面 / 底面分段，共 ${m.postCount} 段，最长 ${fmt(m.maxPostLength)} mm`;
+ $('formulaDetails').innerHTML=[['架体外宽',widthFormula],['架体外深',depthFormula],['底层梁下离地',`${fmt(state.footExposed)} + ${fmt(state.legClear)} = ${fmt(m.baseHeight)}`],['前后梁下料',frontFormula],['左右侧梁下料',sideFormula],['中间托梁下料',`${fmt(m.W)} − 2×${fmt(p.side.b)} = ${fmt(m.middleLength)}`],['玻璃缸底标高','承托梁顶 + 承托板厚度 + 缓冲垫厚度'],['立柱下料',postFormula],['节点方式',`外框 ${connectionLabel(state.connections.outer)}；中梁 ${connectionLabel(state.connections.middle)}`]].map(r=>formulaRow(...r)).join('');
+ renderPricing();renderStockPlan();renderComparison();renderJlc();renderView();
+}
+function calculateStockPlan(m,cfg){
+ const stockLength=cfg.procurement.stockLength,kerf=cfg.procurement.sawKerf,endTrim=cfg.procurement.endTrim,usable=stockLength-2*endTrim,errors=[],groups=[];
+ const byKey=new Map();
+ for(const piece of m.pieces){const key=stockKey(piece.profile);if(!byKey.has(key))byKey.set(key,{key,profile:{...piece.profile},pieces:[]});byKey.get(key).pieces.push({...piece});}
+ for(const group of byKey.values()){
+  const sorted=[...group.pieces].sort((a,b)=>b.length-a.length||a.id.localeCompare(b.id)),bars=[];
+  for(const piece of sorted){const need=piece.length+kerf;if(need>usable+1e-7){errors.push(`${sectionName(group.profile)} 的 ${piece.id} 长 ${fmt(piece.length)} mm，超过当前定尺可用长度 ${fmt(usable-kerf)} mm。`);continue;}
+   let target=null,best=Infinity;for(const bar of bars){const after=bar.remaining-need;if(after>=-1e-7&&after<best){target=bar;best=after;}}
+   if(!target){target={index:bars.length+1,items:[],remaining:usable};bars.push(target);}target.items.push(piece);target.remaining=Math.max(0,target.remaining-need);
+  }
+  const netLength=group.pieces.reduce((sum,piece)=>sum+piece.length,0),purchaseLength=bars.length*stockLength,kerfLoss=group.pieces.length*kerf,trimLoss=bars.length*endTrim*2,remainder=bars.reduce((sum,bar)=>sum+bar.remaining,0);
+  groups.push({...group,bars,netLength,purchaseLength,kerfLoss,trimLoss,remainder,utilization:purchaseLength?netLength/purchaseLength:0});
+ }
+ groups.sort((a,b)=>a.key.localeCompare(b.key));
+ const sum=field=>groups.reduce((total,group)=>total+group[field],0),purchaseLength=sum('purchaseLength'),netLength=sum('netLength');
+ return {groups,errors,stockLength,kerf,endTrim,totalBars:groups.reduce((total,group)=>total+group.bars.length,0),purchaseLength,netLength,kerfLoss:sum('kerfLoss'),trimLoss:sum('trimLoss'),remainder:sum('remainder'),utilization:purchaseLength?netLength/purchaseLength:0};
+}
+function accessoryDefinitions(m,cfg,brackets){
+ const area=roundMoney(m.levels.reduce((sum,level)=>sum+level.tankWidth*level.tankDepth/1e6,0)),bracketCount=brackets.reduce((sum,row)=>sum+(Number.isFinite(row.amount)?row.amount:0),0),casterOn=cfg.footExposed>0;
+ const definitions=[
+  {key:'casters',name:cfg.casterModel||'福马轮',automatic:casterOn?4:0,unitLabel:'个',rule:casterOn?`${cfg.casterModel} · 四角各 1 只`:'福马轮高度为 0',integer:true},
+  {key:'casterPlates',name:'福马轮转接底板',automatic:casterOn?4:0,unitLabel:'块',rule:casterOn?'每只福马轮 1 块':'福马轮高度为 0',integer:true},
+  {key:'supportBoard',name:'防水刚性承托板',automatic:cfg.boardThickness>0?area:0,unitLabel:'m²',rule:cfg.boardThickness>0?`${fmt(cfg.boardThickness)} mm · 各层缸底面积`:'承托板厚度为 0',integer:false},
+  {key:'cushionMat',name:'缓冲垫',automatic:cfg.matThickness>0?area:0,unitLabel:'m²',rule:cfg.matThickness>0?`${fmt(cfg.matThickness)} mm · 各层缸底面积`:'缓冲垫厚度为 0',integer:false},
+  {key:'fasteners',name:'角码螺栓与 T 型螺母',automatic:bracketCount*4,unitLabel:'套',rule:`角码 ${fmt(bracketCount)} 个 × 4 套`,integer:true},
+  {key:'endTapConnections',name:'端面攻丝 + 配合通孔加工组件',automatic:m.connectionCounts.endTap,unitLabel:'端',rule:m.connectionCounts.endTap?`选择端面攻丝的连接端，共 ${m.connectionCounts.endTap} 处`:'当前未选择端面攻丝',integer:true},
+  {key:'throughBoltConnections',name:'贯穿孔 + 螺栓螺母组件',automatic:m.connectionCounts.throughBolt,unitLabel:'套',rule:m.connectionCounts.throughBolt?`选择贯穿螺栓的连接端，共 ${m.connectionCounts.throughBolt} 处`:'当前未选择贯穿螺栓',integer:true},
+  {key:'anchorConnections',name:'内置锚式连接件',automatic:m.connectionCounts.anchor,unitLabel:'套',rule:m.connectionCounts.anchor?`选择内置锚式连接的连接端，共 ${m.connectionCounts.anchor} 处`:'当前未选择内置锚式连接件',integer:true},
+  {key:'rearBrace',name:'背部 X 斜撑组件',automatic:2,unitLabel:'根',rule:'背部交叉布置 2 根',integer:true},
+  {key:'wallAnchor',name:'墙面防倾倒固定套件',automatic:2,unitLabel:'套',rule:'顶部左右各 1 套',integer:true},
+  {key:'endCaps',name:'立柱端盖',automatic:cfg.topMode==='open'?4:0,unitLabel:'个',rule:cfg.topMode==='open'?'开放顶部 4 根立柱':'顶部封框',integer:true}
+ ];
+ return definitions.filter(def=>!['endTapConnections','throughBoltConnections','anchorConnections'].includes(def.key)||def.automatic>0);
+}
+function calculateCosts(m,cfg){
+ const settings=cfg.cost??{profiles:{},brackets:{},extras:{}},errors=[],planByKey=new Map(m.stockPlan.groups.map(group=>[group.key,group]));
+ const profiles=Object.values(m.materials).map(g=>{const saved=settings.profiles?.[g.key],referenceUnit=suggestedProfileUnit(g.profile),unit=saved&&Object.prototype.hasOwnProperty.call(saved,'unit')?saved.unit:referenceUnit,stock=planByKey.get(g.key),netAmount=g.length/1000,purchaseAmount=(stock?.purchaseLength??g.length)/1000,amount=cfg.procurement.costBasis==='stock'?purchaseAmount:netAmount;return {...g,amount,netAmount,purchaseAmount,stockBars:stock?.bars.length??0,stock,unit,referenceUnit,group:'profiles'};});
+ const grouped={};
+ for(const r of m.rows){if(!r.connectionEnds||connectionMethodForRole(cfg,r.role)!=='angle')continue;const key=sizeKey(r.profile),role=r.role;if(!grouped[key])grouped[key]={key,name:stockName(r.profile),profile:{...r.profile},bars:0,ends:0,roles:[]};grouped[key].bars+=r.qty;grouped[key].ends+=r.connectionEnds;if(!grouped[key].roles.includes(role))grouped[key].roles.push(role);}
+ const brackets=Object.values(grouped).map(g=>{const saved=settings.brackets?.[g.key],q=saved??{},perEnd=Object.prototype.hasOwnProperty.call(q,'perEnd')?q.perEnd:2,automatic=g.ends*perEnd,quantity=q.quantity??null,referenceUnit=suggestedBracketUnit(g.profile),unit=saved&&Object.prototype.hasOwnProperty.call(q,'unit')?q.unit:referenceUnit;return {...g,group:'brackets',name:q.name??g.name+' 加强角码',beamSpec:g.name,perEnd,automatic,quantity,amount:quantity===null?automatic:quantity,unit,referenceUnit,unitLabel:'个'};});
+ const extras=accessoryDefinitions(m,cfg,brackets).map(def=>{const saved=settings.extras?.[def.key]??{},quantity=Object.prototype.hasOwnProperty.call(saved,'quantity')?saved.quantity:null,referenceUnit=cfg.cost.extras?.[def.key]?.unit??0,unit=Object.prototype.hasOwnProperty.call(saved,'unit')?saved.unit:referenceUnit;return {...def,group:'extras',name:saved.name??def.name,quantity,amount:quantity===null?def.automatic:quantity,unit,referenceUnit};});
+ const integer=(n,min)=>typeof n==='number'&&Number.isInteger(n)&&n>=min;
+ for(const r of [...profiles,...brackets,...extras]){
+  r.issues=[];const base=`cost.${r.group}.${r.key}`;
+  const error=(field,message)=>{const e={path:base+'.'+field,message};r.issues.push(e);errors.push(e);};
+  if(r.group==='brackets'){
+   if(!integer(r.perEnd,1))error('perEnd','每端个数应为不小于 1 的整数');
+   if(r.quantity!==null&&!integer(r.quantity,0))error('quantity','采购数量应为不小于 0 的整数');
+  }
+  if(r.group==='extras'&&r.quantity!==null&&(!(typeof r.quantity==='number'&&Number.isFinite(r.quantity)&&r.quantity>=0)||(r.integer&&!Number.isInteger(r.quantity))))error('quantity',r.integer?'采购数量应为不小于 0 的整数':'采购数量应为不小于 0 的有效数字');
+  if(r.unit!==null&&(typeof r.unit!=='number'||!Number.isFinite(r.unit)||r.unit<0))error('unit','单价应为不小于 0 的有效数字');
+  r.missing=r.amount>0&&r.unit===null;
+  r.subtotal=r.issues.length||r.missing?null:roundMoney(r.amount*(r.unit??0));
+ }
+ const all=[...profiles,...brackets,...extras],sum=rows=>roundMoney(rows.reduce((a,r)=>a+(r.subtotal??0),0));
+ return {profiles,brackets,extras,errors,profileKnown:sum(profiles),bracketKnown:sum(brackets),extraKnown:sum(extras),known:sum(all),missing:all.filter(r=>r.missing).length,priced:all.filter(r=>r.subtotal!==null).length,complete:errors.length===0&&all.every(r=>!r.missing)};
+}
+const costLabel=(roles)=>roles.map(role=>ROLES.find(r=>r[0]===role)?.[1]??role).join('、');
+function priceInput(path,value,label,extra=''){
+ return `<input id="cost-${path.replaceAll('.','-')}" data-path="cost.${path}" type="number" min="0" step="0.01" value="${escapeHtml(value??'')}" aria-label="${escapeHtml(label)}" ${extra}>`;
+}
+function renderPricing(){
+ if(!model?.valid)return;
+ state.cost??={profiles:{},brackets:{},extras:{}};state.cost.profiles??={};state.cost.brackets??={};state.cost.extras??={};
+ const c=model.cost;
+ for(const r of c.profiles){state.cost.profiles[r.key]??={unit:r.unit};if(!Object.prototype.hasOwnProperty.call(state.cost.profiles[r.key],'unit'))state.cost.profiles[r.key].unit=r.unit;}
+ for(const r of c.brackets){state.cost.brackets[r.key]??={name:r.name,unit:r.unit,perEnd:r.perEnd,quantity:null};}
+ for(const r of c.extras){state.cost.extras[r.key]??={name:r.name,unit:r.unit,quantity:null};}
+ $('profileCostRows').innerHTML=c.profiles.map(r=>`<tr data-profile-key="${r.key}"><td><b>${escapeHtml(r.name)}</b></td><td>${escapeHtml(costLabel(r.roles))}<span class="sub">联动建议价 ${money(r.referenceUnit)} 元/m</span></td><td class="number">${r.count}</td><td class="number">${fmtM(r.netAmount)}</td><td class="number"><b>${fmtM(r.amount)}</b><span class="sub">${state.procurement.costBasis==='stock'?`${r.stockBars} 根 × ${fmt(state.procurement.stockLength)} mm`:'按净长'}</span></td><td class="number">${priceInput('profiles.'+r.key+'.unit',r.unit,r.name+' 型材每米单价','placeholder="未报价"')}</td><td class="number" data-cost-sum="profiles.${r.key}">—</td></tr>`).join('');
+ $('bracketCostRows').innerHTML=c.brackets.map(r=>`<tr data-bracket-key="${r.key}"><td><input class="bracket-name" id="cost-brackets-${r.key}-name" data-path="cost.brackets.${r.key}.name" value="${escapeHtml(r.name)}" aria-label="${r.beamSpec} 节点的角码型号"></td><td>${r.beamSpec} · ${r.bars} 根 / ${r.ends} 个连接端<span class="sub">${costLabel(r.roles)} · 建议价 ${money(r.referenceUnit)} 元/个</span></td><td class="number">${priceInput('brackets.'+r.key+'.perEnd',r.perEnd,r.beamSpec+' 角码每端个数','class="per-end"')}</td><td class="number">${priceInput('brackets.'+r.key+'.quantity',r.quantity,r.beamSpec+' 角码采购数量',`placeholder="${r.automatic}"`)}<span class="sub" data-auto-count="${r.key}"></span></td><td class="number">${priceInput('brackets.'+r.key+'.unit',r.unit,r.beamSpec+' 角码每个单价','placeholder="未报价"')}</td><td class="number" data-cost-sum="brackets.${r.key}">—</td></tr>`).join('');
+ $('extraCostRows').innerHTML=c.extras.map(r=>`<tr data-extra-key="${r.key}"><td><input class="bracket-name" id="cost-extras-${r.key}-name" data-path="cost.extras.${r.key}.name" value="${escapeHtml(r.name)}" aria-label="${escapeHtml(r.name)}名称"></td><td>${escapeHtml(r.rule)}<span class="sub" data-extra-auto="${r.key}"></span></td><td class="number">${priceInput('extras.'+r.key+'.quantity',r.quantity,r.name+'采购数量',`placeholder="${fmt(r.automatic)}"`)}</td><td>${escapeHtml(r.unitLabel)}</td><td class="number">${priceInput('extras.'+r.key+'.unit',r.unit,r.name+'单价','placeholder="未报价"')}</td><td class="number" data-cost-sum="extras.${r.key}">—</td></tr>`).join('');
+ for(const field of $('bracketCostRows').querySelectorAll('[data-path$=".perEnd"]')){field.min='1';field.removeAttribute('max');field.step='1';}
+ for(const field of $('bracketCostRows').querySelectorAll('[data-path$=".quantity"]')){field.min='0';field.removeAttribute('max');field.step='1';}
+ for(const r of c.extras){const field=$('cost-extras-'+r.key+'-quantity');if(field){field.min='0';field.removeAttribute('max');field.step=r.integer?'1':'0.01';}}
+ updateCostResults();
+}
+function resetCostDisplay(){
+ for(const id of ['profileCost','bracketCost','extraCost','grandCost'])$(id).textContent='—';
+ $('grandCostLabel').textContent='材料总价';$('costStatus').textContent='等待有效尺寸，报价设置仍保留';
+}
+function updateCostResults(){
+ if(!model?.valid){resetCostDisplay();return;}
+ const c=model.cost,all=[...c.profiles,...c.brackets,...c.extras];
+ $('costCard').querySelectorAll('[data-path]').forEach(el=>{el.removeAttribute('aria-invalid');el.removeAttribute('title');});
+ for(const r of all){
+  const el=$('costCard').querySelector(`[data-cost-sum="${r.group}.${r.key}"]`);
+  if(el){el.textContent=r.issues.length?'请修正':r.missing?'未报价':money(r.subtotal);el.classList.toggle('unpriced',r.missing);el.classList.toggle('price-error',!!r.issues.length);el.classList.toggle('priced',r.subtotal!==null);}
+  if(r.group==='brackets'){
+   const note=$('costCard').querySelector(`[data-auto-count="${r.key}"]`),quantity=$('cost-brackets-'+r.key+'-quantity');
+   const ok=typeof r.perEnd==='number'&&Number.isInteger(r.perEnd)&&r.perEnd>=1;
+   if(note)note.textContent=ok?`自动 ${r.automatic} 个${r.quantity===null?'':' · 已手填'}`:'请修正每端个数';
+   if(quantity)quantity.placeholder=ok?String(r.automatic):'—';
+  }
+  if(r.group==='extras'){
+   const note=$('costCard').querySelector(`[data-extra-auto="${r.key}"]`),quantity=$('cost-extras-'+r.key+'-quantity');
+   if(note)note.textContent=`自动 ${fmt(r.automatic)} ${r.unitLabel}${r.quantity===null?'':' · 已手填'}`;
+   if(quantity)quantity.placeholder=fmt(r.automatic);
+  }
+ }
+ for(const e of c.errors){const el=[...$('costCard').querySelectorAll('[data-path]')].find(el=>el.dataset.path===e.path);if(el){el.setAttribute('aria-invalid','true');el.title=e.message;}}
+ const showGroup=(rows,total)=>!rows.length?'¥ 0.00':rows.some(r=>r.subtotal!==null)?'¥ '+money(total)+(rows.some(r=>r.subtotal===null)?' *':''):'待报价';
+ $('profileCost').textContent=showGroup(c.profiles,c.profileKnown);$('bracketCost').textContent=showGroup(c.brackets,c.bracketKnown);$('extraCost').textContent=showGroup(c.extras,c.extraKnown);
+ $('grandCostLabel').textContent=c.complete?'材料总价':'已报价小计';
+ $('grandCost').textContent=c.priced?'¥ '+money(c.known):'待报价';
+ $('costStatus').textContent=c.errors.length?'请修正标红的单价或数量；未计入有误项目':c.missing?`尚有 ${c.missing} 项未报价 · * 表示部分小计`:`全部项目已计价 · 型材按${state.procurement.costBasis==='stock'?'定尺采购长度':'成品净长度'}`;
+}
+function compactCutPlan(group){
+ return group.bars.map(bar=>{const counts=new Map();for(const item of bar.items){const key=fmt(item.length);counts.set(key,(counts.get(key)??0)+1);}const cuts=[...counts].map(([length,count])=>`${length}${count>1?' × '+count:''}`).join(' + ');return `${bar.index}号：${cuts}；余 ${fmt(bar.remaining)} mm`;}).join(' ｜ ');
+}
+function renderStockPlan(){
+ if(!model?.valid){$('stockSummary').textContent='等待尺寸计算';$('stockRows').innerHTML='';return;}
+ const plan=model.stockPlan;$('stockSummary').textContent=`${plan.totalBars} 根 × ${fmt(plan.stockLength)} mm · 采购 ${fmtM(plan.purchaseLength/1000)} m · 利用率 ${fmt(plan.utilization*100)}%`;
+ $('stockRows').innerHTML=plan.groups.map(group=>`<tr><td><b>${escapeHtml(sectionName(group.profile))}</b><span class="sub">锯缝 ${fmt(plan.kerf)} mm · 每端修整 ${fmt(plan.endTrim)} mm</span></td><td class="number">${fmtM(group.netLength/1000)} m</td><td class="number">${group.bars.length} 根</td><td class="number">${fmtM(group.purchaseLength/1000)} m</td><td class="number">${fmt(group.utilization*100)}%</td><td class="stock-plan">${escapeHtml(compactCutPlan(group))}</td></tr>`).join('');
+}
+function comparisonConfig(kind){
+ const cfg=clone(state),t=2.4,profile=(choice,b,h)=>({choice,b,h,t});
+ if(kind==='4040')for(const [role]of ROLES)cfg.profiles[role]=profile('4040',40,40);
+ else{cfg.profiles.post=profile('4040',40,40);cfg.profiles.fb=profile('4080v',40,80);cfg.profiles.side=profile('4080v',40,80);cfg.profiles.middle=profile('4040',40,40);cfg.profiles.top=profile('4040',40,40);}
+ return cfg;
+}
+function renderComparison(){
+ if(!model?.valid){$('comparisonRows').innerHTML='';$('comparisonSummary').textContent='等待有效参数';return;}
+ const variants=[['全 4040','4040','前后梁、侧梁、中梁均 4040'],['4080 加强','4080','前后主梁与左右侧梁 4080 竖装，中梁 4040']].map(([name,key,note])=>({name,key,note,model:calculate(comparisonConfig(key))}));
+ const current4040=ROLES.filter(([role])=>role!=='top'||state.topMode!=='open').every(([role])=>state.profiles[role].choice==='4040'&&nearly(state.profiles[role].t,2.4)),current4080=state.profiles.post.choice==='4040'&&state.profiles.fb.choice==='4080v'&&state.profiles.side.choice==='4080v'&&state.profiles.middle.choice==='4040';
+ $('comparisonRows').innerHTML=variants.map(row=>{const m=row.model,current=row.key==='4040'?current4040:current4080;if(!m.valid)return `<tr><td>${row.name}</td><td colspan="8">当前参数下无法生成：${escapeHtml(m.errors[0]??'参数无效')}</td></tr>`;return `<tr${current?' class="comparison-current"':''}><td><b>${row.name}</b>${current?'<span class="sub">当前方案</span>':''}</td><td>${escapeHtml(row.note)}</td><td class="number">${fmt(m.H)} mm</td><td class="number">${fmtM(m.totalLength/1000)} m</td><td class="number">${m.stockPlan.totalBars} 根 / ${fmtM(m.stockPlan.purchaseLength/1000)} m</td><td class="number">¥ ${money(m.cost.profileKnown)}</td><td class="number">¥ ${money(m.cost.bracketKnown)}</td><td class="number">¥ ${money(m.cost.extraKnown)}</td><td class="number"><b>¥ ${money(m.cost.known)}</b></td></tr>`;}).join('');
+ const ok=variants.filter(row=>row.model.valid);$('comparisonSummary').textContent=ok.length===2?`4040 ¥ ${money(ok[0].model.cost.known)} · 4080 ¥ ${money(ok[1].model.cost.known)} · 差额 ¥ ${money(ok[1].model.cost.known-ok[0].model.cost.known)}`:'部分方案参数无效';
+}
+const nearly=(a,b)=>Number.isFinite(a)&&Math.abs(a-b)<1e-7;
+function jlcProfileMatch(profile){
+ const key=stockKey(profile);
+ if(key===JLC.profile.key&&nearly(profile.t,JLC.profile.wall))return JLC.profile;
+ if(key===JLC.profile4080.key&&nearly(profile.t,JLC.profile4080.wall))return JLC.profile4080;
+ return null;
+}
+function jlcQuoteData(m){
+ const grouped=new Map();
+ for(const row of m.rows){
+  const spec=jlcProfileMatch(row.profile),length=Math.round(row.length*10)/10,lengthOk=length>=50&&length<=6000&&nearly(length*10,Math.round(length*10));
+  const key=`${spec?.code??stockKey(row.profile)}|${length}`;
+  if(!grouped.has(key))grouped.set(key,{spec,profile:{...row.profile},length,lengthOk,qty:0,uses:[],sourceRows:[]});
+  const item=grouped.get(key);item.qty+=row.qty;item.uses.push(row.name);item.sourceRows.push({id:row.id,label:rowCodeLabel(row),name:row.name,role:row.role,qty:row.qty});
+ }
+ const rows=[...grouped.values()].map(item=>{
+  const lengthKey=String(item.length),unit=item.spec===JLC.profile&&item.lengthOk&&item.qty<51?JLC.profile.pricesWithTax[lengthKey]??null:null;
+  const modelName=item.spec&&item.lengthOk?`${item.spec.code}-L${fmt(item.length)}`:null;
+  return {...item,modelName,unit,subtotal:unit===null?null:roundMoney(unit*item.qty),matched:!!item.spec&&item.lengthOk};
+ });
+ const matchedCount=rows.reduce((sum,row)=>sum+(row.matched?row.qty:0),0),profileKnown=roundMoney(rows.reduce((sum,row)=>sum+(row.subtotal??0),0)),profileExact=rows.length>0&&rows.every(row=>row.subtotal!==null);
+ const bracketQty=m.cost.brackets.reduce((sum,row)=>sum+(Number.isFinite(row.amount)?row.amount:0),0),bracketSubtotal=roundMoney(bracketQty*JLC.bracket.unit),allMapped=rows.every(row=>row.matched);
+ return {rows,matchedCount,profileKnown,profileExact,bracketQty,bracketSubtotal,allMapped,total:profileExact&&allMapped?roundMoney(profileKnown+bracketSubtotal):null};
+}
+function renderJlc(){
+ if(!model?.valid){$('jlcSummary').textContent='等待有效尺寸';$('jlcExactTotal').textContent='';$('step3dSummary').textContent='';$('cutRows').innerHTML='';$('copyJlcList').disabled=true;return;}
+ const q=jlcQuoteData(model);$('copyJlcList').disabled=false;
+ $('jlcSummary').textContent=`${q.rows.length} 个合并组 · ${q.matchedCount} / ${model.totalCount} 根已匹配`;
+ const idRange=part=>part.label??`${part.id} × ${part.qty}`;
+ const position=part=>part.name;
+ $('cutRows').innerHTML=q.rows.map(row=>{
+  const status=row.matched?'<span class="match-ok">可直接选型</span>':`<span class="match-check">${row.spec?'长度需官网确认':'截面需手工匹配'}</span>`;
+  const modelName=row.modelName??(row.spec?`${row.spec.code} · 长度待确认`:'上传后手工匹配');
+  const quote=row.subtotal===null?'官网计算':`¥ ${money(row.unit)} / 根 · 本组 ¥ ${money(row.subtotal)}`;
+  return `<tr><td class="combined-code">${escapeHtml(row.sourceRows.map(idRange).join('、'))}</td><td>${escapeHtml(row.sourceRows.map(position).join('；'))}</td><td><b>${escapeHtml(sectionName(row.profile))}</b><span class="sub">${escapeHtml(modelName)}</span></td><td class="number"><b>${fmt(row.length)} mm × ${row.qty}</b></td><td class="number">${fmtM(row.length*row.qty/1000)} m</td><td class="number">${status}<span class="sub">${quote}</span></td></tr>`;
+ }).join('');
+ if(q.total!==null)$('jlcExactTotal').innerHTML=q.bracketQty?`当前默认长度快照：型材含税 <b>¥ ${money(q.profileKnown)}</b>，加角码候选起价约 <b>¥ ${money(q.total)}</b>`:`当前默认长度快照：型材含税 <b>¥ ${money(q.profileKnown)}</b>；当前未选择外置角码`;
+ else if(q.profileKnown)$('jlcExactTotal').innerHTML=`已知长度的型材含税快照 <b>¥ ${money(q.profileKnown)}</b>；其余长度请打开官网计算`;
+ else $('jlcExactTotal').textContent='型号与数量已按当前参数生成；官网会按每根长度和追加工重新计价。';
+ const detail=detailedStepParts(model).stats;$('step3dSummary').textContent=`详细 STEP 架体外廓 ${fmt(model.W)} × ${fmt(model.D)} × ${fmt(stepAssemblyHeight(model))} mm：${detail.profileCuts} 段型材 + ${detail.angleBrackets} 个角码 + ${detail.casterAssemblies} 套福马轮（含转接板 / 轮体 / 调平脚），共 ${detail.solidBodies} 个 3D 实体`;
+}
+function jlcQuoteText(){
+ const q=jlcQuoteData(model),lines=[state.name||'龟缸架','嘉立创 FA 型材选型清单',`生成日期：${JLC.date}`,`结构：${JOINT_LAYOUTS[state.jointLayout]}`,`节点：外框 ${connectionLabel(state.connections.outer)}；中梁 ${connectionLabel(state.connections.middle)}`,`目录：欧标 40 系列槽 8，A6063-T5，本色喷砂氧化`,''];
+ const idRange=part=>part.label??`${part.id} × ${part.qty}`;
+ for(const row of q.rows)lines.push(`${row.sourceRows.map(idRange).join('、')}\t${row.modelName??sectionName(row.profile)+'（上传后手工匹配）'}\t${fmt(row.length)} mm × ${row.qty}\t${row.uses.join('、')}`);
+ lines.push('');if(q.bracketQty)lines.push(`${JLC.bracket.code}（角码候选）\t${fmt(q.bracketQty)} 个`);for(const row of model.cost.extras.filter(row=>['endTapConnections','throughBoltConnections','anchorConnections'].includes(row.key)&&row.amount>0))lines.push(`${row.name}\t${fmt(row.amount)} ${row.unitLabel}`);
+ lines.push('',`STEP 架体外廓 ${fmt(model.W)} × ${fmt(model.D)} × ${fmt(stepAssemblyHeight(model))} mm；含龟缸设计整体高 ${fmt(model.H)} mm。`,`型材净长 ${fmtM(model.totalLength/1000)} m，共 ${model.totalCount} 根；未计锯缝、运费，孔位和连接件须在官网按工艺复核。`,`整架 STEP 上传：${JLC.assemblyUrl}`,`单根真实槽型报价：${JLC.quoteUrl}`,`型材选型：${JLC.catalogUrl}`);
+ return lines.join('\n');
+}
+async function copyText(value){
+ try{await navigator.clipboard.writeText(value);return true;}catch{}
+ const area=document.createElement('textarea');area.value=value;area.style.position='fixed';area.style.opacity='0';document.body.append(area);area.select();let ok=false;try{ok=document.execCommand('copy');}catch{}area.remove();return ok;
+}
+function safeFileName(value){
+ const clean=String(value||'龟缸架').replace(/[<>:"/\\|?*\u0000-\u001f]/g,'_').replace(/[. ]+$/g,'').trim();
+ return (clean||'龟缸架').slice(0,80);
+}
+function downloadBlob(blob,fileName){
+ const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=fileName;link.style.display='none';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1200);
+}
+let zipCrcTable=null;
+function zipCrc32(bytes){
+ if(!zipCrcTable)zipCrcTable=Array.from({length:256},(_,n)=>{let c=n;for(let i=0;i<8;i++)c=(c&1)?0xedb88320^(c>>>1):c>>>1;return c>>>0;});
+ let crc=0xffffffff;for(const byte of bytes)crc=zipCrcTable[(crc^byte)&255]^(crc>>>8);return (crc^0xffffffff)>>>0;
+}
+function zipStoreBlob(files,mime){
+ const encoder=new TextEncoder(),now=new Date(),year=Math.min(2107,Math.max(1980,now.getFullYear())),dosTime=(now.getHours()<<11)|(now.getMinutes()<<5)|(now.getSeconds()>>1),dosDate=((year-1980)<<9)|((now.getMonth()+1)<<5)|now.getDate(),locals=[],centrals=[];let offset=0,centralSize=0;
+ for(const file of files){
+  const name=encoder.encode(file.name),data=typeof file.data==='string'?encoder.encode(file.data):file.data,crc=zipCrc32(data),local=new Uint8Array(30),lv=new DataView(local.buffer);
+  lv.setUint32(0,0x04034b50,true);lv.setUint16(4,20,true);lv.setUint16(6,0x0800,true);lv.setUint16(8,0,true);lv.setUint16(10,dosTime,true);lv.setUint16(12,dosDate,true);lv.setUint32(14,crc,true);lv.setUint32(18,data.length,true);lv.setUint32(22,data.length,true);lv.setUint16(26,name.length,true);lv.setUint16(28,0,true);
+  const central=new Uint8Array(46),cv=new DataView(central.buffer);cv.setUint32(0,0x02014b50,true);cv.setUint16(4,20,true);cv.setUint16(6,20,true);cv.setUint16(8,0x0800,true);cv.setUint16(10,0,true);cv.setUint16(12,dosTime,true);cv.setUint16(14,dosDate,true);cv.setUint32(16,crc,true);cv.setUint32(20,data.length,true);cv.setUint32(24,data.length,true);cv.setUint16(28,name.length,true);cv.setUint16(30,0,true);cv.setUint16(32,0,true);cv.setUint16(34,0,true);cv.setUint16(36,0,true);cv.setUint32(38,0,true);cv.setUint32(42,offset,true);
+  locals.push(local,name,data);centrals.push(central,name);offset+=local.length+name.length+data.length;centralSize+=central.length+name.length;
+ }
+ const end=new Uint8Array(22),ev=new DataView(end.buffer);ev.setUint32(0,0x06054b50,true);ev.setUint16(4,0,true);ev.setUint16(6,0,true);ev.setUint16(8,files.length,true);ev.setUint16(10,files.length,true);ev.setUint32(12,centralSize,true);ev.setUint32(16,offset,true);ev.setUint16(20,0,true);
+ return new Blob([...locals,...centrals,end],{type:mime});
+}
+const stepNum=value=>{
+ let text=Number(Math.abs(value)<1e-10?0:value).toPrecision(12).replace(/(?:\.0+|(\.\d+?)0+)(E|$)/,'$1$2').replace('e','E');
+ if(!text.includes('.')&&!text.includes('E'))text+='.';
+ return text;
+};
+const stepToken=value=>String(Number(Number(value).toFixed(3))).replace('-','M').replace('.','_');
+function jlcAssemblyFileName(m){
+ return `JLCFA_Turtle_Rack_W${stepToken(m.W)}_D${stepToken(m.D)}_H${stepToken(stepAssemblyHeight(m))}.step`;
+}
+function stepAssemblyHeight(m){const boardTop=m.cfg.boardThickness>0?Math.max(...m.levels.map(level=>level.boardTop)):m.rackTop;return m.cfg.topMode==='open'?Math.max(m.rackTop,boardTop):m.H;}
+function visibleOutputHeight(m,includeTanks=true){return includeTanks?m.H:(m.cfg.topMode==='open'?m.withoutTopTankHeight:m.H);}
+function allViewsSvgFileName(m,includeTanks=true){
+ const suffix=includeTanks?'Assembly_Drawing':'Frame_Only_Drawing';
+ return `JLCFA_Turtle_Rack_W${stepToken(m.W)}_D${stepToken(m.D)}_H${stepToken(visibleOutputHeight(m,includeTanks))}_${suffix}.svg`;
+}
+const stepText=value=>String(value).replace(/[^\x20-\x7e]/g,'_').replaceAll("'","''").replace(/\s+/g,'_').slice(0,110);
+const asciiModelToken=(value,fallback)=>String(value??'').match(/[A-Za-z][A-Za-z0-9_-]{2,}/)?.[0]??fallback;
+function profileStepMembers(m){
+ const out=m.profileMembers.map(part=>{const match=jlcProfileMatch(part.profile),profileCode=match?.code??`CUSTOM_${stepToken(part.profile.b)}X${stepToken(part.profile.h)}_T${stepToken(part.profile.t)}`,modelCode=`${profileCode}-L${stepToken(part.length)}`,location=`${part.role.toUpperCase()}_X${stepToken(part.x)}_Y${stepToken(part.y)}_Z${stepToken(part.z)}`;return {...part,kind:'profile',profile:{...part.profile},profileCode,modelCode,name:stepText(`${part.id}_${profileCode}_CUT_L${stepToken(part.length)}MM_${location}`)};});
+ if(out.length!==m.totalCount)throw Error(`STEP 型材数量 ${out.length} 与下料清单 ${m.totalCount} 不一致。`);
+ return out;
+}
+function extrudedOutlineMesh(outline,mapStart,mapEnd){
+ const n=outline.length,coords=[...outline.map(mapStart),...outline.map(mapEnd)],faces=[Array.from({length:n},(_,i)=>n-1-i),Array.from({length:n},(_,i)=>n+i)];
+ for(let i=0;i<n;i++){const next=(i+1)%n;faces.push([i,next,next+n,i+n]);}
+ return {coords,faces};
+}
+function notchedProfileOutline(width,height){
+ const slotX=Math.min(10,width*.28),slotY=Math.min(10,height*.28),depthX=Math.min(5,width*.14),depthY=Math.min(5,height*.14),x1=(width-slotX)/2,x2=(width+slotX)/2,y1=(height-slotY)/2,y2=(height+slotY)/2;
+ return [[0,0],[x1,0],[x1,depthY],[x2,depthY],[x2,0],[width,0],[width,y1],[width-depthX,y1],[width-depthX,y2],[width,y2],[width,height],[x2,height],[x2,height-depthY],[x1,height-depthY],[x1,height],[0,height],[0,y2],[depthX,y2],[depthX,y1],[0,y1]];
+}
+function profileStepMesh(part){
+ if(part.axis==='y'){const outline=notchedProfileOutline(part.w,part.h);return extrudedOutlineMesh(outline,([u,v])=>[part.x+u,part.y,part.z+v],([u,v])=>[part.x+u,part.y+part.d,part.z+v]);}
+ if(part.axis==='z'){const outline=notchedProfileOutline(part.w,part.d);return extrudedOutlineMesh(outline,([u,v])=>[part.x+u,part.y+v,part.z],([u,v])=>[part.x+u,part.y+v,part.z+part.h]);}
+ const outline=notchedProfileOutline(part.d,part.h);return extrudedOutlineMesh(outline,([u,v])=>[part.x,part.y+u,part.z+v],([u,v])=>[part.x+part.w,part.y+u,part.z+v]);
+}
+function boxStepMesh(part){
+ const {x,y,z,w,d,h}=part,x1=x+w,y1=y+d,z1=z+h;
+ return {coords:[[x,y,z],[x1,y,z],[x1,y1,z],[x,y1,z],[x,y,z1],[x1,y,z1],[x1,y1,z1],[x,y1,z1]],faces:[[0,3,2,1],[4,5,6,7],[0,1,5,4],[3,7,6,2],[0,4,7,3],[1,2,6,5]]};
+}
+function cylinderStepMesh({cx,cy,cz,r,length,axis='z',segments=16}){
+ const coords=[];for(const end of [0,length])for(let i=0;i<segments;i++){const a=2*Math.PI*i/segments,u=r*Math.cos(a),v=r*Math.sin(a);coords.push(axis==='x'?[cx+end,cy+u,cz+v]:axis==='y'?[cx+u,cy+end,cz+v]:[cx+u,cy+v,cz+end]);}
+ const faces=[Array.from({length:segments},(_,i)=>segments-1-i),Array.from({length:segments},(_,i)=>segments+i)];for(let i=0;i<segments;i++){const next=(i+1)%segments;faces.push([i,next,next+segments,i+segments]);}return {coords,faces};
+}
+function angleBracketMesh(member,endpoint,index,count){
+ const leg=Math.max(16,Math.min(30,Math.min(member.profile.b,member.profile.h)*.75)),t=Math.min(4,leg*.18),width=Math.max(6,Math.min(10,member.axis==='y'?member.w:member.d)*.24),outline=[[0,0],[leg,0],[leg,t],[t,t],[t,leg],[0,leg]],start=endpoint==='start',point=member.axis==='y'?[member.x+member.w/2,member.y,member.z]:member.axis==='z'?[member.x+member.w/2,member.y+member.d/2,start?member.z:member.z+member.h]:[member.x,member.y+member.d/2,member.z];
+ if(member.axis==='x'){
+  const sign=start?1:-1,y0=count===1?member.y+(member.d-width)/2:index===0?member.y-width+1:index===count-1?member.y+member.d-1:member.y+(member.d-width)*index/(count-1),y1=y0+width,z0=member.z+2;
+  return extrudedOutlineMesh(outline,([u,v])=>[point[0]+sign*u,y0,z0+v],([u,v])=>[point[0]+sign*u,y1,z0+v]);
+ }
+ if(member.axis==='y'){
+  const sign=start?1:-1,x0=count===1?member.x+(member.w-width)/2:index===0?member.x-width+1:index===count-1?member.x+member.w-1:member.x+(member.w-width)*index/(count-1),x1=x0+width,z0=member.z+2;
+  return extrudedOutlineMesh(outline,([u,v])=>[x0,point[1]+sign*u,z0+v],([u,v])=>[x1,point[1]+sign*u,z0+v]);
+ }
+ const signZ=start?1:-1,signX=member.x<1?1:-1,xBase=signX>0?member.x+member.w:member.x,y0=count===1?member.y+(member.d-width)/2:index===0?member.y-width+1:member.y+member.d-1,y1=y0+width;
+ return extrudedOutlineMesh(outline,([u,v])=>[xBase+signX*u,y0,point[2]+signZ*v],([u,v])=>[xBase+signX*u,y1,point[2]+signZ*v]);
+}
+function angleBracketStepParts(m){
+ const out=[],rows=new Map(m.cost.brackets.map(row=>[row.key,row]));let index=0;
+ for(const member of m.profileMembers){if(connectionMethodForRole(m.cfg,member.role)!=='angle'||!member.connectAt?.length)continue;const row=rows.get(sizeKey(member.profile)),count=Number.isInteger(row?.perEnd)&&row.perEnd>0?row.perEnd:1,code=asciiModelToken(row?.name,JLC.bracket.code);
+  for(const endpoint of member.connectAt)for(let i=0;i<count;i++){const id=`K${++index}`;out.push({id,kind:'angle-bracket',name:stepText(`${id}_${code}_AT_${member.id}_${endpoint.toUpperCase()}_${i+1}OF${count}`),mesh:angleBracketMesh(member,endpoint,i,count),modelCode:code,parentId:member.id});}
+ }
+ return out;
+}
+function casterStepParts(m){
+ if(!(m.cfg.footExposed>0))return [];
+ const out=[],p=m.p.post,modelCode=asciiModelToken(m.cfg.casterModel,'CASTER'),centres=[[p.b/2,p.h/2],[m.W-p.b/2,p.h/2],[p.b/2,m.D-p.h/2],[m.W-p.b/2,m.D-p.h/2]];
+ centres.forEach(([cx,cy],i)=>{const n=i+1,plateW=p.b+24,plateD=p.h+24,plateH=Math.max(4,Math.min(8,m.cfg.footExposed*.09)),plateZ=Math.max(0,m.cfg.footExposed-plateH),radius=Math.max(10,Math.min(32,m.cfg.footExposed*.24)),wheelZ=Math.max(radius,m.cfg.footExposed*.28),wheelT=Math.max(12,Math.min(22,p.h*.5)),stemTop=plateZ,stemBottom=Math.min(stemTop-2,wheelZ+radius*.72),padR=Math.max(9,Math.min(16,p.b*.36)),padX=cx+(cx<m.W/2?Math.min(22,p.b*.48):-Math.min(22,p.b*.48));
+  out.push({id:`CP${n}`,kind:'caster-plate',name:`CP${n}_CASTER_ADAPTER_PLATE_${stepToken(plateW)}X${stepToken(plateD)}X${stepToken(plateH)}MM`,x:cx-plateW/2,y:cy-plateD/2,z:plateZ,w:plateW,d:plateD,h:plateH});
+  out.push({id:`CB${n}`,kind:'caster-body',name:stepText(`CB${n}_${modelCode}_YOKE`),x:cx-7,y:cy-7,z:Math.max(0,stemBottom),w:14,d:14,h:Math.max(2,stemTop-Math.max(0,stemBottom))});
+  out.push({id:`CW${n}`,kind:'caster-wheel',name:stepText(`CW${n}_${modelCode}_WHEEL_D${stepToken(radius*2)}MM`),mesh:cylinderStepMesh({cx,cy:cy-wheelT/2,cz:wheelZ,r:radius,length:wheelT,axis:'y'})});
+  out.push({id:`CF${n}`,kind:'caster-foot',name:stepText(`CF${n}_${modelCode}_LEVELING_PAD_D${stepToken(padR*2)}MM`),mesh:cylinderStepMesh({cx:padX,cy,cz:0,r:padR,length:Math.max(4,Math.min(9,m.cfg.footExposed*.08)),axis:'z'})});
+ });
+ return out;
+}
+function supportBoardStepParts(m){
+ if(!(m.cfg.boardThickness>0))return [];
+ return m.levels.map(level=>({id:`BD${level.index}`,kind:'support-board',name:`BD${level.index}_SUPPORT_BOARD_${stepToken(level.tankWidth)}X${stepToken(level.tankDepth)}X${stepToken(m.cfg.boardThickness)}MM`,x:level.tankX,y:level.tankY,z:level.boardBottom,w:level.tankWidth,d:level.tankDepth,h:m.cfg.boardThickness}));
+}
+function detailedStepParts(m){
+ const profiles=profileStepMembers(m),brackets=angleBracketStepParts(m),casters=casterStepParts(m),boards=supportBoardStepParts(m),parts=[...profiles,...brackets,...casters,...boards];
+ return {parts,profiles,brackets,casters,boards,stats:{profileCuts:profiles.length,angleBrackets:brackets.length,casterAssemblies:m.cfg.footExposed>0?4:0,casterBodies:casters.length,supportBoards:boards.length,solidBodies:parts.length}};
+}
+function meshFaceDirections(coords,indices){
+ const p0=coords[indices[0]],sub=(a,b)=>a.map((v,i)=>v-b[i]),cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],unit=v=>{const n=Math.hypot(...v)||1;return v.map(x=>x/n);};let ref=unit(sub(coords[indices[1]],p0)),normal=[0,0,1];
+ for(let i=2;i<indices.length;i++){const candidate=cross(sub(coords[indices[i-1]],p0),sub(coords[indices[i]],p0));if(Math.hypot(...candidate)>1e-8){normal=unit(candidate);break;}}
+ if(Math.abs(normal[0]*ref[0]+normal[1]*ref[1]+normal[2]*ref[2])>.999)ref=Math.abs(normal[0])<.9?[1,0,0]:[0,1,0];return {normal,ref};
+}
+function stepAssemblyText(m){
+ if(!m?.valid)throw Error('当前参数无效，无法生成 STEP。');
+ const detailed=detailedStepParts(m),rows=[],add=body=>{rows.push(`#${rows.length+1}=${body};`);return `#${rows.length}`;};
+ const app=add("APPLICATION_CONTEXT('automotive design')");add(`APPLICATION_PROTOCOL_DEFINITION('international standard','automotive_design',2000,${app})`);
+ const productContext=add(`PRODUCT_CONTEXT('',${app},'mechanical')`),product=add(`PRODUCT('TURTLE_TANK_RACK_DETAILED_ASSEMBLY','TURTLE_TANK_RACK_DETAILED_ASSEMBLY','PROFILE CUTS BRACKETS CASTERS AND PLATES',(${productContext}))`),formation=add(`PRODUCT_DEFINITION_FORMATION_WITH_SPECIFIED_SOURCE('','',${product},.NOT_KNOWN.)`),designContext=add(`PRODUCT_DEFINITION_CONTEXT('part definition',${app},'design')`),definition=add(`PRODUCT_DEFINITION('design','',${formation},${designContext})`),definitionShape=add(`PRODUCT_DEFINITION_SHAPE('','',${definition})`);
+ const lengthUnit=add('(LENGTH_UNIT() NAMED_UNIT(*) SI_UNIT(.MILLI.,.METRE.))'),angleUnit=add('(NAMED_UNIT(*) PLANE_ANGLE_UNIT() SI_UNIT($,.RADIAN.))'),solidAngleUnit=add('(NAMED_UNIT(*) SI_UNIT($,.STERADIAN.) SOLID_ANGLE_UNIT())'),uncertainty=add(`UNCERTAINTY_MEASURE_WITH_UNIT(LENGTH_MEASURE(1.E-7),${lengthUnit},'distance_accuracy_value','')`),context=add(`(GEOMETRIC_REPRESENTATION_CONTEXT(3) GLOBAL_UNCERTAINTY_ASSIGNED_CONTEXT((${uncertainty})) GLOBAL_UNIT_ASSIGNED_CONTEXT((${lengthUnit},${angleUnit},${solidAngleUnit})) REPRESENTATION_CONTEXT('','3D'))`);
+ const makeBrep=part=>{
+  const mesh=part.mesh??(part.kind==='profile'?profileStepMesh(part):boxStepMesh(part)),points=mesh.coords.map(v=>add(`CARTESIAN_POINT('',(${v.map(stepNum).join(',')}))`));
+  const faces=mesh.faces.map(indices=>{const {normal,ref}=meshFaceDirections(mesh.coords,indices),loop=add(`POLY_LOOP('',(${indices.map(i=>points[i]).join(',')}))`),bound=add(`FACE_OUTER_BOUND('',${loop},.T.)`),normalDir=add(`DIRECTION('',(${normal.map(stepNum).join(',')}))`),refDir=add(`DIRECTION('',(${ref.map(stepNum).join(',')}))`),axis=add(`AXIS2_PLACEMENT_3D('',${points[indices[0]]},${normalDir},${refDir})`),plane=add(`PLANE('',${axis})`);return add(`ADVANCED_FACE('',(${bound}),${plane},.T.)`);});
+  const shell=add(`CLOSED_SHELL('${stepText(part.id)}',(${faces.join(',')}))`);return add(`FACETED_BREP('${stepText(part.name)}',${shell})`);
+ };
+ const breps=detailed.parts.map(makeBrep),origin=add("CARTESIAN_POINT('',(0.,0.,0.))"),zDir=add("DIRECTION('',(0.,0.,1.))"),xDir=add("DIRECTION('',(1.,0.,0.))"),placement=add(`AXIS2_PLACEMENT_3D('',${origin},${zDir},${xDir})`),representation=add(`ADVANCED_BREP_SHAPE_REPRESENTATION('DETAILED_ASSEMBLY_${detailed.stats.solidBodies}_SOLIDS',(${placement},${breps.join(',')}),${context})`);add(`SHAPE_DEFINITION_REPRESENTATION(${definitionShape},${representation})`);
+ const stamp=new Date().toISOString().replace(/\.\d{3}Z$/,'Z');
+ const description1=`DETAIL_COUNTS_PROFILES=${detailed.stats.profileCuts}_BRACKETS=${detailed.stats.angleBrackets}_CASTERS=${detailed.stats.casterAssemblies}_CASTER_BODIES=${detailed.stats.casterBodies}_BOARDS=${detailed.stats.supportBoards}_SOLIDS=${detailed.stats.solidBodies}`,description2='PROFILE_ENTITY_NAMES_INCLUDE_CUT_LENGTHS;_SLOTS_SIMPLIFIED;_CENTRE_BORES_AND_FASTENER_HOLES_OMITTED',description3=`FRAME_BBOX_W=${stepToken(m.W)}MM_D=${stepToken(m.D)}MM_H=${stepToken(stepAssemblyHeight(m))}MM;_DESIGN_OVERALL_H=${stepToken(m.H)}MM_INCLUDING_TANK`;
+ return `ISO-10303-21;\nHEADER;\nFILE_DESCRIPTION(('${stepText(description1)}','${stepText(description2)}','${stepText(description3)}'),'2;1');\nFILE_NAME('turtle-tank-rack-detailed-assembly.step','${stamp}',('Turtle Frame Planner'),(''),'Browser STEP writer','','');\nFILE_SCHEMA(('AUTOMOTIVE_DESIGN { 1 0 10303 214 3 1 1 }'));\nENDSEC;\nDATA;\n${rows.join('\n')}\nENDSEC;\nEND-ISO-10303-21;\n`;
+}
+const csvCell=value=>{const text=String(value??'');return /[",\r\n]/.test(text)?`"${text.replaceAll('"','""')}"`:text;};
+const csvRow=values=>values.map(csvCell).join(',');
+function cutListCsv(m){
+ if(!m?.valid)throw Error('当前参数无效，无法生成清单。');
+ const rows=[['方案名称',state.name],['导出时间',new Date().toLocaleString('zh-CN')],['设计整体 / STEP 架体外廓（mm）',`${fmt(m.W)} × ${fmt(m.D)} × ${fmt(m.H)} / ${fmt(m.W)} × ${fmt(m.D)} × ${fmt(stepAssemblyHeight(m))}`],['主体型材净长（m）',fmtM(m.totalLength/1000)],['定尺原料采购',`${m.stockPlan.totalBars} 根 × ${fmt(m.stockPlan.stockLength)} mm = ${fmtM(m.stockPlan.purchaseLength/1000)} m`],['当前材料总价（元）',m.cost.complete?money(m.cost.known):`已报价 ${money(m.cost.known)}`],[],['类别','合并编号 / 型号','安装位置','规格 / 型号','单件长度（mm）','数量','计价单位','单价（元）','小计（元）','备注']];
+ for(const cost of m.cost.profiles){const info=profilePurchaseInfo(m,cost);rows.push(['型材',info.codes,costLabel(cost.roles),info.spec,info.length,info.quantity,'元/m',cost.unit??'',cost.subtotal??'',info.note]);}
+ for(const row of m.cost.brackets)rows.push(['角码',row.name,costLabel(row.roles),row.beamSpec,'',row.amount,'元/个',row.unit??'',row.subtotal??'',`${row.quantity===null?`自动数量：${row.automatic}`:'手工数量'}；${stepEntityNote('bracket',row.automatic)}`]);
+ for(const row of m.cost.extras)rows.push(['辅材',row.name,row.rule,row.name,'',row.amount,`元/${row.unitLabel}`,row.unit??'',row.subtotal??'',`${row.quantity===null?`自动数量：${fmt(row.automatic)} ${row.unitLabel}`:'手工数量'}；${stepEntityNote(row.key,extraStepEntityCount(m,row))}`]);
+ rows.push([],['合计','','','','','','','',money(m.cost.known),m.cost.complete?'全部已计价':'存在未报价项']);
+ return '\uFEFF'+rows.map(csvRow).join('\r\n');
+}
+const xmlEscape=value=>String(value??'').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g,'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&apos;');
+const xlsxColumn=index=>{let n=index+1,out='';while(n){const r=(n-1)%26;out=String.fromCharCode(65+r)+out;n=Math.floor((n-1)/26);}return out;};
+function xlsxCellXml(ref,value,style=0){
+ const s=style?` s="${style}"`:'';
+ if(value===null||value===undefined||value==='')return `<c r="${ref}"${s}/>`;
+ if(typeof value==='number'&&Number.isFinite(value))return `<c r="${ref}"${s} t="n"><v>${value}</v></c>`;
+ return `<c r="${ref}"${s} t="inlineStr"><is><t xml:space="preserve">${xmlEscape(value)}</t></is></c>`;
+}
+function xlsxFormulaCellXml(ref,formula,cachedValue,style=0){
+ const s=style?` s="${style}"`:'',cached=typeof cachedValue==='number'&&Number.isFinite(cachedValue)?`<v>${cachedValue}</v>`:'';
+ return `<c r="${ref}"${s}><f>${xmlEscape(formula)}</f>${cached}</c>`;
+}
+function xlsxRowXml(index,values,styles=[],height=null,formulas={}){
+ const cells=values.map((value,col)=>Object.prototype.hasOwnProperty.call(formulas,col)?xlsxFormulaCellXml(`${xlsxColumn(col)}${index}`,formulas[col],value,styles[col]??0):xlsxCellXml(`${xlsxColumn(col)}${index}`,value,styles[col]??0)).join('');
+ return `<row r="${index}"${height?` ht="${height}" customHeight="1"`:''}>${cells}</row>`;
+}
+function profilePurchaseInfo(m,cost){
+ const sourceRows=m.rows.filter(row=>stockKey(row.profile)===cost.key),idRange=row=>rowCodeLabel(row),cuts=sourceRows.map(row=>`${fmt(row.length)} mm × ${row.qty}`).join('；'),match=jlcProfileMatch(cost.profile),stockMode=m.cfg.procurement.costBasis==='stock';
+ const codes=sourceRows.map(idRange).join('、');return {codes,spec:`${sectionName(cost.profile)} / ${match?.code??'自定义截面'}`,length:stockMode?m.cfg.procurement.stockLength:roundMoney(cost.netAmount*1000),quantity:stockMode?cost.stockBars:1,note:`STEP 实体 ${codes}；成品 ${cuts}；净长 ${fmtM(cost.netAmount)} m${stockMode?`；余料及工艺损耗 ${fmtM(cost.purchaseAmount-cost.netAmount)} m；逐根排料：${compactCutPlan(cost.stock)}`:'；按净长计价'}`};
+}
+function stepEntityNote(key,amount){
+ const n=Math.max(0,Math.round(Number(amount)||0)),range=prefix=>n?`STEP 实体 ${prefix}1${n>1?`～${prefix}${n}`:''}`:'STEP 中未启用';
+ if(key==='bracket')return range('K');
+ if(key==='casters')return n?`STEP 实体 CB1～CB${n}、CW1～CW${n}、CF1～CF${n}`:'STEP 中未启用';
+ if(key==='casterPlates')return range('CP');
+ if(key==='supportBoard')return range('BD');
+ return '配套件见装配图';
+}
+function extraStepEntityCount(m,row){if(row.key==='supportBoard')return m.cfg.boardThickness>0?m.levels.length:0;if(row.key==='casters'||row.key==='casterPlates')return m.cfg.footExposed>0?4:0;return row.automatic;}
+function materialListWorkbookData(m){
+ if(!m?.valid)throw Error('当前参数无效，无法生成材料清单。');
+ const detail=[];
+ for(const cost of m.cost.profiles){const info=profilePurchaseInfo(m,cost);detail.push({kind:'profile',values:['型材',info.codes,costLabel(cost.roles),info.spec,info.length,info.quantity,'元/m',cost.unit??null,cost.subtotal??null,info.note]});}
+ for(const row of m.cost.brackets)detail.push({kind:'quantity',values:['角码',row.name,costLabel(row.roles),row.beamSpec,null,Number.isFinite(row.amount)?row.amount:null,'元/个',row.unit??null,row.subtotal??null,`${row.quantity===null?`自动数量：${row.automatic}`:'手工数量'}；${stepEntityNote('bracket',row.automatic)}`]});
+ for(const row of m.cost.extras)detail.push({kind:'quantity',values:['辅材',row.name,row.rule,row.name,null,Number.isFinite(row.amount)?row.amount:null,`元/${row.unitLabel}`,row.unit??null,row.subtotal??null,`${row.quantity===null?`自动数量：${fmt(row.automatic)} ${row.unitLabel}`:'手工数量'}；${stepEntityNote(row.key,extraStepEntityCount(m,row))}`]});
+ const totalLabel=m.cost.complete?'材料总价（元）':'已报价小计（元）';
+ return {title:`${state.name||'龟缸架'} · 配套 STEP 完整 BOM`,summary:[['方案名称',state.name||'龟缸架'],['装配方式',`${JOINT_LAYOUTS[state.jointLayout]}；外框 ${connectionLabel(state.connections.outer)}；中梁 ${connectionLabel(state.connections.middle)}`],['设计整体 / STEP 架体外廓（mm）',`${fmt(m.W)} × ${fmt(m.D)} × ${fmt(m.H)} / ${fmt(m.W)} × ${fmt(m.D)} × ${fmt(stepAssemblyHeight(m))}`],['主体型材净长（m）',Number((m.totalLength/1000).toFixed(5))],['成品件 / 定尺采购',`${m.totalCount} 件；${m.stockPlan.totalBars} 根 × ${fmt(m.stockPlan.stockLength)} mm`],[totalLabel,roundMoney(m.cost.known)]],headers:['类别','合并编号 / 型号','安装位置 / 依据','规格 / 型号','单件长度（mm）','数量','计价单位','单价（元）','小计（元）','备注'],detail,total:['合计','','','','','','','',roundMoney(m.cost.known),m.cost.complete?'全部已计价':'存在未报价项']};
+}
+function xlsxColumnWidths(data){
+ const minimum=[12,18,24,28,15,10,11,14,14,22],maximum=[20,30,42,42,18,12,13,16,16,46],summaryRows=data.summary.map(([label,value])=>[label,value]),rows=[data.headers,...data.detail.map(row=>row.values),data.total,...summaryRows],displayWidth=value=>[...String(value??'')].reduce((sum,ch)=>sum+(ch.charCodeAt(0)>255?2:1),0);
+ return data.headers.map((_,col)=>Math.min(maximum[col],Math.max(minimum[col],...rows.map(row=>displayWidth(row[col])+2))));
+}
+function materialListSheetXml(m){
+ const data=materialListWorkbookData(m),widths=xlsxColumnWidths(data),detailStart=9,detailEnd=detailStart+data.detail.length-1,totalRow=detailEnd+2,rows=[xlsxRowXml(1,[data.title],[1],28)];
+ data.summary.forEach((row,index)=>rows.push(xlsxRowXml(index+2,row,[2,index===5?8:3],22,index===5?{1:`SUM(I${detailStart}:I${detailEnd})`}:{})));
+ rows.push(xlsxRowXml(8,data.headers,Array(10).fill(4),34));
+ data.detail.forEach((entry,index)=>{const r=detailStart+index,row=entry.values,formula=entry.kind==='profile'?`IF(OR(E${r}="",F${r}="",H${r}=""),"",ROUND(E${r}*F${r}/1000*H${r},2))`:`IF(OR(F${r}="",H${r}=""),"",ROUND(F${r}*H${r},2))`;rows.push(xlsxRowXml(r,row,[5,5,5,5,7,7,5,11,8,5],entry.kind==='profile'?96:36,{8:formula}));});
+ const totalStyles=Array(10).fill(9);totalStyles[8]=10;rows.push(xlsxRowXml(totalRow,data.total,totalStyles,25,{8:`SUM(I${detailStart}:I${detailEnd})`}));
+ const cols=widths.map((width,index)=>`<col min="${index+1}" max="${index+1}" width="${width.toFixed(2)}" customWidth="1"/>`).join('');
+ return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetPr><pageSetUpPr fitToPage="1"/></sheetPr><dimension ref="A1:J${totalRow}"/><sheetViews><sheetView workbookViewId="0" showGridLines="0"><pane ySplit="8" topLeftCell="A9" activePane="bottomLeft" state="frozen"/><selection pane="bottomLeft" activeCell="A9" sqref="A9"/></sheetView></sheetViews><sheetFormatPr defaultRowHeight="20"/><cols>${cols}</cols><sheetData>${rows.join('')}</sheetData><autoFilter ref="A8:J${detailEnd}"/><mergeCells count="1"><mergeCell ref="A1:J1"/></mergeCells><pageMargins left="0.25" right="0.25" top="0.5" bottom="0.5" header="0.2" footer="0.2"/><pageSetup paperSize="9" orientation="landscape" fitToWidth="1" fitToHeight="0"/></worksheet>`;
+}
+function materialListStylesXml(){return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="1"><numFmt numFmtId="165" formatCode="&quot;¥&quot;#,##0.00"/></numFmts><fonts count="4"><font><sz val="10"/><name val="Arial"/><family val="2"/></font><font><b/><sz val="14"/><color rgb="FF173F39"/><name val="Arial"/><family val="2"/></font><font><b/><sz val="10"/><color rgb="FF173F39"/><name val="Arial"/><family val="2"/></font><font><b/><sz val="10"/><color rgb="FFFFFFFF"/><name val="Arial"/><family val="2"/></font></fonts><fills count="5"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF285F56"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFEAF2EE"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFFF2CC"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="4"><border><left/><right/><top/><bottom/><diagonal/></border><border><left/><right/><top/><bottom style="thin"><color rgb="FFDDE7E1"/></bottom><diagonal/></border><border><left style="thin"><color rgb="FF6F8E87"/></left><right style="thin"><color rgb="FF6F8E87"/></right><top style="thin"><color rgb="FF6F8E87"/></top><bottom style="thin"><color rgb="FF6F8E87"/></bottom><diagonal/></border><border><left/><right/><top style="medium"><color rgb="FF285F56"/></top><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="12"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0"><alignment vertical="center"/></xf><xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0"><alignment vertical="center"/></xf><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"><alignment vertical="center"/></xf><xf numFmtId="0" fontId="3" fillId="2" borderId="2" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf><xf numFmtId="3" fontId="0" fillId="0" borderId="1" xfId="0" applyNumberFormat="1" applyAlignment="1"><alignment horizontal="right" vertical="center"/></xf><xf numFmtId="4" fontId="0" fillId="0" borderId="1" xfId="0" applyNumberFormat="1" applyAlignment="1"><alignment horizontal="right" vertical="center"/></xf><xf numFmtId="165" fontId="0" fillId="0" borderId="1" xfId="0" applyNumberFormat="1" applyAlignment="1"><alignment horizontal="right" vertical="center"/></xf><xf numFmtId="0" fontId="2" fillId="3" borderId="3" xfId="0" applyAlignment="1"><alignment vertical="center"/></xf><xf numFmtId="165" fontId="2" fillId="3" borderId="3" xfId="0" applyNumberFormat="1" applyAlignment="1"><alignment horizontal="right" vertical="center"/></xf><xf numFmtId="165" fontId="0" fillId="4" borderId="1" xfId="0" applyNumberFormat="1" applyAlignment="1"><alignment horizontal="right" vertical="center"/></xf></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles><dxfs count="0"/><tableStyles count="0" defaultTableStyle="TableStyleMedium2" defaultPivotStyle="PivotStyleLight16"/></styleSheet>`;}
+function materialListXlsxBlob(m){
+ const stamp=new Date().toISOString(),files=[
+  {name:'[Content_Types].xml',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>`},
+  {name:'_rels/.rels',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/></Relationships>`},
+  {name:'docProps/app.xml',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>龟缸架参数设计器</Application><AppVersion>15.2</AppVersion></Properties>`},
+  {name:'docProps/core.xml',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>${xmlEscape(state.name||'龟缸架')} 材料清单</dc:title><dc:creator>龟缸架参数设计器</dc:creator><dcterms:created xsi:type="dcterms:W3CDTF">${stamp}</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">${stamp}</dcterms:modified></cp:coreProperties>`},
+  {name:'xl/workbook.xml',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><bookViews><workbookView activeTab="0"/></bookViews><sheets><sheet name="材料清单" sheetId="1" r:id="rId1"/></sheets><calcPr calcId="0" calcMode="auto" fullCalcOnLoad="1" forceFullCalc="1"/></workbook>`},
+  {name:'xl/_rels/workbook.xml.rels',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`},
+  {name:'xl/styles.xml',data:materialListStylesXml()},
+  {name:'xl/worksheets/sheet1.xml',data:materialListSheetXml(m)}
+ ];
+ return zipStoreBlob(files,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+}
+function materialListXlsxFileName(m){return `JLCFA_Turtle_Rack_W${stepToken(m.W)}_D${stepToken(m.D)}_H${stepToken(stepAssemblyHeight(m))}_BOM.xlsx`;}
+function svgTextForView(view){if(!model?.valid||!VIEWS[view])throw Error('当前参数或视角无效，无法生成图纸。');return '<?xml version="1.0" encoding="UTF-8"?>\n'+drawingSvg(view,model,outputViewOptions(),'export-'+view);}
+function currentSvgText(){return svgTextForView(activeView);}
+function profileSpecPanelSvg(m,x,y,w,h){
+ const q=jlcQuoteData(m),idRange=part=>part.label??`${part.id} × ${part.qty}`,rows=q.rows,rowTop=y+94,rowH=(h-188)/Math.max(1,rows.length),font='font-family="Microsoft YaHei,Segoe UI,Arial,sans-serif"',short=(value,max)=>{const chars=[...String(value)];return chars.length>max?chars.slice(0,max-1).join('')+'…':chars.join('');};
+ const body=rows.map((row,index)=>{const ry=rowTop+index*rowH,spec=`${stockName(row.profile)} · ${fmt(row.profile.b)}×${fmt(row.profile.h)} · t${fmt(row.profile.t)}`,code=row.spec?.code??'自定义截面',uses=row.uses.join('、'),ids=row.sourceRows.map(idRange).join('、');return `<g data-profile-row="${index+1}"><line x1="${x+14}" y1="${ry}" x2="${x+w-14}" y2="${ry}" stroke="#e3ebe6"/><text x="${x+18}" y="${ry+23}" fill="#173f39" font-size="12" font-weight="700">${escapeHtml(ids)}</text><text x="${x+128}" y="${ry+20}" fill="#173f39" font-size="12" font-weight="700">${escapeHtml(spec)}</text><text x="${x+128}" y="${ry+39}" fill="#71847f" font-size="10">${escapeHtml(code)}</text><text x="${x+360}" y="${ry+22}" fill="#173f39" font-size="12">${escapeHtml(short(uses,18))}</text><text x="${x+w-18}" y="${ry+20}" text-anchor="end" fill="#173f39" font-size="12" font-weight="700">${fmt(row.length)} mm × ${row.qty}</text><text x="${x+w-18}" y="${ry+39}" text-anchor="end" fill="#71847f" font-size="10">净长 ${fmtM(row.length*row.qty/1000)} m</text></g>`;}).join('');
+ const ds=detailedStepParts(m).stats,bracketName=m.cost.brackets[0]?.name??'当前未启用角码',casterName=m.cfg.casterModel||'福马轮',bracketIds=ds.angleBrackets?`K1～K${ds.angleBrackets}`:'未生成',casterIds=ds.casterAssemblies?`CP / CB / CW / CF 1～${ds.casterAssemblies}`:'未生成';
+ return `<g data-profile-table="true" ${font}><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="#fff" stroke="#dce7e1"/><text x="${x+18}" y="${y+29}" fill="#173f39" font-size="20" font-weight="700">型材规格与下料</text><text x="${x+18}" y="${y+51}" fill="#71847f" font-size="11">${m.totalCount} 件 · 净长 ${fmtM(m.totalLength/1000)} m · ${fmt(m.stockPlan.stockLength)} mm 定尺 ${m.stockPlan.totalBars} 根 / ${fmtM(m.stockPlan.purchaseLength/1000)} m</text><rect x="${x+14}" y="${y+62}" width="${w-28}" height="32" rx="3" fill="#eef3ef"/><text x="${x+18}" y="${y+83}" fill="#49645e" font-size="11" font-weight="700">合并编号</text><text x="${x+128}" y="${y+83}" fill="#49645e" font-size="11" font-weight="700">截面 / 壁厚 / 型号</text><text x="${x+360}" y="${y+83}" fill="#49645e" font-size="11" font-weight="700">使用部位</text><text x="${x+w-18}" y="${y+83}" text-anchor="end" fill="#49645e" font-size="11" font-weight="700">长度 × 数量</text>${body}<g data-hardware-summary="true"><rect x="${x+14}" y="${y+h-79}" width="${w-28}" height="50" rx="4" fill="#fff8ee" stroke="#edc69f"/><text x="${x+24}" y="${y+h-58}" fill="#914d16" font-size="11" font-weight="700">STEP 装配附件：角码 ${ds.angleBrackets} 个（${escapeHtml(short(bracketName,27))}） · 福马轮 ${ds.casterAssemblies} 套（${escapeHtml(short(casterName,20))}） · 转接底板 ${ds.casterAssemblies} 块</text><text x="${x+24}" y="${y+h-39}" fill="#8a6a50" font-size="10">实体编号：${bracketIds}；${casterIds}。孔位与紧固件按最终型号深化。</text></g><text x="${x+18}" y="${y+h-12}" fill="#71847f" font-size="10">同规格同长度已合并；价格仅在 HTML 与配套 BOM XLSX 中显示。</text></g>`;
+}
+function allViewSvgText(){
+ if(!model?.valid)throw Error('当前参数无效，无法生成图纸。');
+ const width=1600,margin=20,header=76,gapX=40,gapY=24,cellW=760,scale=cellW/1120,cellH=760*scale,views=Object.keys(VIEWS),positions=[[margin,header],[margin+cellW+gapX,header],[margin,header+cellH+gapY],[margin+cellW+gapX,header+cellH+gapY],[margin,header+2*(cellH+gapY)]],height=Math.ceil(header+3*cellH+2*gapY+margin),options=outputViewOptions();
+ const cards=views.map((view,index)=>{const [x,y]=positions[index];return `<g data-view="${view}" transform="translate(${x} ${y}) scale(${scale})">${drawingSvg(view,model,options,'export-all-'+view)}</g>`;}).join('');
+ const specs=profileSpecPanelSvg(model,margin+cellW+gapX,header+2*(cellH+gapY),cellW,cellH);
+ const outputHeight=visibleOutputHeight(model,options.tanks),mode=options.tanks?'整体':'架体（龟缸隐藏）';
+ return `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="龟缸架全视角总图"><rect width="100%" height="100%" fill="#f6f8f4"/><text x="20" y="34" fill="#163d38" font-family="Microsoft YaHei,Segoe UI,Arial,sans-serif" font-size="24" font-weight="700">${escapeHtml(state.name||'龟缸架')} · 全视角总图</text><text x="20" y="60" fill="#71847f" font-family="Microsoft YaHei,Segoe UI,Arial,sans-serif" font-size="15">${mode} ${fmt(model.W)} × ${fmt(model.D)} × ${fmt(outputHeight)} mm · ${JOINT_LAYOUTS[state.jointLayout]} · 外框 ${connectionLabel(state.connections.outer)} / 中梁 ${connectionLabel(state.connections.middle)}</text>${cards}${specs}</svg>`;
+}
+function preparePrintSheet(){
+ if(!model?.valid)return '';
+ const options={tanks:$('showTanks').checked,brackets:$('showBrackets').checked,dims:$('showDims').checked,tier:selectedTier,focus:null},pages=Object.keys(VIEWS).map(view=>`<section class="print-page">${drawingSvg(view,model,options,'print-'+view)}</section>`).join(''),q=jlcQuoteData(model),outputHeight=visibleOutputHeight(model,options.tanks),sizeLabel=options.tanks?'整体':'架体（龟缸隐藏）';
+ const cutRows=q.rows.map(row=>`<tr><td>${escapeHtml(row.sourceRows.map(part=>part.label??`${part.id} × ${part.qty}`).join('、'))}</td><td>${escapeHtml(row.uses.join('、'))}</td><td>${escapeHtml(row.modelName??sectionName(row.profile))}</td><td class="number">${fmt(row.length)} mm × ${row.qty}</td><td class="number">${fmtM(row.length*row.qty/1000)} m</td></tr>`).join('');
+ const purchaseRows=[...model.cost.profiles.map(row=>`<tr><td>定尺型材</td><td>${escapeHtml(sectionName(row.profile))}</td><td>${row.stockBars} 根 × ${fmt(model.stockPlan.stockLength)} mm</td><td>${escapeHtml(costLabel(row.roles)+'；'+compactCutPlan(row.stock))}</td></tr>`),...model.cost.brackets.map(row=>`<tr><td>角码</td><td>${escapeHtml(row.name)}</td><td>${fmt(row.amount)} 个</td><td>${escapeHtml(costLabel(row.roles))}</td></tr>`),...model.cost.extras.filter(row=>row.amount>0).map(row=>`<tr><td>辅材</td><td>${escapeHtml(row.name)}</td><td>${fmt(row.amount)} ${escapeHtml(row.unitLabel)}</td><td>${escapeHtml(row.rule)}</td></tr>`)].join('');
+ const list=`<section class="print-page print-list"><h1>${escapeHtml(state.name||'龟缸架')} · 下料与材料清单</h1><p>${sizeLabel} ${fmt(model.W)} × ${fmt(model.D)} × ${fmt(outputHeight)} mm · ${escapeHtml(JOINT_LAYOUTS[state.jointLayout])} · 外框 ${escapeHtml(connectionLabel(state.connections.outer))} / 中梁 ${escapeHtml(connectionLabel(state.connections.middle))} · 型材净长 ${fmtM(model.totalLength/1000)} m · 定尺原料 ${model.stockPlan.totalBars} 根 / ${fmtM(model.stockPlan.purchaseLength/1000)} m · 导出日期 ${new Date().toLocaleDateString('zh-CN')}</p><table><thead><tr><th>合并编号</th><th>安装位置</th><th>型材 / 型号</th><th class="number">长度 × 数量</th><th class="number">净长合计</th></tr></thead><tbody>${cutRows}</tbody></table><h2>采购数量</h2><table><thead><tr><th>类别</th><th>项目</th><th>采购数量</th><th>用途 / 依据</th></tr></thead><tbody>${purchaseRows}</tbody></table><p>本页不显示金额。详细 STEP 已包含独立型材段、简化槽形、当前启用的角码、福马轮和转接底板；中心孔、紧固件孔、斜撑及墙面固定件仍需按最终型号深化。提交整机报价时请将 STEP 与配套 BOM XLSX 一并上传。</p></section>`;
+ $('printSheet').innerHTML=pages+list;return $('printSheet').innerHTML;
+}
+$('costCard').addEventListener('input',event=>{
+ const input=event.target,path=input.dataset.path;if(!path?.startsWith('cost.'))return;
+ setPath(state,path,input.type==='number'?(input.value===''?null:Number(input.value)):input.value);
+  if(model?.valid){model.cost=calculateCosts(model,state);updateCostResults();renderComparison();renderJlc();}selectedPath=path;locateParameter(path);queuePersist();
+});
+
+function frameMembers(m){
+ const all=m.profileMembers.map(part=>({...part})),p=m.p;
+ const add=(role,x,y,z,w,d,h,tier=-1,axis='x')=>all.push({role,x,y,z,w,d,h,tier,axis});
+ for(const x of [0,m.W-p.post.b])for(const y of [0,m.D-p.post.h]){
+  if(m.cfg.footExposed)add('caster',x,y,0,p.post.b,p.post.h,m.cfg.footExposed);
+ }
+ for(const l of m.levels){
+  const t=l.index-1;
+  if(m.cfg.boardThickness)add('deck',l.tankX,l.tankY,l.boardBottom,l.tankWidth,l.tankDepth,m.cfg.boardThickness,t);
+  if(m.cfg.matThickness)add('mat',l.tankX,l.tankY,l.boardTop,l.tankWidth,l.tankDepth,m.cfg.matThickness,t);
+  add('tank',l.tankX,l.tankY,l.tankBottom,l.tankWidth,l.tankDepth,l.height,t);
+ }
+ return all;
+}
+function focusInfo(m,path,tier=selectedTier){
+ if(!m?.valid||!path)return null;
+ const cfg=m.cfg,parts=frameMembers(m),index=Math.min(Math.max(0,tier),m.levels.length-1),l=m.levels[index],tank=parts.find(p=>p.role==='tank'&&p.tier===index);
+ const f={path,label:'参数位置',value:'',description:'橙色表示此参数对应的位置。',view:'iso',tier:index,regions:[],points:[],inset:'note'};
+ const val=readPath(state,path),mm=v=>fmt(v)+' mm',box=(x,y,z,w,d,h,tierIndex=index)=>({x,y,z,w,d,h,tier:tierIndex,role:'focus'});
+ const measure=(a,b,value)=>{f.a=a;f.b=b;f.measureValue=mm(value);};
+ if(path==='name'){f.label='方案名称';f.value=cfg.name;f.description='方案名称显示在图纸标题处。';f.inset='name';return f;}
+ if(path==='topMode'){f.label='最上层上方结构';f.value=cfg.topMode==='open'?'顶部开放':'顶部封框';f.view='iso';f.description=cfg.topMode==='open'?'最上层龟缸位于最高承托框上方，立柱止于承托梁顶。':'保留顶层操作净空，并在净空上方增加四边封框。';f.regions=cfg.topMode==='open'?parts.filter(p=>p.role==='tank'&&p.tier===m.levels.length-1):parts.filter(p=>p.role==='top');return f;}
+ if(path==='jointLayout'){f.label='立柱与层框对齐';f.value=JOINT_LAYOUTS[cfg.jointLayout];f.description=cfg.jointLayout==='continuous'?'四根立柱贯通，前后梁和侧梁夹装在立柱之间。':'层框形成完整承压面，上一段立柱压在下一层框架顶面。';f.regions=parts.filter(p=>['post','fb','side','top'].includes(p.role));return f;}
+ const connectionMatch=path.match(/^connections\.(outer|middle)$/);
+ if(connectionMatch){const group=connectionMatch[1],roles=group==='middle'?['middle']:['fb','side','top',...(cfg.jointLayout==='stacked'?['post']:[])];f.label=group==='middle'?'中间托梁节点':'外框与分段立柱节点';f.value=connectionLabel(cfg.connections[group]);f.description=cfg.connections[group]==='angle'?'采用外置角码，不要求在型材端面加工连接孔。':'橙色符号显示需要加工或安装连接件的构件端；具体孔径、端距和攻丝规格以所购型材连接图为准。';f.regions=parts.filter(p=>roles.includes(p.role));return f;}
+ const topMatch=path.match(/^topTank\.(width|depth|height)$/);
+ if(topMatch&&cfg.topMode==='open'){
+  const lev=m.levels.at(-1),axis=topMatch[1],topIndex=m.levels.length-1;f.tier=topIndex;f.label={width:'顶部缸外宽 · 左右',depth:'顶部缸外深 · 前后',height:'顶部缸外高'}[axis];f.value=mm(cfg.topTank[axis]);f.view=axis==='height'?'front':'plan';f.inset='dimension';f.description='顶部开放时使用的独立玻璃缸尺寸；承托板和缓冲垫同步采用该缸底尺寸。';f.regions=parts.filter(p=>p.role==='tank'&&p.tier===topIndex);
+  if(axis==='width')measure([lev.tankX,lev.tankY,lev.tankRim],[lev.tankX+lev.tankWidth,lev.tankY,lev.tankRim],lev.tankWidth);
+  if(axis==='depth')measure([lev.tankX,lev.tankY,lev.tankRim],[lev.tankX,lev.tankY+lev.tankDepth,lev.tankRim],lev.tankDepth);
+  if(axis==='height')measure([lev.tankX+lev.tankWidth,lev.tankY,lev.tankBottom],[lev.tankX+lev.tankWidth,lev.tankY,lev.tankRim],lev.height);return f;
+ }
+ const topClearMatch=path.match(/^topTank\.clear\.(left|right|front|back)$/);
+ if(topClearMatch&&cfg.topMode==='open'){
+  const k=topClearMatch[1],lev=m.levels.at(-1),topIndex=m.levels.length-1,amount=cfg.topTank.clear[k],actual=lev.clear[k],cx=lev.tankX+lev.tankWidth/2,cy=lev.tankY+lev.tankDepth/2,cz=lev.tankBottom+lev.height/2;f.tier=topIndex;f.label=`顶部缸${{left:'左',right:'右',front:'前',back:'后'}[k]}余量`;f.value=nearly(amount,actual)?mm(amount):`设置 ${mm(amount)}；实际 ${mm(actual)}`;f.view='plan';f.inset='clearance';f.edge=k;f.description='从顶部缸外壁量到架体外沿；当常规层需要更大外廓时，多出的空间在两侧均分。';
+  if(k==='left'){f.regions=[box(0,lev.tankY,lev.tankBottom,actual,lev.tankDepth,lev.height,topIndex)];measure([0,cy,cz],[lev.tankX,cy,cz],actual);}
+  if(k==='right'){f.regions=[box(lev.tankX+lev.tankWidth,lev.tankY,lev.tankBottom,actual,lev.tankDepth,lev.height,topIndex)];measure([lev.tankX+lev.tankWidth,cy,cz],[m.W,cy,cz],actual);}
+  if(k==='front'){f.regions=[box(lev.tankX,0,lev.tankBottom,lev.tankWidth,actual,lev.height,topIndex)];measure([cx,0,cz],[cx,lev.tankY,cz],actual);}
+  if(k==='back'){f.regions=[box(lev.tankX,lev.tankY+lev.tankDepth,lev.tankBottom,lev.tankWidth,actual,lev.height,topIndex)];measure([cx,lev.tankY+lev.tankDepth,cz],[cx,m.D,cz],actual);}return f;
+ }
+ if(path==='tankWidth'||path==='tankDepth'){
+  const commonIndex=cfg.topMode==='open'?Math.min(index,m.levels.length-2):index,w=path==='tankWidth';f.label=w?'常规缸外宽 · 左右':'常规缸外深 · 前后';f.value=mm(w?cfg.tankWidth:cfg.tankDepth);f.view='plan';f.inset='dimension';
+  if(commonIndex<0){f.description='当前只有一个顶部开放缸，常规缸尺寸暂不参与架体计算。';return f;}
+  const lev=m.levels[commonIndex],commonTank=parts.find(p=>p.role==='tank'&&p.tier===commonIndex);f.tier=commonIndex;f.regions=[commonTank];f.description='标注下层常规龟缸的外侧边界，不包含四边余量和立柱。';measure([lev.tankX,lev.tankY,lev.tankRim],w?[lev.tankX+lev.tankWidth,lev.tankY,lev.tankRim]:[lev.tankX,lev.tankY+lev.tankDepth,lev.tankRim],w?lev.tankWidth:lev.tankDepth);return f;
+ }
+ if(path==='legClear'||path==='footExposed'){
+  const foot=path==='footExposed';f.label=foot?'福马轮组件安装高度':'底层梁下离地';f.value=mm(val);f.view='front';f.inset=foot&&val?'foot':foot?'note':'dimension';
+  if(!foot)f.label='脚轮顶至底层梁下净高';
+  f.description=foot?(val?'地面到铝立柱底端；与上方净高分段计算。':'高度为 0，表示不安装福马轮，立柱直接下至地面。'):`从福马轮顶（铝立柱底端）到第一层框最低横梁下沿；与轮高相加后，梁下离地为 ${fmt(m.baseHeight)} mm。`;
+  f.regions=foot?parts.filter(p=>p.role==='caster'):[box(m.frontX,0,cfg.footExposed,m.frontLength,m.p.fb.b,cfg.legClear)];
+  measure([foot?m.p.post.b/2:m.W/2,0,foot?0:cfg.footExposed],[foot?m.p.post.b/2:m.W/2,0,foot?val:m.baseHeight],val);return f;
+ }
+ if(path==='boardThickness'||path==='matThickness'){
+  const board=path==='boardThickness',role=board?'deck':'mat',amount=board?cfg.boardThickness:cfg.matThickness,bottom=board?l.boardBottom:l.boardTop;
+  f.label=board?'刚性承托板厚度':'缓冲垫厚度';f.value=mm(amount);f.view='section';f.inset='dimension';
+  f.description=board?'承托板覆盖玻璃缸整个底面，并落在前梁、后梁及中梁上。':'缓冲垫铺在承托板与玻璃缸之间；是否使用及厚度按缸厂说明。';
+  f.regions=parts.filter(p=>p.role===role&&p.tier===index);if(!f.regions.length)f.regions=[box(l.tankX,l.tankY,bottom,l.tankWidth,l.tankDepth,Math.max(amount,.5))];
+  measure([l.tankX,l.tankY,bottom],[l.tankX,l.tankY,bottom+amount],amount);return f;
+ }
+ if(path==='casterModel'||path==='casterCapacity'){
+  const capacity=path==='casterCapacity';f.label=capacity?'单只福马轮额定承载':'福马轮型号说明';f.value=capacity?fmt(cfg.casterCapacity)+' kg / 只':cfg.casterModel;f.view='iso';f.inset=cfg.footExposed?'foot':'note';
+  f.description=cfg.footExposed?(capacity?`四只脚轮中按三只分担并留 1.5 倍余量，当前估算每只至少 ${Math.ceil(m.requiredCasterCapacity)} kg。`:'四根立柱下各装一只平板福马轮，转接底板与螺栓孔位按实物深化。'):'福马轮安装高度为 0，当前方案不安装脚轮。';
+  f.regions=parts.filter(p=>p.role==='caster');return f;
+ }
+ if(path==='tierCount'){f.label='龟缸层数';f.value=fmt(val)+' 层';f.description='层号从下往上；顶部开放时，最上层净空不参与总高。';f.view='front';f.regions=parts.filter(p=>p.role==='tank');return f;}
+ const tierMatch=path.match(/^tiers\.(\d+)\.(height|gap)$/);
+ if(tierMatch){
+   const n=Number(tierMatch[1]);if(!m.levels[n])return null;const lev=m.levels[n],height=tierMatch[2]==='height';if(!height&&lev.gap===null)return null;const bottom=height?lev.tankBottom:lev.tankRim,amount=height?lev.height:lev.gap;
+  f.tier=n;f.label=`第 ${n+1} 层${height?'缸高':'上方操作净空'}`;f.value=mm(amount);f.view='front';f.inset='dimension';
+   f.description=height?'从缸底外表面到缸口最高处。':'从缸口到上方框最低横梁下沿；封框模式下顶层对应顶部封框下沿。';
+   f.regions=[box(lev.tankX,lev.tankY,bottom,lev.tankWidth,lev.tankDepth,amount,n)];
+   measure([lev.tankX+lev.tankWidth,lev.tankY,bottom],[lev.tankX+lev.tankWidth,lev.tankY,bottom+amount],amount);return f;
+  }
+  if(path.startsWith('clear.')){
+   const k=path.split('.')[1],commonIndex=cfg.topMode==='open'?Math.min(index,m.levels.length-2):index,amount=cfg.clear[k];f.label=`常规缸${{left:'左',right:'右',front:'前',back:'后'}[k]}余量`;f.view='plan';f.inset='clearance';f.edge=k;
+   if(commonIndex<0){f.value=mm(amount);f.description='当前只有一个顶部开放缸，常规缸余量暂不参与架体计算。';return f;}
+   const lev=m.levels[commonIndex],actual=lev.clear[k],cx=lev.tankX+lev.tankWidth/2,cy=lev.tankY+lev.tankDepth/2,cz=lev.tankBottom+lev.height/2;f.tier=commonIndex;f.value=nearly(amount,actual)?mm(amount):`设置 ${mm(amount)}；实际 ${mm(actual)}`;f.description=k==='left'||k==='right'?'从常规缸外壁量到立柱内侧；顶部尺寸决定更大外廓时，多出的空间在两侧均分。':'从常规缸外壁量到架体外沿；前后主梁位于承托面下方，多出的空间在两侧均分。';
+   if(k==='left'){f.regions=[box(m.p.post.b,lev.tankY,lev.tankBottom,actual,lev.tankDepth,lev.height,commonIndex)];measure([m.p.post.b,cy,cz],[lev.tankX,cy,cz],actual);}
+   if(k==='right'){f.regions=[box(lev.tankX+lev.tankWidth,lev.tankY,lev.tankBottom,actual,lev.tankDepth,lev.height,commonIndex)];measure([lev.tankX+lev.tankWidth,cy,cz],[m.W-m.p.post.b,cy,cz],actual);}
+   if(k==='front'){f.regions=[box(lev.tankX,0,lev.tankBottom,lev.tankWidth,actual,lev.height,commonIndex)];measure([cx,0,cz],[cx,lev.tankY,cz],actual);}
+   if(k==='back'){f.regions=[box(lev.tankX,lev.tankY+lev.tankDepth,lev.tankBottom,lev.tankWidth,actual,lev.height,commonIndex)];measure([cx,lev.tankY+lev.tankDepth,cz],[cx,m.D,cz],actual);}return f;
+  }
+ if(path==='middleCount'){
+  f.label='每层中间托梁根数';f.value=`${cfg.middleCount} 根 / 层`;f.view='plan';f.description=`全架共 ${cfg.middleCount*cfg.tierCount} 根中梁，位于前后主梁之间。`;f.regions=parts.filter(p=>p.role==='middle'&&p.tier===index);
+  if(!f.regions.length)f.regions=[box(m.p.side.b,m.p.fb.b,l.frameBottom,m.middleLength,m.D-2*m.p.fb.b,m.frameHeight)];return f;
+ }
+ const profileMatch=path.match(/^profiles\.([^.]+)\.(choice|b|h|t)$/);
+ if(profileMatch){
+  const role=profileMatch[1],axis=profileMatch[2],p=m.p[role];f.profile=p;f.role=role;f.profileAxis=axis;f.inset='profile';
+  f.label=ROLES.find(r=>r[0]===role)[1]+(axis==='choice'?'规格':axis==='t'?'名义壁厚':axis==='b'?(role==='post'?'左右宽度':'水平宽度'):(role==='post'?'前后深度':'竖向高度'));
+  f.value=axis==='choice'?`${fmt(p.b)} × ${fmt(p.h)} mm，t ${fmt(p.t)}`:mm(p[axis]);f.regions=parts.filter(p=>p.role===role);
+  f.description=axis==='t'?'名义壁厚用于采购筛选和分组计价；槽型材承载还需核对内部筋位、米重及截面惯性矩。':role==='post'?'立柱截面按“左右宽 × 前后深”安装。':'橙色为这一类横梁，截面按“水平宽 × 竖向高”安装；各层承托梁顶面齐平。';
+  f.view=axis==='choice'||axis==='t'?'iso':axis==='b'||role==='post'?'plan':role==='side'?'side':role==='top'?'front':'section';
+  const r=f.regions.find(r=>r.tier===index)??f.regions[0];
+  if(r&&axis!=='choice'&&axis!=='t'){
+   const a=[r.x,r.y,r.z],b=[...a];b[axis==='h'?(role==='post'?1:2):role==='side'||role==='post'?0:1]+=p[axis];measure(a,b,p[axis]);
+  }
+  if(!r)f.description='当前中梁根数为 0；此截面暂未用于下料。';return f;
+ }
+ const procurementMatch=path.match(/^procurement\.(costBasis|stockLength|sawKerf|endTrim)$/);
+ if(procurementMatch){
+  const field=procurementMatch[1],labels={costBasis:'型材预算计价方式',stockLength:'原料定尺长度',sawKerf:'单次切割锯缝',endTrim:'每端修整余量'};f.label=labels[field];f.value=field==='costBasis'?(cfg.procurement.costBasis==='stock'?'按定尺原料采购长度':'按成品净长度'):mm(cfg.procurement[field]);f.view='iso';f.inset='note';f.regions=parts.filter(part=>['post','fb','side','middle','top'].includes(part.role));
+  f.description=field==='costBasis'?`当前型材小计按${cfg.procurement.costBasis==='stock'?`${m.stockPlan.totalBars} 根定尺、共 ${fmtM(m.stockPlan.purchaseLength/1000)} m`:`成品净长 ${fmtM(m.totalLength/1000)} m`}计算。`:'该参数用于定尺排料和采购损耗计算，不改变架体成品尺寸；橙色标出参与排料的全部型材。';return f;
+ }
+ const costMatch=path.match(/^cost\.(profiles|brackets|extras)\.([^.]+)\.(unit|perEnd|quantity|name)$/);
+ if(costMatch){
+  const group=costMatch[1],key=costMatch[2],field=costMatch[3],r=m.cost[group].find(r=>r.key===key);if(!r)return null;
+  const bracket=group==='brackets',extra=group==='extras',member=extra?[]:parts.filter(p=>r.roles.includes(p.role));
+  f.label=(extra?r.name:bracket?r.beamSpec+' 梁用角码':r.name+' 型材')+({unit:'单价',perEnd:'每端个数',quantity:'采购数量',name:extra?'名称':'型号'}[field]);
+  f.value=field==='name'?r.name:field==='unit'?(r.unit===null?'未报价':`¥ ${money(r.unit)} / ${extra?r.unitLabel:bracket?'个':'m'}`):field==='perEnd'?fmt(r.perEnd)+' 个 / 端':fmt(r.amount)+' '+(extra?r.unitLabel:'个');
+  f.description=extra?`${r.rule}；采购数量留空时自动使用 ${fmt(r.automatic)} ${r.unitLabel}，填 0 可从预算中排除。`:bracket?'圆点标出这组角码对应的横梁端头；型号和用量按实际连接方案填写。':'橙色为按该规格合并计价的型材；转向安装不改变每米报价。';
+  f.view='iso';f.inset='note';
+  if(bracket){for(const b of member){const a=[b.x+b.w/2,b.y+b.d/2,b.z+b.h/2],z=[...a],axis=b.axis==='x'?0:1;a[axis]=axis===0?b.x:b.y;z[axis]=axis===0?b.x+b.w:b.y+b.d;f.points.push(a,z);}}
+  else if(extra){const roleMap={casters:['caster'],casterPlates:['caster'],supportBoard:['deck'],cushionMat:['mat'],fasteners:['fb','side','middle','top'],rearBrace:['post'],wallAnchor:['post'],endCaps:['post']};f.regions=parts.filter(part=>(roleMap[key]??[]).includes(part.role));}
+  else f.regions=member;return f;
+ }
+ return null;
+}
+function updateLocator(){
+ document.querySelectorAll('.is-located').forEach(el=>el.classList.remove('is-located'));
+ if(selectedPath){const input=[...document.querySelectorAll('[data-path]')].find(el=>el.dataset.path===selectedPath);input?.classList.add('is-located');}
+ const f=focusInfo(model,selectedPath);
+ $('locatorBar').classList.toggle('active',!!selectedPath);$('clearFocus').disabled=!selectedPath;
+ $('locatorTitle').textContent=f?f.label+'：'+f.value:selectedPath?'参数定位 · 请先修正无效尺寸':'参数定位';
+ $('locatorText').textContent=f?f.description:'选中尺寸或型材参数，图上会用橙色标出对应位置。';
+}
+function locateParameter(path){
+ selectedPath=path;const f=focusInfo(model,path);
+  if(f){selectedTier=f.tier;$('selectedTier').value=String(selectedTier);if($('autoLocate').checked){setView('iso');return;}}
+ renderView();
+}
+function focusOverlay(m,path,project,type,tier,prefix,suppressMoney=false){
+ const f=focusInfo(m,path,tier);if(!f)return '';
+ if(suppressMoney&&path.startsWith('cost.')&&path.endsWith('.unit'))f.value='详见材料清单 XLSX';
+ const orange='#d97420',dark='#9b5019',marker=prefix+'-focus-arrow';
+ const text=(x,y,t,size=13,extra='')=>`<text x="${x}" y="${y}" fill="${dark}" font-size="${size}" ${extra}>${escapeHtml(t)}</text>`;
+ const rect=(x,y,w,h,fill='#fff5e6',extra='')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${orange}" ${extra}/>`;
+ const line=(a,b,extra='')=>`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${orange}" stroke-width="2" ${extra}/>`;
+ const circle=(p,r=4)=>`<circle cx="${p[0]}" cy="${p[1]}" r="${r}" fill="#fff7e6" stroke="${orange}" stroke-width="2"/>`;
+ const short=(str,max)=>[...String(str)].slice(0,max).join('')+([...String(str)].length>max?'…':'');
+ let out=`<g data-focus-path="${escapeHtml(path)}"><defs><marker id="${marker}" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse"><path d="M6,3 L0,0 L0,6 Z" fill="${orange}"/></marker><clipPath id="${prefix}-focus-clip"><rect x="16" y="96" width="1088" height="600"/></clipPath></defs>`;
+ out+=text(32,86,short(f.label+'：'+f.value,66),13,'font-weight="650"');
+ out+=`<g clip-path="url(#${prefix}-focus-clip)">`;
+ const seen=new Set();
+ for(const r of f.regions){
+  if((type==='section'||type==='plan')&&r.tier>=0&&r.tier!==tier)continue;
+  if(type==='section'&&r.tier<0)continue;
+  const pts=[];for(const x of [r.x,r.x+r.w])for(const y of [r.y,r.y+r.d])for(const z of [r.z,r.z+r.h])pts.push(project(x,y,z));
+  if(type==='iso'){
+   const a=[[r.x,r.y,r.z],[r.x+r.w,r.y,r.z],[r.x+r.w,r.y,r.z+r.h],[r.x,r.y,r.z+r.h]];
+   const b=[[r.x,r.y,r.z],[r.x,r.y+r.d,r.z],[r.x,r.y+r.d,r.z+r.h],[r.x,r.y,r.z+r.h]];
+   const c=[[r.x,r.y,r.z+r.h],[r.x+r.w,r.y,r.z+r.h],[r.x+r.w,r.y+r.d,r.z+r.h],[r.x,r.y+r.d,r.z+r.h]];
+   for(const face of [a,b,c])out+=`<polygon data-focus-role="${r.role}" points="${face.map(p=>project(...p).join(',')).join(' ')}" fill="${orange}" fill-opacity=".1" stroke="${orange}" stroke-width="2.5" stroke-linejoin="round"/>`;
+  }else{
+   const x=Math.min(...pts.map(p=>p[0])),y=Math.min(...pts.map(p=>p[1])),w=Math.max(1.5,Math.max(...pts.map(p=>p[0]))-x),h=Math.max(1.5,Math.max(...pts.map(p=>p[1]))-y),key=[x,y,w,h].map(v=>v.toFixed(1)).join(',');
+   if(seen.has(key))continue;seen.add(key);out+=rect(x,y,w,h,orange,`data-focus-role="${r.role}" fill-opacity=".12" stroke-width="2.8"`);
+  }
+ }
+ for(const p of f.points)out+=circle(project(...p),5);
+ if(f.a&&f.b){
+  const a=project(...f.a),b=project(...f.b),dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy);
+  if(len>8){
+   const nx=-dy/len,ny=dx/len,off=24,aa=[a[0]+nx*off,a[1]+ny*off],bb=[b[0]+nx*off,b[1]+ny*off];
+   out+=line(a,aa)+line(b,bb)+line(aa,bb,`marker-start="url(#${marker})" marker-end="url(#${marker})"`)+circle(a,3)+circle(b,3);
+   const tx=Math.min(1020,Math.max(70,(aa[0]+bb[0])/2+nx*15)),ty=Math.min(675,Math.max(112,(aa[1]+bb[1])/2+ny*15));
+   out+=rect(tx-59,ty-15,118,24,'#fff9ec','rx="5" stroke-width=".7"')+text(tx,ty+2,f.measureValue,14,'text-anchor="middle" font-weight="700"');
+  }else out+=circle(a,6)+line(a,[a[0]+24,a[1]-24])+text(Math.min(1000,a[0]+30),Math.max(114,a[1]-25),f.measureValue,14,'font-weight="700"');
+ }
+ out+='</g>';
+ out+=rect(884,112,214,195,'#fffaf1','rx="9" stroke-width="1"')+text(897,133,short(f.label,14),12,'font-weight="650"')+text(897,159,short(f.value,19),17,'font-weight="700"');
+ const arrow=(a,b)=>line(a,b,`marker-start="url(#${marker})" marker-end="url(#${marker})"`);
+ if(f.inset==='clearance'){
+  const reverse=f.edge==='right'||f.edge==='back',edge=f.edge==='left'||f.edge==='right'?'立柱内侧':'架体外沿';
+  out+=rect(901,193,59,46,reverse?'#c9e7dc':'#c6d5d8','stroke-width="1"')+rect(989,193,91,46,reverse?'#c6d5d8':'#c9e7dc','stroke-width="1"');
+  out+=line([960,183],[960,247])+line([989,183],[989,247])+arrow([960,180],[989,180]);
+  out+=text(930,258,reverse?'缸外壁':edge,11,'text-anchor="middle"')+text(1034,258,reverse?edge:'缸外壁',11,'text-anchor="middle"')+text(897,286,'局部放大示意 · 不按比例',11);
+ }else if(f.inset==='profile'){
+  const p=f.profile,max=Math.max(p.b,p.h),w=100*p.b/max,h=78*p.h/max,x=991-w/2,y=214-h/2;
+  out+=rect(x,y,w,h,'#ccd9db','stroke-width="2"');
+  if(f.profileAxis==='t'){
+   const inset=Math.max(3,Math.min(Math.min(w,h)/3,100*p.t/max));out+=rect(x+inset,y+inset,Math.max(2,w-2*inset),Math.max(2,h-2*inset),'#fffaf1','stroke-width="1.5"')+arrow([x,y-10],[x+inset,y-10]);
+   out+=text(991,280,`名义壁厚 t = ${fmt(p.t)} mm`,11,'text-anchor="middle"')+text(991,297,'槽型截面仅作简化示意',10,'text-anchor="middle"');
+  }else{
+   out+=line([x+w/2,y+4],[x+w/2,y+h-4]);if(f.profileAxis==='b'||f.profileAxis==='choice')out+=arrow([x,y+h+12],[x+w,y+h+12]);if(f.profileAxis==='h'||f.profileAxis==='choice')out+=arrow([x+w+12,y],[x+w+12,y+h]);
+   out+=text(991,280,f.role==='post'?'左右宽 × 前后深':'水平宽 × 竖向高',11,'text-anchor="middle"')+text(991,297,'截面方向示意',10,'text-anchor="middle"');
+  }
+ }else if(f.inset==='foot'){
+  out+=rect(968,176,46,45,'#ccd9db')+line([958,222],[1024,222])+line([991,222],[991,239])+`<circle cx="991" cy="248" r="10" fill="#78918c" stroke="${dark}" stroke-width="2"/>`+line([913,263],[1075,263])+line([1038,236],[1038,263])+arrow([1057,222],[1057,263]);
+  out+=text(897,282,'平板安装 · 轮组与调平脚',12)+text(897,299,'地面至铝立柱底端',10);
+ }else if(f.inset==='dimension'){
+  out+=line([917,192],[1063,192])+line([917,253],[1063,253])+arrow([990,192],[990,253]);
+  out+=text(897,280,'橙色端点对应测量边界',11)+text(897,297,'尺寸以标注数值为准',10);
+ }else{
+  const chars=[...f.description];for(let i=0;i<Math.min(4,Math.ceil(chars.length/15));i++)out+=text(897,188+i*24,chars.slice(i*15,i*15+15).join(''),12);
+ }
+ return out+'</g>';
+}
+document.addEventListener('focusin',event=>{if(event.target.dataset.path)locateParameter(event.target.dataset.path);});
+document.addEventListener('click',event=>{if(event.target.dataset.path&&selectedPath!==event.target.dataset.path)locateParameter(event.target.dataset.path);});
+$('clearFocus').addEventListener('click',()=>{selectedPath=null;renderView();});
+$('autoLocate').addEventListener('change',()=>{if(selectedPath)locateParameter(selectedPath);});
+
+document.querySelector('.parameters').addEventListener('input',event=>{
+ const input=event.target,path=input.dataset.path;if(!path)return;
+ if(path.endsWith('.choice')){const role=path.split('.')[1],choice=input.value,p=state.profiles[role];p.choice=choice;if(PRESETS[choice])[p.b,p.h]=PRESETS[choice];const row=input.closest('.profile-row');row.querySelector('.custom-fields').hidden=choice!=='custom';$('profile-'+role+'-b').value=p.b;$('profile-'+role+'-h').value=p.h;}
+ else{const value=input.type==='number'?(input.value===''?null:Number(input.value)):input.value;setPath(state,path,value);if(path==='tierCount')tierEditors();if(path==='topMode'){$('topTankEditor').hidden=state.topMode!=='open';tierEditors();profileEditors();}}
+ selectedPath=path;refresh();locateParameter(path);queuePersist();
+});
+document.querySelectorAll('[data-view]').forEach(button=>{
+ button.addEventListener('click',()=>setView(button.dataset.view));
+ button.addEventListener('keydown',event=>{const keys=Object.keys(VIEWS),i=keys.indexOf(activeView);let next;if(event.key==='ArrowRight')next=keys[(i+1)%keys.length];if(event.key==='ArrowLeft')next=keys[(i+keys.length-1)%keys.length];if(event.key==='Home')next=keys[0];if(event.key==='End')next=keys.at(-1);if(next){event.preventDefault();setView(next);$('tab-'+next).focus();}});
+});
+for(const id of ['showTanks','showBrackets','showDims'])$(id).addEventListener('change',renderView);
+$('selectedTier').addEventListener('change',()=>{selectedTier=Number($('selectedTier').value);if(selectedPath?.startsWith('tiers.'))selectedPath=null;renderView();});
+$('mixedPreset').addEventListener('click',()=>{state.profiles={post:{choice:'4040',b:40,h:40,t:2.4},fb:{choice:'4080v',b:40,h:80,t:2.4},side:{choice:'4080v',b:40,h:80,t:2.4},middle:{choice:'4040',b:40,h:40,t:2.4},top:{choice:'4040',b:40,h:40,t:2.4}};profileEditors();refresh();queuePersist();showToast('已切换 4080 竖装加强外框，统一名义壁厚 2.4 mm；承托层和脚轮参数保持不变。');});
+function applyJlc4040(){
+ for(const [role]of ROLES)state.profiles[role]={choice:'4040',b:40,h:40,t:JLC.profile.wall};
+ state.cost??={profiles:{},brackets:{}};state.cost.profiles??={};state.cost.brackets??={};
+ state.cost.profiles[JLC.profile.key]={unit:JLC.profile.unitWithTax};
+ state.cost.brackets['40x40']={name:JLC.bracket.code+'（候选）',unit:JLC.bracket.unit,perEnd:2,quantity:null};
+}
+$('all4040').addEventListener('click',()=>{applyJlc4040();profileEditors();refresh();queuePersist();showToast('已切换全 4040、名义壁厚 2.4 mm；须保留整底承托、斜撑及防倾倒连接。');});
+$('jlcPreset').addEventListener('click',()=>{applyJlc4040();syncControls();refresh();queuePersist();showToast('已应用嘉立创 TXCL-H6-4040：壁厚 2.4 mm，并带入当前含税折算价与角码候选起价。');});
+$('copyJlcList').addEventListener('click',async()=>{if(!model?.valid)return;showToast(await copyText(jlcQuoteText())?'嘉立创型号清单已复制。':'浏览器未允许自动复制，请在下料表中手动复制。');});
+$('exportSvg').addEventListener('click',()=>{if(!model?.valid)return;const includeTanks=$('showTanks').checked;downloadBlob(new Blob([allViewSvgText()],{type:'image/svg+xml;charset=utf-8'}),allViewsSvgFileName(model,includeTanks));showToast(`已导出一个 SVG 总图，包含全部 5 个视角${includeTanks?'和龟缸':'；龟缸及其尺寸标注已隐藏'}。`);});
+$('exportXlsx').addEventListener('click',()=>{if(!model?.valid)return;downloadBlob(materialListXlsxBlob(model),materialListXlsxFileName(model));showToast('已导出配套 BOM XLSX；请与同尺寸编号的详细装配 STEP 一并上传。');});
+$('exportStep').addEventListener('click',()=>{if(!model?.valid)return;try{const detail=detailedStepParts(model),stats=detail.stats;downloadBlob(new Blob([stepAssemblyText(model)],{type:'model/step'}),jlcAssemblyFileName(model));showToast(`已导出详细装配 STEP：${stats.profileCuts} 段型材、${stats.angleBrackets} 个角码、${stats.casterAssemblies} 套福马轮，共 ${stats.solidBodies} 个实体。请同时上传配套 BOM XLSX。`);}catch(error){showToast(error.message||'STEP 生成失败。');}});
+$('printBtn').addEventListener('click',()=>{if(!model?.valid)return;preparePrintSheet();window.print();});
+$('resetBtn').addEventListener('click',()=>{state=clone(INITIAL);selectedPath=null;syncControls();refresh();queuePersist();showToast('已恢复此文件的初始参数。');});
+$('fullscreenBtn').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if($('drawing').requestFullscreen)await $('drawing').requestFullscreen();else showToast('此浏览器不支持全屏，请使用浏览器缩放。');}catch{showToast('全屏未开启，请使用浏览器缩放。');}});
+window.addEventListener('beforeunload',persistNow);
+window.addEventListener('beforeprint',()=>{if(model?.valid)preparePrintSheet();});
+try{const saved=localStorage.getItem(storageKey);if(saved)state=normalise(JSON.parse(saved));}catch{storageAvailable=false;}
+syncControls();refresh();if(storageAvailable)persistNow();$('saveState').textContent=storageAvailable?'参数自动保存在当前浏览器':'浏览器存储不可用，修改仅保留在本次打开期间';
+window.rackPlanner={getState:()=>clone(state),getModel:()=>clone(model),getJlcQuote:()=>model?.valid?clone(jlcQuoteData(model)):null,calculate:cfg=>calculate(normalise(cfg)),getCosts:()=>clone(model?.cost??null),getStockPlan:()=>clone(model?.stockPlan??null),getStepMembers:()=>model?.valid?clone(profileStepMembers(model)):null,getDetailedStepParts:()=>model?.valid?clone(detailedStepParts(model)):null,exportStepText:()=>model?.valid?stepAssemblyText(model):null,exportCsvText:()=>model?.valid?cutListCsv(model):null,preparePrint:()=>preparePrintSheet(),version:'15.2.0-output-consistency'};
+</script>
+</body>
+</html>
