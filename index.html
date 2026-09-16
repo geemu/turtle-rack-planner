@@ -28,7 +28,7 @@
 .orbit-focus strong{display:block;font-size:11px}.orbit-focus-desc{display:block;color:#8d6847;margin-top:2px}
 .drawing.is-orbit:fullscreen{height:100vh;min-height:100vh;padding:0}.drawing.is-orbit:fullscreen .orbit-stage{height:100%;min-height:100%}
 @media(max-width:850px){.drawing.is-orbit{height:470px;min-height:380px}.orbit-stage{min-height:380px}.orbit-toolbar{top:8px;right:8px}.orbit-badge{top:8px;left:8px}.orbit-help{left:8px;bottom:8px;max-width:60%;line-height:1.35}.orbit-focus{right:8px;bottom:8px;width:min(270px,58%)}.orbit-focus-desc{display:none}.orbit-stage.has-focus .orbit-help{display:none}}
-@media(max-width:520px){.drawing.is-orbit{height:430px}.orbit-toolbar button{min-width:36px;height:36px;padding:0 5px}.orbit-badge{max-width:48%;line-height:1.35}.orbit-help{max-width:48%}}
+@media(max-width:520px){.drawing.is-orbit{height:430px}.orbit-toolbar button{min-width:36px;height:36px;padding:0 5px}.orbit-badge{max-width:48%;line-height:1.35}.orbit-help{display:none}}
 @media(max-width:340px){.orbit-toolbar{width:82px;flex-wrap:wrap;gap:2px;padding:3px}.orbit-toolbar button{flex:0 0 36px;min-width:36px;height:36px;padding:0 3px}}
 
 /* Compact workspace: keep the common controls and drawing visible together. */
@@ -164,7 +164,7 @@ const VIEWS={iso:'立体总览',front:'正视图',side:'侧视图',plan:'单层�
 const INITIAL=JSON.parse($('initial-config').textContent);
 let selectedPath=null;
 let state=clone(INITIAL),model=null,activeView='iso',selectedTier=0,storageAvailable=true,updateTimer=null,toastTimer=null;
-const orbitState={yaw:-.72,pitch:.38,zoom:1,panX:0,panY:0,pointers:new Map(),gesture:null,canvas:null,stage:null,model:null,options:null,observer:null,cleanup:[],raf:0,stats:null};
+const orbitState={yaw:0,pitch:.2,zoom:1,panX:0,panY:0,pointers:new Map(),gesture:null,canvas:null,stage:null,model:null,options:null,observer:null,cleanup:[],raf:0,stats:null};
 const storageKey='turtle-frame-planner:1:'+INITIAL.seed+':'+location.pathname;
 const keyNumber=v=>String(v).replaceAll('.','_'),sizeKey=p=>[p.b,p.h].sort((a,b)=>a-b).map(keyNumber).join('x');
 const stockKey=p=>sizeKey(p)+(Number.isFinite(p.t)&&p.t!==2?'-t'+keyNumber(p.t):'');
@@ -657,7 +657,7 @@ function destroyOrbitView(){
  if(orbitState.raf)cancelAnimationFrame(orbitState.raf);orbitState.raf=0;orbitState.observer?.disconnect();orbitState.observer=null;for(const cleanup of orbitState.cleanup)cleanup();orbitState.cleanup=[];orbitState.pointers.clear();orbitState.gesture=null;orbitState.canvas=null;orbitState.stage=null;orbitState.model=null;orbitState.options=null;orbitState.stats=null;
 }
 function setOrbitPreset(name){
- const presets={reset:[-.72,.38,1],front:[0,.02,1],side:[-Math.PI/2,.02,1],top:[-.02,1.42,1]};const preset=presets[name]??presets.reset;[orbitState.yaw,orbitState.pitch,orbitState.zoom]=preset;orbitState.panX=0;orbitState.panY=0;queueOrbitDraw();
+ const presets={reset:[0,.2,1],front:[0,.02,1],side:[-Math.PI/2,.02,1],top:[-.02,1.42,1]};const preset=presets[name]??presets.reset;[orbitState.yaw,orbitState.pitch,orbitState.zoom]=preset;orbitState.panX=0;orbitState.panY=0;queueOrbitDraw();
 }
 function renderOrbitView(m,o){
  const f=focusInfo(m,selectedPath,o.tier),visibleTop=visibleOutputHeight(m,o.tanks),focusMarkup=f?`<div class="orbit-focus"><strong>${escapeHtml(f.label)}：${escapeHtml(f.value)}</strong><span class="orbit-focus-desc">${escapeHtml(f.description)}</span></div>`:'';
@@ -1362,7 +1362,7 @@ window.addEventListener('beforeunload',persistNow);
 window.addEventListener('beforeprint',()=>{if(model?.valid)preparePrintSheet();});
 try{const saved=localStorage.getItem(storageKey);if(saved)state=normalise(JSON.parse(saved));}catch{storageAvailable=false;}
 syncControls();refresh();if(storageAvailable)persistNow();$('saveState').textContent=storageAvailable?'参数自动保存在当前浏览器':'浏览器存储不可用，修改仅保留在本次打开期间';
-window.rackPlanner={getState:()=>clone(state),getModel:()=>clone(model),getJlcQuote:()=>model?.valid?clone(jlcQuoteData(model)):null,calculate:cfg=>calculate(normalise(cfg)),getCosts:()=>clone(model?.cost??null),getStockPlan:()=>clone(model?.stockPlan??null),getStepMembers:()=>model?.valid?clone(profileStepMembers(model)):null,getDetailedStepParts:()=>model?.valid?clone(detailedStepParts(model)):null,exportStepText:()=>model?.valid?stepAssemblyText(model):null,exportCsvText:()=>model?.valid?cutListCsv(model):null,preparePrint:()=>preparePrintSheet(),getOrbitState:()=>({yaw:orbitState.yaw,pitch:orbitState.pitch,zoom:orbitState.zoom,panX:orbitState.panX,panY:orbitState.panY}),getOrbitStats:()=>clone(orbitState.stats),setOrbitPreset,version:'16.0.1-mobile-layout'};
+window.rackPlanner={getState:()=>clone(state),getModel:()=>clone(model),getJlcQuote:()=>model?.valid?clone(jlcQuoteData(model)):null,calculate:cfg=>calculate(normalise(cfg)),getCosts:()=>clone(model?.cost??null),getStockPlan:()=>clone(model?.stockPlan??null),getStepMembers:()=>model?.valid?clone(profileStepMembers(model)):null,getDetailedStepParts:()=>model?.valid?clone(detailedStepParts(model)):null,exportStepText:()=>model?.valid?stepAssemblyText(model):null,exportCsvText:()=>model?.valid?cutListCsv(model):null,preparePrint:()=>preparePrintSheet(),getOrbitState:()=>({yaw:orbitState.yaw,pitch:orbitState.pitch,zoom:orbitState.zoom,panX:orbitState.panX,panY:orbitState.panY}),getOrbitStats:()=>clone(orbitState.stats),setOrbitPreset,version:'16.0.2-front-facing'};
 </script>
 </body>
 </html>
