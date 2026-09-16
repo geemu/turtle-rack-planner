@@ -17,6 +17,18 @@
 .vendor-quote{border-top:1px solid #e4ebe3;background:#fbfcf8}.vendor-quote>summary{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 18px;color:#285f50}.vendor-quote>summary span:first-child{font-weight:650}.vendor-quote>summary small{color:var(--muted);font-weight:400;text-align:right}.vendor-body{padding:0 18px 12px}.vendor-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:3px 0 9px}.vendor-actions{display:flex;gap:7px;flex-wrap:wrap}.link-button{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:8px;padding:5px 9px;background:#fff;color:var(--ink);font-size:12px;line-height:1.45;text-decoration:none}.link-button:hover{background:#edf4ef}.link-button.primary{background:var(--green);border-color:var(--green);color:#fff}.vendor-total{font-size:12px;color:#4f6d62}.vendor-total b{font-size:14px;color:#235f50}.jlc-table{min-width:900px}.jlc-table td,.jlc-table th{padding-top:7px;padding-bottom:7px}.combined-code{white-space:nowrap;font-weight:650;color:#315f54}.match-ok{color:#26735f}.match-check{color:#986821}.vendor-note{margin:8px 0 0;font-size:11px;color:var(--muted);line-height:1.6}
 .tier-open{display:grid;place-items:center;height:36px;border:1px dashed #bfd3c7;border-radius:6px;background:#f1f7f2;color:#39705d;font-size:11px}
 @media(max-width:850px){.locator-bar{margin:10px 10px 0;align-items:flex-start}.cost-summary{grid-template-columns:1fr 1fr;gap:10px;padding:14px}.cost-summary strong{font-size:20px}.cost-grand{border-left:0;padding-left:0}.cost-heading span{display:block;margin:3px 0 0}.locator-bar span{line-height:1.5}}
+.drawing.is-orbit{height:clamp(390px,56vw,610px);min-height:390px;padding:0;overflow:hidden;background:radial-gradient(circle at 48% 42%,#fff 0,#f8fbf7 56%,#edf3ed 100%)}
+.orbit-stage{position:relative;width:100%;height:100%;min-height:390px;overflow:hidden;touch-action:none;overscroll-behavior:contain;user-select:none;cursor:grab;outline:none}
+.orbit-stage.dragging{cursor:grabbing}.orbit-stage canvas{display:block;width:100%;height:100%;touch-action:none}
+.orbit-toolbar{position:absolute;z-index:3;top:10px;right:10px;display:flex;gap:4px;padding:4px;border:1px solid #dbe5de;border-radius:9px;background:#ffffffdc;box-shadow:0 3px 14px #25483c12;backdrop-filter:blur(5px)}
+.orbit-toolbar button{min-width:42px;padding:4px 7px;border:0;border-radius:6px;background:transparent;font-size:11px;color:#365c52}.orbit-toolbar button:hover{background:#e8f1ea}.orbit-toolbar button:focus-visible{outline:2px solid var(--green)}
+.orbit-badge,.orbit-help,.orbit-focus{position:absolute;z-index:2;pointer-events:none;border:1px solid #dfe8e1;border-radius:7px;background:#ffffffdd;color:#506b62;box-shadow:0 2px 12px #234a3d0b;backdrop-filter:blur(4px)}
+.orbit-badge{left:11px;top:10px;padding:6px 9px;font-size:11px;font-variant-numeric:tabular-nums}.orbit-badge b{color:#234f44;font-weight:650}
+.orbit-help{left:11px;bottom:10px;padding:5px 8px;font-size:10px}.orbit-focus{right:11px;bottom:10px;width:min(330px,46%);padding:7px 9px;border-color:#e8b879;background:#fff8edeb;color:#844710;font-size:10px;line-height:1.45}
+.orbit-focus strong{display:block;font-size:11px}.orbit-focus-desc{display:block;color:#8d6847;margin-top:2px}
+.drawing.is-orbit:fullscreen{height:100vh;min-height:100vh;padding:0}.drawing.is-orbit:fullscreen .orbit-stage{height:100%;min-height:100%}
+@media(max-width:850px){.drawing.is-orbit{height:470px;min-height:380px}.orbit-stage{min-height:380px}.orbit-toolbar{top:8px;right:8px}.orbit-badge{top:8px;left:8px}.orbit-help{left:8px;bottom:8px;max-width:60%;line-height:1.35}.orbit-focus{right:8px;bottom:8px;width:min(270px,58%)}.orbit-focus-desc{display:none}}
+@media(max-width:520px){.drawing.is-orbit{height:430px}.orbit-toolbar button{min-width:36px;padding:4px 5px}.orbit-badge{max-width:48%;line-height:1.35}.orbit-help{max-width:48%}}
 
 /* Compact workspace: keep the common controls and drawing visible together. */
 .dot.bracket{background:#df7c24;border-radius:50%}.dot.deck{background:#b88a52}.dot.caster{background:#536865;border-radius:50%}
@@ -111,7 +123,7 @@
   <div class="metrics"><div class="metric"><small>整体外尺寸 · 宽 × 深 × 最高处</small><strong id="metricSize">—</strong><span class="metric-caption">mm，开放时含最上层玻璃缸</span></div><div class="metric"><small>不含最上层缸高度</small><strong id="metricWithoutTopTank">—</strong><span class="metric-caption">顶部开放时即顶层缸底离地</span></div><div class="metric"><small id="metricColumnLabel">立柱下料长度</small><strong id="metricColumn">—</strong><span class="metric-caption" id="metricColumnCaption">4 根立柱，随顶部结构联动</span></div><div class="metric"><small>主体型材净长</small><strong id="metricLength">—</strong><span class="metric-caption" id="metricCount">未计锯缝及配件</span></div><div class="metric"><small>最上层玻璃缸口离地</small><strong id="metricRim">—</strong><span class="metric-caption" id="metricWater">名义满水量估算</span></div></div>
   <div id="validation" class="validation" role="status" hidden></div>
   <section class="card"><div class="card-head"><h2><span class="index">01</span>结构视图</h2><div class="card-actions"><button id="fullscreenBtn" class="small">放大</button></div></div>
-   <div class="tabs" role="tablist" aria-label="视图选择"><button class="tab" role="tab" id="tab-iso" data-view="iso" aria-controls="drawing" aria-selected="true">立体总览</button><button class="tab" role="tab" id="tab-front" data-view="front" aria-controls="drawing" aria-selected="false" tabindex="-1">正视图</button><button class="tab" role="tab" id="tab-side" data-view="side" aria-controls="drawing" aria-selected="false" tabindex="-1">侧视图</button><button class="tab" role="tab" id="tab-plan" data-view="plan" aria-controls="drawing" aria-selected="false" tabindex="-1">单层俯视</button><button class="tab" role="tab" id="tab-section" data-view="section" aria-controls="drawing" aria-selected="false" tabindex="-1">承托剖面</button></div>
+   <div class="tabs" role="tablist" aria-label="视图选择"><button class="tab" role="tab" id="tab-iso" data-view="iso" aria-controls="drawing" aria-selected="true">旋转 3D</button><button class="tab" role="tab" id="tab-front" data-view="front" aria-controls="drawing" aria-selected="false" tabindex="-1">正视图</button><button class="tab" role="tab" id="tab-side" data-view="side" aria-controls="drawing" aria-selected="false" tabindex="-1">侧视图</button><button class="tab" role="tab" id="tab-plan" data-view="plan" aria-controls="drawing" aria-selected="false" tabindex="-1">单层俯视</button><button class="tab" role="tab" id="tab-section" data-view="section" aria-controls="drawing" aria-selected="false" tabindex="-1">承托剖面</button></div>
    <div class="view-options"><label title="同时控制页面视图、SVG 导出和整套打印"><input type="checkbox" id="showTanks" checked>导出 / 打印显示龟缸</label><label><input type="checkbox" id="showBrackets" checked>显示连接件 / 孔位</label><label><input type="checkbox" id="showDims" checked>尺寸标注</label><label>查看层位 <select id="selectedTier" aria-label="俯视和剖面的层位"></select></label><label><input type="checkbox" id="autoLocate" checked>选参数时在立体图标注</label><span id="viewHint"></span></div>
    <div class="locator-bar" id="locatorBar"><div><strong id="locatorTitle">参数定位</strong><span id="locatorText">选中尺寸或型材参数，图上会用橙色标出对应位置。</span></div><button class="small" id="clearFocus" disabled>取消标注</button></div>
    <div class="drawing" id="drawing" role="tabpanel" aria-labelledby="tab-iso"></div>
@@ -151,6 +163,7 @@ const VIEWS={iso:'立体总览',front:'正视图',side:'侧视图',plan:'单层�
 const INITIAL=JSON.parse($('initial-config').textContent);
 let selectedPath=null;
 let state=clone(INITIAL),model=null,activeView='iso',selectedTier=0,storageAvailable=true,updateTimer=null,toastTimer=null;
+const orbitState={yaw:-.72,pitch:.38,zoom:1,panX:0,panY:0,pointers:new Map(),gesture:null,canvas:null,stage:null,model:null,options:null,observer:null,cleanup:[],raf:0,stats:null};
 const storageKey='turtle-frame-planner:1:'+INITIAL.seed+':'+location.pathname;
 const keyNumber=v=>String(v).replaceAll('.','_'),sizeKey=p=>[p.b,p.h].sort((a,b)=>a-b).map(keyNumber).join('x');
 const stockKey=p=>sizeKey(p)+(Number.isFinite(p.t)&&p.t!==2?'-t'+keyNumber(p.t):'');
@@ -563,13 +576,112 @@ function displayValidation(m){
 function setView(type){activeView=type;document.querySelectorAll('[data-view]').forEach(b=>{const selected=b.dataset.view===type;b.setAttribute('aria-selected',String(selected));b.tabIndex=selected?0:-1;});$('drawing').setAttribute('aria-labelledby','tab-'+type);renderView();}
 function viewOptions(){return {tanks:$('showTanks').checked,brackets:$('showBrackets').checked,dims:$('showDims').checked&&!selectedPath,tier:selectedTier,focus:selectedPath};}
 function outputViewOptions(){return {tanks:$('showTanks').checked,brackets:$('showBrackets').checked,dims:$('showDims').checked,tier:selectedTier,focus:null,suppressMoney:true};}
+const orbitClamp=(value,min,max)=>Math.max(min,Math.min(max,value));
+function orbitRgba(hex,delta=0,alpha=1){
+ const raw=hex.replace('#',''),n=parseInt(raw.length===3?raw.split('').map(c=>c+c).join(''):raw,16),channel=shift=>orbitClamp((n>>shift&255)+delta,0,255);
+ return `rgba(${channel(16)},${channel(8)},${channel(0)},${alpha})`;
+}
+function orbitSceneObjects(m,o){
+ const objects=m.profileMembers.map(part=>({...part,kind:'profile'}));
+ for(const level of m.levels){
+  if(m.cfg.boardThickness)objects.push({kind:'deck',role:'deck',tier:level.index-1,x:level.tankX,y:level.tankY,z:level.boardBottom,w:level.tankWidth,d:level.tankDepth,h:m.cfg.boardThickness});
+  if(m.cfg.matThickness)objects.push({kind:'mat',role:'mat',tier:level.index-1,x:level.tankX,y:level.tankY,z:level.boardTop,w:level.tankWidth,d:level.tankDepth,h:m.cfg.matThickness});
+  if(o.tanks){
+   objects.push({kind:'tank',role:'tank',tier:level.index-1,x:level.tankX,y:level.tankY,z:level.tankBottom,w:level.tankWidth,d:level.tankDepth,h:level.height,open:true});
+   objects.push({kind:'water',role:'water',tier:level.index-1,x:level.tankX+2,y:level.tankY+2,z:level.tankBottom+level.height*.88,w:Math.max(1,level.tankWidth-4),d:Math.max(1,level.tankDepth-4),h:1});
+  }
+ }
+ if(m.cfg.footExposed>0){
+  const p=m.p.post,plateH=Math.max(4,Math.min(7,m.cfg.footExposed*.08)),corners=[[p.b/2,p.h/2],[m.W-p.b/2,p.h/2],[p.b/2,m.D-p.h/2],[m.W-p.b/2,m.D-p.h/2]];
+  for(const [cx,cy]of corners){
+   objects.push({kind:'caster',role:'caster',x:cx-(p.b+18)/2,y:cy-(p.h+18)/2,z:m.cfg.footExposed-plateH,w:p.b+18,d:p.h+18,h:plateH});
+   objects.push({kind:'caster',role:'caster',x:cx-6,y:cy-6,z:m.cfg.footExposed*.28,w:12,d:12,h:Math.max(5,m.cfg.footExposed-plateH-m.cfg.footExposed*.28)});
+  }
+ }
+ return objects;
+}
+function orbitProjector(width,height,m,visibleTop){
+ const yaw=orbitState.yaw,pitch=orbitState.pitch,cy=Math.cos(yaw),sy=Math.sin(yaw),cp=Math.cos(pitch),sp=Math.sin(pitch),camera=Math.max(m.W,m.D,visibleTop)*4.8;
+ const raw=point=>{const dx=point[0]-m.W/2,dy=point[1]-m.D/2,dz=point[2]-visibleTop/2,u=cy*dx-sy*dy,v=sy*dx+cy*dy,vertical=cp*dz-sp*v,depth=sp*dz+cp*v,factor=camera/(camera+depth);return {x:u*factor,y:-vertical*factor,depth};};
+ const corners=[];for(const x of [0,m.W])for(const y of [0,m.D])for(const z of [0,visibleTop])corners.push(raw([x,y,z]));
+ const minX=Math.min(...corners.map(p=>p.x)),maxX=Math.max(...corners.map(p=>p.x)),minY=Math.min(...corners.map(p=>p.y)),maxY=Math.max(...corners.map(p=>p.y)),padX=Math.min(92,width*.13),padY=Math.min(72,height*.14),scale=Math.min((width-padX*2)/Math.max(1,maxX-minX),(height-padY*2)/Math.max(1,maxY-minY))*orbitState.zoom,cx=(minX+maxX)/2,centerY=(minY+maxY)/2;
+ return point=>{const p=raw(point);return{x:width/2+(p.x-cx)*scale+orbitState.panX,y:height/2+(p.y-centerY)*scale+orbitState.panY,depth:p.depth,scale};};
+}
+const ORBIT_BOX_VERTICES=box=>[[box.x,box.y,box.z],[box.x+box.w,box.y,box.z],[box.x+box.w,box.y+box.d,box.z],[box.x,box.y+box.d,box.z],[box.x,box.y,box.z+box.h],[box.x+box.w,box.y,box.z+box.h],[box.x+box.w,box.y+box.d,box.z+box.h],[box.x,box.y+box.d,box.z+box.h]];
+const ORBIT_FACES=[[0,1,2,3],[0,4,5,1],[1,5,6,2],[2,6,7,3],[3,7,4,0],[4,7,6,5]],ORBIT_EDGES=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+function orbitObjectStyle(object,faceIndex){
+ const roleColors={post:'#c7d5d8',fb:'#abc3cb',side:'#b7cbd0',middle:'#c9a664',top:'#abc3cb',deck:'#b7834d',mat:'#668b72',caster:'#566b67'},base=roleColors[object.role]??'#b7cbd0',shade=[-18,7,-8,-14,13,19][faceIndex];
+ if(object.kind==='tank')return{fill:orbitRgba('#98d2e0',shade,.13),stroke:'rgba(66,126,146,.64)',line:.9};
+ if(object.kind==='water')return{fill:'rgba(78,167,188,.22)',stroke:'rgba(59,137,156,.28)',line:.6};
+ return{fill:orbitRgba(base,shade,object.kind==='mat'?.72:1),stroke:orbitRgba(base,-48,.82),line:.65};
+}
+function orbitPath(ctx,points){ctx.beginPath();ctx.moveTo(points[0].x,points[0].y);for(let i=1;i<points.length;i++)ctx.lineTo(points[i].x,points[i].y);ctx.closePath();}
+function orbitRoundRect(ctx,x,y,w,h,r){const radius=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x+radius,y);ctx.arcTo(x+w,y,x+w,y+h,radius);ctx.arcTo(x+w,y+h,x,y+h,radius);ctx.arcTo(x,y+h,x,y,radius);ctx.arcTo(x,y,x+w,y,radius);ctx.closePath();}
+function drawOrbitGround(ctx,project,m){
+ const plane=[[0,0,0],[m.W,0,0],[m.W,m.D,0],[0,m.D,0]].map(project);orbitPath(ctx,plane);ctx.fillStyle='rgba(218,231,216,.42)';ctx.fill();ctx.strokeStyle='rgba(136,162,148,.4)';ctx.lineWidth=.8;ctx.stroke();
+ ctx.strokeStyle='rgba(142,166,152,.2)';ctx.lineWidth=.65;for(let i=0;i<=6;i++){const x=m.W*i/6,a=project([x,0,0]),b=project([x,m.D,0]);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();const y=m.D*i/6,c=project([0,y,0]),d=project([m.W,y,0]);ctx.beginPath();ctx.moveTo(c.x,c.y);ctx.lineTo(d.x,d.y);ctx.stroke();}
+ const front=project([m.W/2,0,0]);ctx.fillStyle='#789087';ctx.font='600 10px "Microsoft YaHei",sans-serif';ctx.textAlign='center';ctx.fillText('前',front.x,front.y+16);
+}
+function orbitConnectionPoints(m){
+ const points=[];for(const part of m.profileMembers){if(!part.connectAt?.length)continue;for(const end of part.connectAt){let point;if(part.axis==='y')point=[part.x+part.w/2,end==='start'?part.y:part.y+part.d,part.z+part.h/2];else if(part.axis==='z')point=[part.x+part.w/2,part.y+part.d/2,end==='start'?part.z:part.z+part.h];else point=[end==='start'?part.x:part.x+part.w,part.y+part.d/2,part.z+part.h/2];points.push(point);}}
+ return points;
+}
+function drawOrbitMeasure(ctx,project,a,b,label,color='#6f8f84',offset=16){
+ const pa=project(a),pb=project(b),dx=pb.x-pa.x,dy=pb.y-pa.y,len=Math.hypot(dx,dy);if(len<5)return;const nx=-dy/len,ny=dx/len,aa={x:pa.x+nx*offset,y:pa.y+ny*offset},bb={x:pb.x+nx*offset,y:pb.y+ny*offset};
+ ctx.save();ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=1.15;ctx.beginPath();ctx.moveTo(pa.x,pa.y);ctx.lineTo(aa.x,aa.y);ctx.moveTo(pb.x,pb.y);ctx.lineTo(bb.x,bb.y);ctx.moveTo(aa.x,aa.y);ctx.lineTo(bb.x,bb.y);ctx.stroke();
+ const tick=4.5;for(const p of [aa,bb]){ctx.beginPath();ctx.moveTo(p.x-nx*tick,p.y-ny*tick);ctx.lineTo(p.x+nx*tick,p.y+ny*tick);ctx.stroke();}
+ ctx.font='600 11px "Microsoft YaHei",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';const mx=(aa.x+bb.x)/2+nx*9,my=(aa.y+bb.y)/2+ny*9,w=ctx.measureText(label).width+12;orbitRoundRect(ctx,mx-w/2,my-9,w,18,4);ctx.fillStyle='rgba(255,255,255,.9)';ctx.fill();ctx.strokeStyle=orbitRgba(color,-10,.35);ctx.lineWidth=.6;ctx.stroke();ctx.fillStyle=color;ctx.fillText(label,mx,my+.5);ctx.restore();
+}
+function drawOrbitWireBox(ctx,project,box,color='#df791f'){
+ const vertices=ORBIT_BOX_VERTICES(box).map(project);ctx.save();ctx.strokeStyle=color;ctx.lineWidth=2;ctx.fillStyle='rgba(223,121,31,.055)';for(const indexes of ORBIT_FACES){const points=indexes.map(i=>vertices[i]);orbitPath(ctx,points);ctx.fill();}ctx.beginPath();for(const [a,b]of ORBIT_EDGES){ctx.moveTo(vertices[a].x,vertices[a].y);ctx.lineTo(vertices[b].x,vertices[b].y);}ctx.stroke();ctx.restore();
+}
+function drawOrbitCasterWheels(ctx,project,m){
+ if(!(m.cfg.footExposed>0))return;const p=m.p.post,r=Math.max(9,Math.min(24,m.cfg.footExposed*.18)),items=[[p.b/2,p.h/2],[m.W-p.b/2,p.h/2],[p.b/2,m.D-p.h/2],[m.W-p.b/2,m.D-p.h/2]].map(([x,y])=>{const center=project([x,y,r+3]),px=project([x+r,y,r+3]),pz=project([x,y,r*2+3]);return{center,rx:Math.max(4,Math.hypot(px.x-center.x,px.y-center.y)),ry:Math.max(5,Math.hypot(pz.x-center.x,pz.y-center.y)),depth:center.depth};}).sort((a,b)=>b.depth-a.depth);
+ ctx.save();for(const item of items){ctx.beginPath();ctx.ellipse(item.center.x,item.center.y,item.rx,item.ry,0,0,Math.PI*2);ctx.fillStyle='rgba(75,94,91,.92)';ctx.fill();ctx.strokeStyle='#294945';ctx.lineWidth=1.2;ctx.stroke();ctx.beginPath();ctx.arc(item.center.x,item.center.y,Math.max(1.5,Math.min(item.rx,item.ry)*.25),0,Math.PI*2);ctx.fillStyle='#a9bbb5';ctx.fill();}ctx.restore();
+}
+function drawOrbitScene(){
+ const canvas=orbitState.canvas,m=orbitState.model,o=orbitState.options;if(!canvas||!m?.valid)return;const rect=canvas.getBoundingClientRect(),width=Math.max(1,rect.width),height=Math.max(1,rect.height),dpr=Math.min(2,window.devicePixelRatio||1),pixelW=Math.round(width*dpr),pixelH=Math.round(height*dpr);if(canvas.width!==pixelW||canvas.height!==pixelH){canvas.width=pixelW;canvas.height=pixelH;}
+ const ctx=canvas.getContext('2d');if(!ctx)return;ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);ctx.setTransform(dpr,0,0,dpr,0,0);ctx.lineJoin='round';ctx.lineCap='round';
+ const visibleTop=visibleOutputHeight(m,o.tanks),project=orbitProjector(width,height,m,visibleTop);drawOrbitGround(ctx,project,m);
+ const objects=orbitSceneObjects(m,o),faces=[];for(const object of objects){const vertices=ORBIT_BOX_VERTICES(object).map(project);ORBIT_FACES.forEach((indexes,faceIndex)=>{if(object.open&&faceIndex===5)return;const points=indexes.map(i=>vertices[i]),depth=points.reduce((sum,p)=>sum+p.depth,0)/points.length;faces.push({points,depth,style:orbitObjectStyle(object,faceIndex),kind:object.kind});});}
+ faces.sort((a,b)=>b.depth-a.depth);for(const face of faces){orbitPath(ctx,face.points);ctx.fillStyle=face.style.fill;ctx.fill();ctx.strokeStyle=face.style.stroke;ctx.lineWidth=face.style.line;ctx.stroke();}
+ drawOrbitCasterWheels(ctx,project,m);
+ const connectionPoints=o.brackets?orbitConnectionPoints(m):[];if(connectionPoints.length){ctx.save();ctx.fillStyle='#f28a25';ctx.strokeStyle='rgba(151,74,14,.85)';ctx.lineWidth=.8;for(const point of connectionPoints){const p=project(point),radius=orbitClamp(2.5+p.scale*4,2.8,5.2);ctx.beginPath();ctx.arc(p.x,p.y,radius,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.beginPath();ctx.arc(p.x,p.y,Math.max(1,radius*.32),0,Math.PI*2);ctx.fillStyle='#fff4df';ctx.fill();ctx.fillStyle='#f28a25';}ctx.restore();}
+ const focus=focusInfo(m,selectedPath,o.tier);if(focus){for(const region of focus.regions)drawOrbitWireBox(ctx,project,region);ctx.save();ctx.fillStyle='#e2761e';for(const point of focus.points){const p=project(point);ctx.beginPath();ctx.arc(p.x,p.y,5,0,Math.PI*2);ctx.fill();}ctx.restore();if(focus.a&&focus.b)drawOrbitMeasure(ctx,project,focus.a,focus.b,focus.measureValue,'#bd5d14',24);}
+ if(o.dims){drawOrbitMeasure(ctx,project,[0,0,0],[m.W,0,0],`宽 ${fmt(m.W)}`,'#6d8d83',18);drawOrbitMeasure(ctx,project,[m.W,0,0],[m.W,m.D,0],`深 ${fmt(m.D)}`,'#6d8d83',-18);drawOrbitMeasure(ctx,project,[0,m.D,0],[0,m.D,visibleTop],`${o.tanks?'高':'架高'} ${fmt(visibleTop)}`,'#6d8d83',20);}
+ orbitState.stats={profileCount:m.profileMembers.length,tankCount:o.tanks?m.levels.length:0,casterCount:m.cfg.footExposed>0?4:0,connectionMarkerCount:connectionPoints.length,objectCount:objects.length,visibleHeight:visibleTop};
+}
+function queueOrbitDraw(){if(orbitState.raf)cancelAnimationFrame(orbitState.raf);orbitState.raf=requestAnimationFrame(()=>{orbitState.raf=0;drawOrbitScene();});}
+function destroyOrbitView(){
+ if(orbitState.raf)cancelAnimationFrame(orbitState.raf);orbitState.raf=0;orbitState.observer?.disconnect();orbitState.observer=null;for(const cleanup of orbitState.cleanup)cleanup();orbitState.cleanup=[];orbitState.pointers.clear();orbitState.gesture=null;orbitState.canvas=null;orbitState.stage=null;orbitState.model=null;orbitState.options=null;
+}
+function setOrbitPreset(name){
+ const presets={reset:[-.72,.38,1],front:[0,.02,1],side:[-Math.PI/2,.02,1],top:[-.02,1.42,1]};const preset=presets[name]??presets.reset;[orbitState.yaw,orbitState.pitch,orbitState.zoom]=preset;orbitState.panX=0;orbitState.panY=0;queueOrbitDraw();
+}
+function renderOrbitView(m,o){
+ const f=focusInfo(m,selectedPath,o.tier),visibleTop=visibleOutputHeight(m,o.tanks),focusMarkup=f?`<div class="orbit-focus"><strong>${escapeHtml(f.label)}：${escapeHtml(f.value)}</strong><span class="orbit-focus-desc">${escapeHtml(f.description)}</span></div>`:'';
+ $('drawing').innerHTML=`<div class="orbit-stage" id="orbitStage" tabindex="0" aria-label="可旋转三维龟缸架。单指或鼠标拖动旋转，双指缩放和平移，滚轮缩放。"><canvas id="orbitCanvas" role="img" aria-label="龟缸架交互式三维模型">当前浏览器不支持三维画布。</canvas><div class="orbit-badge"><b>${fmt(m.W)} × ${fmt(m.D)} × ${fmt(visibleTop)}</b> mm${o.tanks?'':' · 已隐藏龟缸'}</div><div class="orbit-toolbar" aria-label="三维视角预设"><button type="button" data-orbit-preset="reset" title="恢复默认立体视角">复位</button><button type="button" data-orbit-preset="front">正面</button><button type="button" data-orbit-preset="side">侧面</button><button type="button" data-orbit-preset="top">顶视</button></div><div class="orbit-help">单指拖动旋转 · 双指缩放/平移 · 滚轮缩放 · 双击复位</div>${focusMarkup}</div>`;
+ const stage=$('orbitStage'),canvas=$('orbitCanvas');orbitState.stage=stage;orbitState.canvas=canvas;orbitState.model=m;orbitState.options=o;
+ const startGesture=()=>{const list=[...orbitState.pointers.values()];if(list.length===1)orbitState.gesture={type:'rotate',x:list[0].x,y:list[0].y,yaw:orbitState.yaw,pitch:orbitState.pitch};else if(list.length>=2){const a=list[0],b=list[1],cx=(a.x+b.x)/2,cy=(a.y+b.y)/2;orbitState.gesture={type:'pinch',distance:Math.max(1,Math.hypot(a.x-b.x,a.y-b.y)),cx,cy,zoom:orbitState.zoom,panX:orbitState.panX,panY:orbitState.panY};}};
+ const pointerDown=event=>{if(event.target.closest('button'))return;event.preventDefault();stage.focus({preventScroll:true});try{stage.setPointerCapture?.(event.pointerId);}catch{}orbitState.pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});stage.classList.add('dragging');startGesture();};
+ const pointerMove=event=>{if(!orbitState.pointers.has(event.pointerId))return;event.preventDefault();orbitState.pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});const list=[...orbitState.pointers.values()],g=orbitState.gesture;if(!g)return;if(list.length===1&&g.type==='rotate'){orbitState.yaw=g.yaw+(list[0].x-g.x)*.008;orbitState.pitch=orbitClamp(g.pitch-(list[0].y-g.y)*.006,-1.15,1.47);queueOrbitDraw();}else if(list.length>=2&&g.type==='pinch'){const a=list[0],b=list[1],distance=Math.max(1,Math.hypot(a.x-b.x,a.y-b.y)),cx=(a.x+b.x)/2,cy=(a.y+b.y)/2;orbitState.zoom=orbitClamp(g.zoom*distance/g.distance,.45,4);orbitState.panX=g.panX+cx-g.cx;orbitState.panY=g.panY+cy-g.cy;queueOrbitDraw();}};
+ const pointerEnd=event=>{orbitState.pointers.delete(event.pointerId);if(!orbitState.pointers.size)stage.classList.remove('dragging');startGesture();};
+ stage.addEventListener('pointerdown',pointerDown);stage.addEventListener('pointermove',pointerMove);stage.addEventListener('pointerup',pointerEnd);stage.addEventListener('pointercancel',pointerEnd);
+ stage.addEventListener('wheel',event=>{event.preventDefault();orbitState.zoom=orbitClamp(orbitState.zoom*Math.exp(-event.deltaY*.0012),.45,4);queueOrbitDraw();},{passive:false});
+ stage.addEventListener('dblclick',event=>{if(!event.target.closest('button'))setOrbitPreset('reset');});stage.addEventListener('keydown',event=>{let handled=true;if(event.key==='ArrowLeft')orbitState.yaw-=.09;else if(event.key==='ArrowRight')orbitState.yaw+=.09;else if(event.key==='ArrowUp')orbitState.pitch=orbitClamp(orbitState.pitch+.07,-1.15,1.47);else if(event.key==='ArrowDown')orbitState.pitch=orbitClamp(orbitState.pitch-.07,-1.15,1.47);else if(event.key==='+'||event.key==='=')orbitState.zoom=orbitClamp(orbitState.zoom*1.1,.45,4);else if(event.key==='-'||event.key==='_')orbitState.zoom=orbitClamp(orbitState.zoom/1.1,.45,4);else if(event.key==='0')setOrbitPreset('reset');else handled=false;if(handled){event.preventDefault();queueOrbitDraw();}});
+ stage.querySelectorAll('[data-orbit-preset]').forEach(button=>button.addEventListener('click',()=>setOrbitPreset(button.dataset.orbitPreset)));
+ if('ResizeObserver'in window){orbitState.observer=new ResizeObserver(queueOrbitDraw);orbitState.observer.observe(stage);}else{window.addEventListener('resize',queueOrbitDraw);orbitState.cleanup.push(()=>window.removeEventListener('resize',queueOrbitDraw));}
+ queueOrbitDraw();
+}
 function renderView(){
+ destroyOrbitView();
  updateLocator();
  const tanks=$('showTanks').checked,tankLegend=document.querySelector('.legend .dot.tank')?.closest('span');if(tankLegend)tankLegend.hidden=!tanks;
- $('viewHint').textContent=activeView==='iso'?`橙色符号为连接件 / 孔位；外框 ${CONNECTION_METHODS[state.connections.outer].short}，中梁 ${CONNECTION_METHODS[state.connections.middle].short}`:activeView==='plan'?(tanks?'虚线为龟缸边界':'龟缸边界与余量已隐藏'):activeView==='section'?'前后方向剖切，显示各梁高度':activeView==='side'?'侧梁半透明，显示中梁安装高度':'';
+ $('viewHint').textContent=activeView==='iso'?`可拖动旋转、双指缩放；橙色符号为连接件 / 孔位。外框 ${CONNECTION_METHODS[state.connections.outer].short}，中梁 ${CONNECTION_METHODS[state.connections.middle].short}`:activeView==='plan'?(tanks?'虚线为龟缸边界':'龟缸边界与余量已隐藏'):activeView==='section'?'前后方向剖切，显示各梁高度':activeView==='side'?'侧梁半透明，显示中梁安装高度':'';
  $('selectedTier').disabled=activeView!=='plan'&&activeView!=='section';
- if(!model?.valid){$('drawing').innerHTML='<div class="drawing-placeholder">调整左侧标出的参数后，<br>这里会重新生成尺寸图。</div>';return;}
- $('drawing').innerHTML=drawingSvg(activeView,model,viewOptions());
+ const drawing=$('drawing');drawing.classList.toggle('is-orbit',activeView==='iso'&&!!model?.valid);
+ if(!model?.valid){drawing.classList.remove('is-orbit');drawing.innerHTML='<div class="drawing-placeholder">调整左侧标出的参数后，<br>这里会重新生成尺寸图。</div>';return;}
+ if(activeView==='iso')renderOrbitView(model,viewOptions());else drawing.innerHTML=drawingSvg(activeView,model,viewOptions());
 }
 const formulaRow=(label,value)=>`<div class="formula-row"><span class="label">${escapeHtml(label)}</span><span class="value">${escapeHtml(value)}</span></div>`;
 function refresh(){
@@ -1249,7 +1361,7 @@ window.addEventListener('beforeunload',persistNow);
 window.addEventListener('beforeprint',()=>{if(model?.valid)preparePrintSheet();});
 try{const saved=localStorage.getItem(storageKey);if(saved)state=normalise(JSON.parse(saved));}catch{storageAvailable=false;}
 syncControls();refresh();if(storageAvailable)persistNow();$('saveState').textContent=storageAvailable?'参数自动保存在当前浏览器':'浏览器存储不可用，修改仅保留在本次打开期间';
-window.rackPlanner={getState:()=>clone(state),getModel:()=>clone(model),getJlcQuote:()=>model?.valid?clone(jlcQuoteData(model)):null,calculate:cfg=>calculate(normalise(cfg)),getCosts:()=>clone(model?.cost??null),getStockPlan:()=>clone(model?.stockPlan??null),getStepMembers:()=>model?.valid?clone(profileStepMembers(model)):null,getDetailedStepParts:()=>model?.valid?clone(detailedStepParts(model)):null,exportStepText:()=>model?.valid?stepAssemblyText(model):null,exportCsvText:()=>model?.valid?cutListCsv(model):null,preparePrint:()=>preparePrintSheet(),version:'15.2.0-output-consistency'};
+window.rackPlanner={getState:()=>clone(state),getModel:()=>clone(model),getJlcQuote:()=>model?.valid?clone(jlcQuoteData(model)):null,calculate:cfg=>calculate(normalise(cfg)),getCosts:()=>clone(model?.cost??null),getStockPlan:()=>clone(model?.stockPlan??null),getStepMembers:()=>model?.valid?clone(profileStepMembers(model)):null,getDetailedStepParts:()=>model?.valid?clone(detailedStepParts(model)):null,exportStepText:()=>model?.valid?stepAssemblyText(model):null,exportCsvText:()=>model?.valid?cutListCsv(model):null,preparePrint:()=>preparePrintSheet(),getOrbitState:()=>({yaw:orbitState.yaw,pitch:orbitState.pitch,zoom:orbitState.zoom,panX:orbitState.panX,panY:orbitState.panY}),getOrbitStats:()=>clone(orbitState.stats),setOrbitPreset,version:'16.0.0-interactive-3d'};
 </script>
 </body>
 </html>
